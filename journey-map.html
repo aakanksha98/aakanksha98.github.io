@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aakanksha's Journey Map</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Outfit:wght@400;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* VINTAGE PARCHMENT & PIRATE THEME */
+    :root {
+      --parchment: #e6cfa3;
+      --parchment-dark: #c4a16b;
+      --ink: #3b2c1d;
+      --ink-light: #5a4b3c;
+      --red-x: #8b251b;
+      
+      --font-map: 'IM Fell English', serif;
+      --font-ui: 'Outfit', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-map);
+      overflow: hidden; /* Hide scrollbars, render map fullscreen */
+      cursor: crosshair;
+    }
+
+    /* SVG Filter for Texture */
+    .texture-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 0;
+      opacity: 0.6; mix-blend-mode: multiply;
+    }
+
+    /* Burnt Edges Vignette */
+    .vignette {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 10;
+      box-shadow: inset 0 0 150px rgba(71, 35, 12, 0.4), inset 0 0 300px rgba(45, 17, 3, 0.2);
+    }
+
+    /* Map UI Wrapper */
+    .map-container {
+      position: relative; width: 100vw; height: 100vh; z-index: 1;
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    .map-header {
+      position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+      text-align: center; z-index: 20;
+    }
+    .map-title {
+      font-size: 3rem; text-transform: uppercase; letter-spacing: 0.2em;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+      border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 10px;
+    }
+    .map-subtitle {
+      font-family: var(--font-ui); font-size: 0.9rem; letter-spacing: 0.1em; opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    /* The SVG Path Drawing */
+    .trail-svg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .trail-path {
+      fill: none;
+      stroke: var(--ink-light);
+      stroke-width: 4;
+      stroke-dasharray: 12 16;
+      stroke-linecap: round;
+      /* Animation properties added by JS */
+    }
+
+    /* Milestones */
+    .milestone {
+      position: absolute; transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 20;
+      transition: transform 0.3s;
+    }
+    .milestone:hover { transform: translate(-50%, -50%) scale(1.1); }
+    
+    .milestone-icon {
+      font-size: 2rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    }
+    
+    .red-x { color: var(--red-x); font-size: 3.5rem; font-family: var(--font-ui); font-weight: 800; line-height: 0.8;}
+
+    .milestone-label {
+      font-family: var(--font-ui); font-weight: 800; font-size: 0.9rem;
+      background: rgba(230, 207, 163, 0.9);
+      padding: 4px 10px; border-radius: 4px; border: 1px dashed var(--ink-light);
+      margin-top: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+      white-space: nowrap; pointer-events: none;
+    }
+
+    /* Info Modal (Parchment Card) */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    
+    .parchment-modal {
+      background: #e1c79b; width: 500px; max-width: 90%;
+      padding: 3rem; position: relative;
+      border: 2px solid var(--ink); border-radius: 4px;
+      box-shadow: 10px 10px 0px rgba(0,0,0,0.2), inset 0 0 50px rgba(139, 90, 43, 0.2);
+      transform: translateY(20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal-overlay.active .parchment-modal { transform: translateY(0) scale(1); }
+
+    .modal-close {
+      position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer;
+      font-family: var(--font-ui); font-weight: 800; color: var(--ink);
+    }
+    
+    .modal-date { font-family: var(--font-ui); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--ink-light); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .modal-title { font-size: 2rem; margin-bottom: 0.5rem; line-height: 1.1; }
+    .modal-subtitle { font-family: var(--font-ui); font-weight: 800; color: var(--red-x); margin-bottom: 1.5rem; }
+    .modal-desc { font-size: 1.1rem; line-height: 1.6; }
+
+    /* Compass Rose Decor */
+    .compass {
+      position: absolute; bottom: 40px; right: 40px;
+      width: 150px; height: 150px; opacity: 0.4; z-index: 5; pointer-events: none;
+      animation: slowSpin 60s linear infinite;
+    }
+    @keyframes slowSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    .back-btn {
+      position: absolute; top: 30px; left: 30px; z-index: 30;
+      text-decoration: none; color: var(--ink); font-family: var(--font-ui);
+      font-weight: 800; border: 2px solid var(--ink); padding: 10px 20px;
+      text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.2s;
+    }
+    .back-btn:hover { background: var(--ink); color: var(--parchment); }
+
+  </style>
+</head>
+<body>
+
+  <!-- Parchment Texture via SVG Filter -->
+  <svg class="texture-overlay" preserveAspectRatio="none">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="4" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.2 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+  </svg>
+  
+  <div class="vignette"></div>
+
+  <a href="aaku cv.html" class="back-btn">← Return to present</a>
+
+  <div class="map-container">
+    <div class="map-header">
+      <h1 class="map-title" id="mapHeaderTitle">The Journey</h1>
+      <div class="map-subtitle">A Cartographic Record of Progress</div>
+    </div>
+
+    <!-- Navigation Path -->
+    <svg class="trail-svg" id="trailSvg">
+      <!-- Path mathematically drawn by JS -->
+      <path id="mapPath" class="trail-path" d=""/>
+    </svg>
+
+    <!-- Milestones appended here via JS -->
+    <div id="milestonesContainer"></div>
+
+    <!-- Compass -->
+    <svg class="compass" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5"/>
+      <polygon points="50,5 60,40 95,50 60,60 50,95 40,60 5,50 40,40" fill="none" stroke="currentColor" stroke-width="2"/>
+      <polygon points="50,5 50,95" fill="none" stroke="currentColor" stroke-width="1"/>
+      <polygon points="5,50 95,50" fill="none" stroke="currentColor" stroke-width="1"/>
+      <text x="45" y="15" font-family="Outfit" font-weight="bold" font-size="10" fill="currentColor">N</text>
+    </svg>
+
+  </div>
+
+  <!-- Interactive Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="parchment-modal">
+      <div class="modal-close" id="modalClose">×</div>
+      <div class="modal-date" id="modalDate"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-subtitle" id="modalSubtitle"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- MAP DATA DEFINITIONS ---
+    const mapData = {
+      experience: {
+        title: "The Waters of Enterprise",
+        points: [
+          { 
+            date: "2022", title: "Dopamine Enterprises", subtitle: "Java Developer Intern", 
+            desc: "The voyage begins. Collaborated gracefully to construct a full-stack water ordering platform utilizing the ancient arts of Spring Boot, REST APIS, and Oracle DB." 
+          },
+          { 
+            date: "2022 — 2023", title: "Ericsson Product Dev", subtitle: "Product Developer", 
+            desc: "Sailed deeper into the NWT MapView platform territory. Refactored legacy ruins into a modern ES module architecture and mapped RSVP link visualizations for 100+ telecom navigators." 
+          },
+          { 
+            date: "2024 — Present", title: "Ericsson", subtitle: "Verizon Software Developer", 
+            desc: "The ultimate frontier. Slain 32 critical Open Redirect vulnerabilities with Fortify SAST! Migrated giant legacy FDB layers and engineered a dual-protocol CORBA & MQTT architecture for RHEL 8 native servers. Glory!" 
+          }
+        ]
+      },
+      education: {
+        title: "The Isles of Academia",
+        points: [
+          { 
+            date: "2002 — 2014", title: "Mount Assisi School", subtitle: "Secondary School (Class X)", 
+            desc: "The foundation of all knowledge. Scaled the ICSE peaks with an astounding 92.6%." 
+          },
+          { 
+            date: "2014 — 2016", title: "Shree Krishna Public School", subtitle: "Higher Secondary (Class XII)", 
+            desc: "Survived the CBSE trials. Secured 76.2% and forged the discipline needed for higher quests." 
+          },
+          { 
+            date: "2017 — 2021", title: "Techno India College", subtitle: "B.Tech in Information Technology", 
+            desc: "The grand academy in Kolkata. Mastered algorithms and systems with a strong 8.0 DGPA." 
+          },
+          { 
+            date: "2022 Jan - Aug", title: "Simplilearn", subtitle: "Master's Program: Java Full Stack", 
+            desc: "The final certification. Honed full-stack combat skills and attained mastery over the Java framework ecosystem." 
+          }
+        ]
+      },
+      skills: {
+        title: "The Arsenal & Artifacts",
+        points: [
+          { 
+            date: "Core Toolkit", title: "Frontend Magic", subtitle: "UI/UX & Web", 
+            desc: "JavaScript, HTML5, CSS3, ES Modules, and Webpack. Tools of the trade for forging interactive and blistering fast interfaces." 
+          },
+          { 
+            date: "Engine Room", title: "Core & Backend", subtitle: "Java & Scale", 
+            desc: "Java, Spring Boot, REST APIs, SQL, JSP, Servlet, and Oracle DB. The massive pistons powering the enterprise ships." 
+          },
+          { 
+            date: "The Network", title: "Architecture", subtitle: "Protocols", 
+            desc: "MQTT, CORBA, Legacy Modernisation, and Telecom Infrastructure. Speaking the old and new tongues of the global grid." 
+          },
+          { 
+            date: "The Future", title: "AI & Productivity Expert", subtitle: "Agentic Engineering", 
+            desc: "Wielding Claude, OpenClaw, Copilot, and Cursor. A master of AI tooling to automate scaffolding, squash bugs effortlessly, and warp-speed delivery." 
+          }
+        ]
+      }
+    };
+
+    // --- LOGIC ---
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Read URL params
+      const urlParams = new URLSearchParams(window.location.search);
+      let section = urlParams.get('section') || 'experience';
+      
+      if(!mapData[section]) section = 'experience'; // fallback
+      
+      const journey = mapData[section];
+      document.getElementById('mapHeaderTitle').textContent = journey.title;
+
+      // 2. Generate Map Layout
+      const container = document.getElementById('milestonesContainer');
+      const cw = window.innerWidth;
+      const ch = window.innerHeight;
+      
+      // Algorithm to snake points across the screen
+      const nodes = [];
+      const count = journey.points.length;
+      
+      for(let i = 0; i < count; i++) {
+        // Snake path: left, right, left, right... moving downwards
+        let xRatio = (i % 2 === 0) ? 0.3 : 0.7; 
+        
+        // Add random scatter so it looks like a real map
+        xRatio += (Math.random() * 0.1 - 0.05);
+        
+        // Y ratio spreads evenly with padding
+        let yRatio = 0.25 + (i * (0.6 / Math.max(1, count - 1)));
+        
+        const px = cw * xRatio;
+        const py = ch * yRatio;
+        
+        nodes.push({x: px, y: py, data: journey.points[i], isLast: i === count - 1});
+      }
+
+      // 3. Draw Path in SVG
+      const pathEl = document.getElementById('mapPath');
+      if(nodes.length > 0) {
+        let d = `M ${nodes[0].x} ${nodes[0].y}`;
+        for(let i = 1; i < nodes.length; i++) {
+          // Create curvy bezier paths between nodes
+          const prev = nodes[i-1];
+          const curr = nodes[i];
+          const cx1 = prev.x;
+          const cy1 = prev.y + (curr.y - prev.y)/2;
+          const cx2 = curr.x;
+          const cy2 = prev.y + (curr.y - prev.y)/2;
+          
+          d += ` C ${cx1} ${cy1}, ${cx2} ${cy2}, ${curr.x} ${curr.y}`;
+        }
+        pathEl.setAttribute('d', d);
+
+        // Animate Path Drawing
+        const length = pathEl.getTotalLength();
+        pathEl.style.strokeDashoffset = length;
+        pathEl.style.strokeDasharray = `12 16`; 
+        // We override this with a transition to make it draw
+        pathEl.style.strokeDashoffset = length; // reset
+        // To draw dashed lines properly without breaking the array, we animate a solid mask or use CSS keyframes
+        // Simpler approach for dashed animation: Draw from 0 to max over time via JS
+      }
+
+      // 4. Render HTML Nodes
+      nodes.forEach((node, i) => {
+        const el = document.createElement('div');
+        el.className = 'milestone';
+        el.style.left = node.x + 'px';
+        el.style.top = node.y + 'px';
+        
+        // Hide initially for stagger effect
+        el.style.opacity = 0; 
+        el.style.transform = "translate(-50%, -50%) scale(0)";
+        
+        // If it's the last point, make it an X!
+        if(node.isLast) {
+          el.innerHTML = `
+            <div class="red-x">X</div>
+            <div class="milestone-label">Treasure!</div>
+          `;
+        } else {
+          el.innerHTML = `
+            <div class="milestone-icon">🏝️</div>
+            <div class="milestone-label">${node.data.title}</div>
+          `;
+        }
+
+        // On Click -> Modal
+        el.addEventListener('click', () => {
+          document.getElementById('modalDate').textContent = node.data.date;
+          document.getElementById('modalTitle').textContent = node.data.title;
+          document.getElementById('modalSubtitle').textContent = node.data.subtitle;
+          document.getElementById('modalDesc').textContent = node.data.desc;
+          document.getElementById('modalOverlay').classList.add('active');
+        });
+
+        container.appendChild(el);
+
+        // Reveal Animation Stagger
+        setTimeout(() => {
+          el.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          el.style.opacity = 1;
+          el.style.transform = "translate(-50%, -50%) scale(1)";
+        }, (i * 800) + 1000); // 1s initial delay then 800ms per node
+      });
+
+      // Trail Animation via JS to preserve dashes safely
+      let drawProgress = 0;
+      const animateTrail = () => {
+        drawProgress += 2;
+        const total = pathEl.getTotalLength();
+        if(pathEl.style) {
+            // A common trick to draw dashed lines is to use a second path as a reveal mask, 
+            // but we can just use the standard offset math.
+            // For now, simpler: we make the path dashed, and we reveal it with a clip-path moving down.
+        }
+      }
+      
+      // Better Trail Animation: SVG Clip Path Reveal
+      const svg = document.getElementById('trailSvg');
+      svg.innerHTML += `
+        <clipPath id="revealMask">
+          <rect x="0" y="0" width="100%" height="0">
+            <animate attributeName="height" from="0" to="100%" dur="${nodes.length * 0.8}s" begin="0.5s" fill="freeze" />
+          </rect>
+        </clipPath>
+      `;
+      pathEl.setAttribute('clip-path', 'url(#revealMask)');
+
+      // 5. Modal Close Logic
+      document.getElementById('modalClose').addEventListener('click', () => {
+        document.getElementById('modalOverlay').classList.remove('active');
+      });
+      document.getElementById('modalOverlay').addEventListener('click', (e) => {
+        if(e.target === document.getElementById('modalOverlay')) {
+          document.getElementById('modalOverlay').classList.remove('active');
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>
