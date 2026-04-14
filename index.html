@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captain Aakanksha's Log</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Outfit:wght@300;600&family=Pirata+One&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       PIRATE THEME DESIGN SYSTEM (DAY)
+       ========================================================= */
+    :root {
+      --parchment: #eacda1;
+      --parchment-dark: #ccaa77;
+      --wood: #5c3a21;
+      --wood-dark: #3a2211;
+      --ink: #312117;
+      --ink-faded: #5a4b3d;
+      --ocean-deep: #143542;
+      --red-flag: #8a1f1b;
+      --fog-color: rgba(234, 205, 161, 0.4);
+      --font-display: 'Pirata One', cursive;
+      --font-serif: 'IM Fell English', serif;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    /* PIRATE THEME DESIGN SYSTEM (NIGHT VOYAGE) */
+    body.night-mode {
+      --parchment: #0f172a;
+      --parchment-dark: #1e293b;
+      --wood: #1e1b4b;
+      --wood-dark: #000000;
+      --ink: #e2e8f0;
+      --ink-faded: #94a3b8;
+      --fog-color: rgba(255, 255, 255, 0.15);
+      --red-flag: #38bdf8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🔭</text></svg>") 16 16, auto;
+      transition: background-color 2s ease, color 2s ease;
+    }
+
+    /* FEATURE 1: BURN-IN LOADING EFFECT */
+    .burn-in-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 999999;
+      pointer-events: none;
+      /* Using a radial gradient mask to burn a hole */
+      mask-image: radial-gradient(circle, transparent 0%, black 0%);
+      -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
+      animation: burnReveal 2.5s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes burnReveal {
+      0% {
+        -webkit-mask-image: radial-gradient(circle, transparent 0%, black 0%);
+        mask-image: radial-gradient(circle, transparent 0%, black 0%);
+      }
+
+      20% {
+        -webkit-mask-image: radial-gradient(circle, transparent 5%, black 6%);
+        mask-image: radial-gradient(circle, transparent 5%, black 6%);
+      }
+
+      70% {
+        -webkit-mask-image: radial-gradient(circle, transparent 100%, black 150%);
+        mask-image: radial-gradient(circle, transparent 100%, black 150%);
+      }
+
+      100% {
+        -webkit-mask-image: radial-gradient(circle, transparent 200%, black 300%);
+        mask-image: radial-gradient(circle, transparent 200%, black 300%);
+        opacity: 0;
+        display: none;
+      }
+    }
+
+    .burn-flames {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, transparent 0%, #ff5e00 5%, #8a1f1b 10%, black 15%);
+      mix-blend-mode: color-dodge;
+      animation: burnFlames 2s forwards;
+    }
+
+    @keyframes burnFlames {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(30);
+        opacity: 0;
+      }
+    }
+
+    /* GLOBAL TEXTURE OVERLAY */
+    .texture-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.6;
+      mix-blend-mode: multiply;
+      transition: opacity 2s;
+    }
+
+    body.night-mode .texture-overlay {
+      opacity: 0.2;
+    }
+
+    .vignette {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+      box-shadow: inset 0 0 150px rgba(71, 35, 12, 0.4), inset 0 0 300px rgba(45, 17, 3, 0.2);
+    }
+
+    body.night-mode .vignette {
+      box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+    }
+
+    /* FEATURE 2: CONSTELLATION CANVAS */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    body.night-mode #starCanvas {
+      opacity: 1;
+    }
+
+    /* PARALLAX SHIP */
+    .ship-wrapper {
+      position: fixed;
+      left: 10%;
+      top: 10vh;
+      width: 120px;
+      height: 120px;
+      z-index: 50;
+      pointer-events: none;
+      transform-origin: center;
+      transition: transform 0.1s ease-out;
+      animation: bobbing 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes bobbing {
+      0% {
+        transform: translateY(0px) rotate(-3deg);
+      }
+
+      100% {
+        transform: translateY(15px) rotate(3deg);
+      }
+    }
+
+    /* ROLLING FOG */
+    .fog-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 40;
+      overflow: hidden;
+      opacity: 0.5;
+      mix-blend-mode: screen;
+    }
+
+    .fog-layer {
+      position: absolute;
+      bottom: -20vh;
+      width: 300vw;
+      height: 80vh;
+      background: radial-gradient(ellipse at center, var(--fog-color) 0%, transparent 60%);
+      background-size: 50% 100%;
+      background-repeat: repeat-x;
+      animation: fogPan 60s linear infinite;
+      filter: blur(20px);
+      transition: background 2s;
+    }
+
+    .fog-layer.two {
+      bottom: -10vh;
+      animation: fogPan 40s linear infinite reverse;
+      opacity: 0.7;
+      transform: scaleY(1.2);
+    }
+
+    @keyframes fogPan {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50vw);
+      }
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1rem 5%;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--parchment), transparent);
+      transition: background 2s;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--wood-dark);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      transition: color 2s;
+    }
+
+    body.night-mode .logo {
+      color: #fdf5e6;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--ink);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--red-flag);
+    }
+
+    .lantern-toggle {
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--wood-dark);
+      transition: transform 1s, filter 0.3s, color 2s;
+      filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.2));
+    }
+
+    .lantern-toggle:hover {
+      filter: drop-shadow(0 0 10px #ffdf73);
+    }
+
+    body.night-mode .lantern-toggle {
+      text-shadow: 0 0 20px #ffdf73;
+    }
+
+    /* LAYOUT EXTRAS */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 0 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 8rem 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 4.5rem;
+      color: var(--wood-dark);
+      text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.4), 4px 4px 6px rgba(0, 0, 0, 0.1);
+      letter-spacing: 4px;
+      transition: color 2s, text-shadow 2s;
+    }
+
+    body.night-mode .section-title {
+      color: #e0e7ff;
+      text-shadow: 0 0 20px rgba(165, 180, 252, 0.5);
+    }
+
+    .section-header::after {
+      content: '🗡️';
+      display: block;
+      font-size: 1.5rem;
+      margin-top: -10px;
+      color: var(--ink);
+    }
+
+    /* WANTED POSTER */
+    .hero {
+      align-items: center;
+      text-align: center;
+    }
+
+    .wanted-poster {
+      background: var(--parchment);
+      border: 4px solid var(--wood-dark);
+      box-shadow: 15px 15px 0px rgba(0, 0, 0, 0.1), inset 0 0 50px rgba(0, 0, 0, 0.4);
+      padding: 4rem;
+      max-width: 800px;
+      position: relative;
+      transform: rotate(-2deg);
+      transition: transform 0.3s, background 2s, border-color 2s;
+    }
+
+    .wanted-poster:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .wanted-header {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      border-bottom: 2px dashed var(--ink);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+      transition: border-color 2s;
+    }
+
+    .wanted-name {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 8vw, 6rem);
+      color: var(--red-flag);
+      line-height: 1;
+      margin-bottom: 1rem;
+      transition: color 2s;
+    }
+
+    .wanted-bounty {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+      background: rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      padding: 5px 20px;
+    }
+
+    .wanted-bio {
+      font-size: 1.2rem;
+      color: var(--ink-faded);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-inline: auto;
+      font-family: var(--font-serif);
+      font-style: italic;
+      transition: color 2s;
+    }
+
+    /* WOODEN PLANKS */
+    .plank-card {
+      background: var(--wood);
+      background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 2px, transparent 2px, transparent 30px);
+      color: #fdf5e6;
+      border: 6px solid var(--wood-dark);
+      border-radius: 8px;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s, background 2s, border-color 2s;
+    }
+
+    .plank-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .plank-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: #e9c48b;
+      letter-spacing: 2px;
+    }
+
+    body.night-mode .plank-title {
+      color: #fde047;
+    }
+
+    .plank-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: #b89874;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .plank-date {
+      font-family: var(--font-serif);
+      font-weight: bold;
+      padding: 4px 10px;
+      border: 1px dashed #b89874;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .plank-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .plank-list li {
+      position: relative;
+      padding-left: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .plank-list li::before {
+      content: '🏴';
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 1.2rem;
+    }
+
+    /* FEATURE 3: IRON CANNONBALLS (PHYSICS) */
+    .loot-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      justify-content: flex-start;
+    }
+
+    .cannonball {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #555 0%, #222 60%, #0a0a0a 100%);
+      color: #ccc;
+      font-family: var(--font-body);
+      font-weight: bold;
+      font-size: 0.75rem;
+      text-align: center;
+      box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.8), inset 2px 2px 5px rgba(255, 255, 255, 0.2), 10px 10px 15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+      user-select: none;
+      z-index: 5;
+    }
+
+    body.night-mode .cannonball {
+      box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.8), inset 2px 2px 5px rgba(165, 180, 252, 0.3), 10px 10px 15px rgba(0, 0, 0, 0.8);
+      color: #fff;
+    }
+
+    .cannonball.repelled {
+      /* JS handles transform, but CSS gives it the smooth roll */
+      transition: transform 0.1s linear, box-shadow 0.1s;
+    }
+
+    .loot-tag {
+      /* Fallback for ones we don't want as cannonballs like URL buttons */
+      background: linear-gradient(135deg, #d4af37, #aa8822);
+      color: #312117;
+      font-family: var(--font-serif);
+      font-weight: bold;
+      padding: 5px 15px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #5c3a21;
+      border: 1px solid #ffdf73;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .treasure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .treasure-map {
+      background: var(--parchment-dark);
+      border: 2px dashed var(--ink-faded);
+      padding: 2rem;
+      position: relative;
+      box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+      transition: background 2s;
+    }
+
+    .treasure-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--ink-faded);
+    }
+
+    /* TREASURE CHEST CONTACT */
+    .treasure-chest-wrapper {
+      position: relative;
+      width: 300px;
+      height: 250px;
+      margin: 0 auto;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .chest-base {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 150px;
+      background: url('https://www.transparenttextures.com/patterns/wood-pattern.png') var(--wood);
+      border: 8px solid var(--wood-dark);
+      border-radius: 5px;
+      box-shadow: inset 0 -20px 50px rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      transition: background 2s, border-color 2s;
+    }
+
+    .chest-base::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 30px;
+      background: #b5a642;
+      border: 2px solid #5a4b3d;
+      top: 10px;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .chest-lid {
+      position: absolute;
+      bottom: 150px;
+      width: 100%;
+      height: 100px;
+      background: url('https://www.transparenttextures.com/patterns/wood-pattern.png') var(--wood);
+      border: 8px solid var(--wood-dark);
+      border-radius: 100px 100px 0 0;
+      transform-origin: bottom center;
+      transition: transform 0.8s, background 2s, border-color 2s;
+      z-index: 3;
+      box-shadow: inset 0 20px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .chest-lid::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 100%;
+      background: var(--wood-dark);
+      left: 20px;
+      box-shadow: 240px 0 0 var(--wood-dark);
+      transition: background 2s, box-shadow 2s;
+    }
+
+    .chest-glow {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      width: 0px;
+      height: 0px;
+      background: radial-gradient(circle, #ffdf73 0%, transparent 70%);
+      transform: translateX(-50%);
+      transition: width 0.8s, height 0.8s, opacity 0.8s;
+      opacity: 0;
+      z-index: 1;
+      filter: blur(20px);
+    }
+
+    .chest-loot {
+      position: absolute;
+      bottom: 150px;
+      left: 50%;
+      transform: translateX(-50%) translateY(50px) scale(0);
+      opacity: 0;
+      z-index: 4;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition-delay: 0.2s;
+    }
+
+    .treasure-chest-wrapper.opened .chest-lid {
+      transform: rotateX(110deg);
+    }
+
+    .treasure-chest-wrapper.opened .chest-glow {
+      width: 400px;
+      height: 400px;
+      opacity: 0.8;
+    }
+
+    .treasure-chest-wrapper.opened .chest-loot {
+      transform: translateX(-50%) translateY(-50px) scale(1);
+      opacity: 1;
+    }
+
+    .loot-scroll {
+      background: #fdf5e6;
+      border: 2px solid var(--wood);
+      padding: 2rem;
+      border-radius: 2px;
+      text-align: center;
+      box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+      width: 250px;
+    }
+
+    .loot-scroll h3 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: #8a1f1b;
+      margin-bottom: 1rem;
+    }
+
+    .loot-scroll a {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #312117;
+      text-decoration: none;
+      margin: 10px 0;
+      border-bottom: 1px dashed #5a4b3d;
+    }
+
+    /* FEATURE 4: MESSAGE IN A BOTTLE */
+    .bottle-wrapper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 900;
+      transition: transform 0.3s;
+    }
+
+    .bottle-trigger {
+      font-size: 3rem;
+      cursor: pointer;
+      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.4));
+      animation: bobbing 2s infinite alternate;
+      transition: transform 0.3s;
+    }
+
+    .bottle-trigger:hover {
+      transform: scale(1.1) rotate(15deg);
+    }
+
+    .bottle-modal {
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 300px;
+      background: var(--parchment);
+      border: 2px dashed var(--ink);
+      padding: 1.5rem;
+      border-radius: 4px;
+      box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5);
+      transform-origin: bottom right;
+      transform: scale(0);
+      opacity: 0;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    }
+
+    .bottle-wrapper.open .bottle-modal {
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .bottle-wrapper.open .bottle-trigger {
+      animation: none;
+      transform: rotate(90deg);
+      filter: blur(2px);
+    }
+
+    .bottle-wrapper.sent {
+      animation: sailAway 3s forwards;
+      pointer-events: none;
+    }
+
+    @keyframes sailAway {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(90deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(200px, 100px) scale(0.2) rotate(120deg);
+        opacity: 0;
+      }
+    }
+
+    .bottle-modal h4 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--wood-dark);
+      margin-bottom: 10px;
+    }
+
+    .bottle-modal textarea {
+      width: 100%;
+      height: 100px;
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--ink-faded);
+      padding: 10px;
+      font-family: var(--font-body);
+      resize: none;
+      margin-bottom: 10px;
+    }
+
+    .bottle-send {
+      background: var(--red-flag);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-family: var(--font-serif);
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    .bottle-send:hover {
+      background: #5c110e;
+    }
+
+    /* FEATURE 5: THE KRAKEN EASTER EGG */
+    .kraken-container {
+      position: fixed;
+      bottom: -100vh;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .kraken-container.attack {
+      transform: translateY(-80vh);
+    }
+
+    /* PARROT COMPANION */
+    .parrot-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    .parrot-svg {
+      width: 46px;
+      height: 46px;
+      animation: parrotBob 1.8s ease-in-out infinite alternate;
+      filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.35));
+    }
+    @keyframes parrotBob {
+      0%   { transform: rotate(-6deg) translateY(0px); }
+      100% { transform: rotate(6deg)  translateY(-6px); }
+    }
+    .parrot-wrapper.squawking .parrot-svg {
+      animation: parrotSquawk 0.15s ease-in-out 4 alternate;
+    }
+    @keyframes parrotSquawk {
+      0%   { transform: scale(1)    rotate(-8deg); }
+      100% { transform: scale(1.25) rotate(8deg);  }
+    }
+    .parrot-bubble {
+      position: absolute;
+      top: 56px;
+      right: 0;
+      background: #fdf5e6;
+      border: 2px solid var(--wood-dark);
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-family: var(--font-serif);
+      font-size: 0.82rem;
+      color: var(--ink);
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+      transform-origin: top right;
+      transform: scale(0);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.25s;
+      z-index: 200;
+      max-width: 240px;
+      text-align: center;
+      white-space: normal;
+      pointer-events: none;
+    }
+    .parrot-bubble::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 14px;
+      border: 5px solid transparent;
+      border-bottom-color: var(--wood-dark);
+    }
+    .parrot-wrapper.squawking .parrot-bubble {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* 3D SHIP'S LOGBOOK */
+    .logbook-desk {
+      background: linear-gradient(160deg, #4a2d18 0%, #5c3a21 50%, #3a2211 100%);
+      border: 4px solid #2a1a0a;
+      border-radius: 10px;
+      padding: 1.5rem 1rem 1.5rem;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.65), inset 0 0 40px rgba(0,0,0,0.45);
+      position: relative;
+    }
+    .logbook-desk::before {
+      content: '';
+      position: absolute;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      width: 64px; height: 6px;
+      background: #b5a642;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .logbook-scene {
+      perspective: 3000px;
+      perspective-origin: 50% 20%;
+    }
+    .logbook {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      height: 640px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(2deg);
+    }
+    .logbook.is-flipping { pointer-events: none; }
+    .book-spread {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.05s;
+    }
+    .book-spread.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .book-page {
+      width: 50%;
+      height: 100%;
+      background: #fdf5e6;
+      padding: 2.2rem 2.4rem 3rem;
+      overflow-y: auto;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: #c8a87a transparent;
+    }
+    .book-page::-webkit-scrollbar { width: 4px; }
+    .book-page::-webkit-scrollbar-thumb { background: #c8a87a; border-radius: 2px; }
+    .book-page.left-page {
+      border-right: 2px solid #c8a87a;
+      border-radius: 4px 0 0 4px;
+      background: linear-gradient(to right, #f0dfc0, #fdf5e6);
+      box-shadow: inset -8px 0 20px rgba(0,0,0,0.06);
+    }
+    .book-page.right-page {
+      border-left: 2px solid #c8a87a;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(to left, #f0dfc0, #fdf5e6);
+      box-shadow: inset 8px 0 20px rgba(0,0,0,0.06);
+    }
+    .book-spine {
+      position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      width: 18px; height: 100%;
+      background: linear-gradient(to right, #7a5c14, #d4af37 40%, #d4af37 60%, #7a5c14);
+      z-index: 10;
+      box-shadow: 0 0 18px rgba(0,0,0,0.55);
+      pointer-events: none;
+    }
+    /* Page flipper */
+    #pageFlipper {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      transform-style: preserve-3d;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 15;
+    }
+    #flipFront, #flipBack {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      padding: 1.6rem 1.6rem 2.5rem;
+      overflow: hidden;
+    }
+    #flipFront {
+      background: linear-gradient(to left, #f0dfc0, #fdf5e6);
+      border-radius: 0 4px 4px 0;
+      box-shadow: inset 8px 0 20px rgba(0,0,0,0.06);
+    }
+    #flipBack {
+      background: linear-gradient(to right, #f0dfc0, #fdf5e6);
+      transform: rotateY(180deg);
+      border-radius: 4px 0 0 4px;
+      box-shadow: inset -8px 0 20px rgba(0,0,0,0.06);
+    }
+    /* Page content typography */
+    .title-page-header {
+      font-family: var(--font-serif);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: #8b6914;
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      color: #3a2211;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    .page-subtitle {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: #6b4c35;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+    }
+    .page-date-tag {
+      display: inline-block;
+      border: 1px dashed #8b6914;
+      color: #8b6914;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      padding: 3px 12px;
+      margin-bottom: 0.8rem;
+    }
+    .page-rule {
+      border: none;
+      border-top: 1px solid #c8a87a;
+      margin: 0.8rem 0;
+    }
+    .page-entry {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: #312117;
+      line-height: 1.65;
+      margin-bottom: 0.9rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .page-entry::before {
+      content: '⚓';
+      position: absolute;
+      left: 0; top: 2px;
+      font-size: 0.8rem;
+    }
+    .page-loot-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 0.8rem;
+    }
+    .page-loot-tag {
+      background: linear-gradient(135deg, #d4af37, #aa8822);
+      color: #312117;
+      font-family: var(--font-serif);
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      border: 1px solid #b5962a;
+    }
+    .page-number {
+      position: absolute;
+      bottom: 0.8rem;
+      font-family: var(--font-serif);
+      font-size: 0.75rem;
+      color: #8b6914;
+      font-style: italic;
+    }
+    .page-number.left { left: 1.2rem; }
+    .page-number.right { right: 1.2rem; }
+    .page-decoration { text-align: center; font-size: 2rem; margin: 0.6rem 0; }
+    /* Book controls */
+    .book-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .book-btn {
+      background: var(--wood);
+      color: #fdf5e6;
+      border: 3px solid var(--wood-dark);
+      padding: 0.5rem 1.4rem;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 4px 4px 0 var(--wood-dark);
+    }
+    .book-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 var(--wood-dark);
+    }
+    .book-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 2px 2px 0 var(--wood-dark);
+    }
+    .book-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .page-indicator {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: #fdf5e6;
+      font-style: italic;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    /* INTERACTIVE CANNON */
+    .cannon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+      cursor: pointer;
+      position: relative;
+    }
+    .cannon-svg {
+      cursor: pointer;
+      overflow: visible;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+      animation: cannonGlow 2.2s ease-in-out infinite;
+      transition: filter 0.2s;
+    }
+    .cannon-svg:hover {
+      animation: none;
+      filter: drop-shadow(0 0 12px rgba(255,120,0,0.9));
+    }
+    @keyframes cannonGlow {
+      0%, 100% { filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); }
+      50%       { filter: drop-shadow(0 0 10px rgba(255,110,0,0.8)); }
+    }
+    #cannonBarrelGroup {
+      transform-box: view-box;
+      transform-origin: 26px 36px;
+      transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .cannon-hint-label {
+      font-family: var(--font-serif);
+      font-size: 0.72rem;
+      font-style: italic;
+      color: #8b6914;
+      border: 1px dashed #8b6914;
+      padding: 1px 6px;
+      border-radius: 3px;
+      animation: hintFade 1.8s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    @keyframes hintFade {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+    .cannon-entry { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+
+    @keyframes cannonExplode {
+      0%   { transform: translate(0,0) scale(1.2); opacity: 1; }
+      100% { transform: translate(var(--tx),var(--ty)) scale(0); opacity: 0; }
+    }
+    @keyframes smokePuff {
+      0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 1; }
+      100% { transform: translate(calc(-50% + 30px), calc(-50% - 30px)) scale(3); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FEATURE 1: BURN-IN LOADING -->
+  <div class="burn-in-layer" id="burnInLayer">
+    <div class="burn-flames"></div>
+  </div>
+
+  <!-- TEXTURES & FOG -->
+  <svg class="texture-overlay" preserveAspectRatio="none">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.25 0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+  </svg>
+  <div class="vignette"></div>
+
+  <!-- FEATURE 2: CONSTELLATION CANVAS -->
+  <canvas id="starCanvas"></canvas>
+
+  <div class="fog-container">
+    <div class="fog-layer"></div>
+    <div class="fog-layer two"></div>
+  </div>
+
+  <!-- SCROLLING PIRATE SHIP -->
+  <div class="ship-wrapper" id="pirateShip">
+    <svg viewBox="0 0 100 100" width="120" height="120">
+      <path d="M10,70 Q50,90 90,70 L80,50 L20,50 Z" fill="#5c3a21" stroke="#3a2211" stroke-width="2" />
+      <path d="M45,20 L45,70" stroke="#1a1a1a" stroke-width="4" />
+      <path d="M45,20 Q65,40 45,60" fill="#f4ebd9" stroke="#3a2211" stroke-width="1" />
+      <polygon points="45,10 60,15 45,20" fill="#8a1f1b" /> <!-- Flag -->
+      <circle cx="30" cy="65" r="3" fill="#111" />
+      <circle cx="50" cy="65" r="3" fill="#111" />
+      <circle cx="70" cy="65" r="3" fill="#111" />
+      <path d="M0,75 Q20,65 30,75 T60,75 T90,75 T110,80" fill="none" stroke="#256e87" stroke-width="3" opacity="0.6" />
+    </svg>
+  </div>
+
+  <!-- THE KRAKEN -->
+  <div class="kraken-container" id="kraken">
+    <svg viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none">
+      <path d="M-10,100 C20,-20 40,50 10,-30 C15,0 -10,30 5,100 Z" fill="#1b2a33" stroke="#0f1b21" stroke-width="2" />
+      <circle cx="20" cy="40" r="3" fill="#eb4034" />
+      <circle cx="15" cy="55" r="2" fill="#eb4034" />
+      <path d="M110,100 C80,-10 60,60 90,-20 C85,10 110,40 95,100 Z" fill="#223540" stroke="#0f1b21" stroke-width="2" />
+      <circle cx="85" cy="45" r="3" fill="#eb4034" />
+      <circle cx="82" cy="60" r="2" fill="#eb4034" />
+      <path d="M30,120 Q50,60 70,120 Z" fill="#142129" />
+      <circle cx="45" cy="95" r="4" fill="#fcba03" />
+      <circle cx="55" cy="95" r="4" fill="#fcba03" />
+    </svg>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="logo">Aakanksha.</div>
+    <div class="nav-links">
+      <a href="journey-map.html?section=experience" target="_blank">The Voyages</a>
+      <a href="journey-map.html?section=skills" target="_blank">The Arsenal</a>
+      <a href="journey-map.html?section=education" target="_blank">The Academy</a>
+      <!-- FEATURE 2 TOGGLE -->
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage (Constellations)">🏮</div>
+      <!-- PARROT COMPANION -->
+      <div class="parrot-wrapper" id="parrotWrapper" title="Click me! Squawk!">
+        <svg class="parrot-svg" id="parrotSvg" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="30" cy="45" rx="14" ry="16" fill="#e63946"/>
+          <ellipse cx="21" cy="47" rx="8" ry="11" fill="#c1121f" transform="rotate(-10 21 47)"/>
+          <path d="M22,60 Q17,72 13,78 Q19,70 25,68 Q21,74 27,80 Q29,72 33,70 Q39,75 41,80 Q38,72 36,66 Z" fill="#4361ee"/>
+          <circle cx="30" cy="26" r="13" fill="#e63946"/>
+          <path d="M38,29 Q44,26 42,32 Q40,35 36,32 Z" fill="#ffb703"/>
+          <circle cx="35" cy="22" r="4" fill="white"/>
+          <circle cx="36" cy="22" r="2.5" fill="#1a1a2e"/>
+          <circle cx="37" cy="21" r="0.8" fill="white"/>
+          <path d="M22,14 Q20,5 24,9 Q25,3 28,8 Q29,2 32,7 Q36,4 34,10" fill="#f77f00" stroke="#e63946" stroke-width="0.5"/>
+          <path d="M23,60 L19,67 M23,60 L21,69 M23,60 L25,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+          <path d="M37,60 L33,67 M37,60 L35,69 M37,60 L39,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="parrot-bubble" id="parrotBubble"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO SECTION (WANTED POSTER) -->
+    <section class="hero" id="home">
+      <div class="wanted-poster">
+        <div class="wanted-header">Wanted By Authority of Code</div>
+        <h1 class="wanted-name">Aakanksha Kashyap</h1>
+        <div class="wanted-bounty">Bounty: High Enterprise Value</div>
+        <p class="wanted-bio">
+          Notorious Software Captain known for sinking 32 critical Open Redirect vulnerabilities, hijacking legacy FDB
+          systems into modern GCT frameworks, and smuggling AI workflows into the deepest enterprise pipelines. Approach
+          with extreme offers.
+        </p>
+        <div class="loot-container" style="justify-content: center;">
+          <a href="#experience" class="loot-tag" style="text-decoration:none; padding:10px 20px; font-size:1.1rem;">View
+            the Logbook ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION — 3D LOGBOOK -->
+    <section id="experience">
+      <div class="section-header">
+        <h2 class="section-title">The Captain's Logbook</h2>
+      </div>
+
+      <div class="logbook-desk">
+        <div class="logbook-scene">
+          <div class="logbook" id="logbook">
+
+            <!-- SPREAD 0: Title + Verizon -->
+            <div class="book-spread active" id="spread-0">
+              <div class="book-page left-page">
+                <div class="title-page-header">Est. 2021 · High Seas of Code</div>
+                <div class="page-decoration">⚓</div>
+                <div class="page-title" style="text-align:center; font-size:2.2rem;">The<br>Captain's<br>Logbook</div>
+                <hr class="page-rule">
+                <p style="font-family:var(--font-serif); font-style:italic; text-align:center; font-size:0.9rem; color:#6b4c35; margin-top:1rem;">"A record of all<br>naval expeditions,<br>conquests &amp; loot."</p>
+                <div class="page-decoration" style="font-size:1.2rem; margin-top:1.5rem;">🧭</div>
+                <div class="page-number left">Page I</div>
+              </div>
+              <div class="book-page right-page" id="page-verizon">
+                <div class="page-title">Verizon</div>
+                <div class="page-subtitle">Software Developer · Ericsson Fleet</div>
+                <div class="page-date-tag">2024 — Present</div>
+                <hr class="page-rule">
+                <div class="page-entry cannon-entry" id="fortifyEntry">
+                  Fortify: Eliminated all 32 critical Open Redirect vulnerabilities (100% remediation) via Fortify SAST — phishing risk eradicated fleet-wide.
+                  <span class="cannon-wrapper" id="cannonWrapper">
+                    <svg id="cannonSvg" class="cannon-svg" viewBox="0 0 90 50" width="90" height="50" title="Fire the cannon!">
+                      <!-- Wheels -->
+                      <circle cx="18" cy="41" r="9" fill="#3a2211" stroke="#1a0e08" stroke-width="2"/>
+                      <circle cx="18" cy="41" r="3.5" fill="#7a5219"/>
+                      <circle cx="18" cy="41" r="1.5" fill="#1a0e08"/>
+                      <circle cx="44" cy="41" r="9" fill="#3a2211" stroke="#1a0e08" stroke-width="2"/>
+                      <circle cx="44" cy="41" r="3.5" fill="#7a5219"/>
+                      <circle cx="44" cy="41" r="1.5" fill="#1a0e08"/>
+                      <!-- Axle -->
+                      <line x1="9" y1="41" x2="53" y2="41" stroke="#2a1a0a" stroke-width="3"/>
+                      <!-- Carriage -->
+                      <rect x="7" y="29" width="50" height="14" rx="3" fill="#5c3a21" stroke="#3a2211" stroke-width="1.5"/>
+                      <!-- Barrel group — rotates around pivot (26, 36) -->
+                      <g id="cannonBarrelGroup">
+                        <!-- Breech (pivot anchor) -->
+                        <circle cx="26" cy="36" r="8" fill="#666" stroke="#444" stroke-width="1.5"/>
+                        <!-- Barrel body -->
+                        <rect x="26" y="30" width="54" height="12" rx="5" fill="#7a7a7a" stroke="#555" stroke-width="1.5"/>
+                        <!-- Muzzle band -->
+                        <rect x="73" y="31" width="8" height="10" rx="3" fill="#636363" stroke="#444" stroke-width="1"/>
+                        <!-- Highlight sheen -->
+                        <rect x="30" y="31" width="42" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
+                      </g>
+                    </svg>
+                    <span class="cannon-hint-label" id="cannonHintLabel">fire!</span>
+                  </span>
+                </div>
+                <div class="page-entry">MQTT Migration: Extended GCT with MQTT/CORBA dual-protocol architecture for RHEL 8 server.</div>
+                <div class="page-entry">FDB Migration: Migrated DB access layer from NSRS to GCT; frontend modernised from legacy HTML to JSP.</div>
+                <div class="page-loot-row">
+                  <span class="page-loot-tag">Java</span>
+                  <span class="page-loot-tag">Spring Boot</span>
+                  <span class="page-loot-tag">MQTT</span>
+                </div>
+                <div class="page-number right">Page II</div>
+              </div>
+            </div>
+
+            <!-- SPREAD 1: Ericsson Product + Closing -->
+            <div class="book-spread" id="spread-1">
+              <div class="book-page left-page">
+                <div class="page-title">Ericsson</div>
+                <div class="page-subtitle">Product Developer · Product Development</div>
+                <div class="page-date-tag">2022 — 2023</div>
+                <hr class="page-rule">
+                <div class="page-entry">Built and enhanced the NWT MapView platform used by 100+ network engineers across German B2B telecom clients.</div>
+                <div class="page-entry">Refactored NWT MapView codebase from legacy structure to modular ES module architecture, improving maintainability and scalability.</div>
+                <div class="page-loot-row" style="margin-top:1rem;">
+                  <span class="page-loot-tag">JavaScript</span>
+                  <span class="page-loot-tag">WebPack</span>
+                </div>
+                <div class="page-number left">Page III</div>
+              </div>
+              <div class="book-page right-page">
+                <div class="page-decoration" style="margin-top:2rem;">🏴‍☠️</div>
+                <div class="page-title" style="text-align:center; font-size:1.8rem; margin-top:1rem;">~ End of<br>Known Log ~</div>
+                <hr class="page-rule">
+                <p style="font-family:var(--font-serif); font-style:italic; text-align:center; font-size:0.9rem; color:#6b4c35; margin-top:1.5rem;">"The best Captain<br>is the one who<br>never stops sailing."</p>
+                <div class="page-decoration" style="font-size:1.2rem; margin-top:2rem;">⚓</div>
+                <div class="page-number right">Page IV</div>
+              </div>
+            </div>
+
+            <!-- BOOK SPINE -->
+            <div class="book-spine"></div>
+
+            <!-- PAGE FLIPPER (JS-controlled) -->
+            <div id="pageFlipper">
+              <div id="flipFront"></div>
+              <div id="flipBack"></div>
+            </div>
+
+          </div><!-- /logbook -->
+        </div><!-- /logbook-scene -->
+
+        <div class="book-controls">
+          <button class="book-btn" id="prevPageBtn" disabled>← Turn Back</button>
+          <span class="page-indicator" id="pageIndicator">Page 1 of 2</span>
+          <button class="book-btn" id="nextPageBtn">Turn Page →</button>
+        </div>
+      </div><!-- /logbook-desk -->
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills">
+      <div class="section-header">
+        <h2 class="section-title">The Buried Arsenal</h2>
+      </div>
+
+      <div class="treasure-grid" id="arsenalGrid">
+        <div class="treasure-map"
+          style="grid-column: 1 / -1; background: var(--parchment-dark); border-color: var(--red-flag);">
+          <h3 class="treasure-title" style="color:var(--red-flag);">AI & Productivity Tools Expert</h3>
+          <p style="font-family: var(--font-serif); font-size: 1.1rem; margin-bottom: 1rem;">Seamlessly integrates AI
+            tooling directly into the development workflow to automate scaffolding and accelerate delivery speed.</p>
+          <div class="loot-container">
+            <!-- FEATURE 3: CANNONBALLS -->
+            <span class="cannonball">Claude</span>
+            <span class="cannonball">OpenClaw</span>
+            <span class="cannonball">Copilot</span>
+            <span class="cannonball">Cursor</span>
+          </div>
+        </div>
+
+        <div class="treasure-map">
+          <h3 class="treasure-title">Core Engine</h3>
+          <div class="loot-container">
+            <span class="cannonball">Java</span>
+            <span class="cannonball">Spring</span>
+            <span class="cannonball">REST API</span>
+          </div>
+        </div>
+
+        <div class="treasure-map">
+          <h3 class="treasure-title">Hull Assets</h3>
+          <div class="loot-container">
+            <span class="cannonball">JS</span>
+            <span class="cannonball">HTML5</span>
+            <span class="cannonball">CSS3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION SECTION -->
+    <section id="education">
+      <div class="section-header">
+        <h2 class="section-title">The Royal Academies</h2>
+      </div>
+      <div class="treasure-grid">
+        <div class="treasure-map">
+          <div class="plank-date" style="border-color:var(--ink); color:var(--ink);">2022</div>
+          <h3 class="treasure-title">Master's: Java Full Stack</h3>
+          <p style="font-family: var(--font-serif); font-weight: bold; font-size:1.2rem;">Simplilearn</p>
+        </div>
+        <div class="treasure-map">
+          <div class="plank-date" style="border-color:var(--ink); color:var(--ink);">2017 — 2021</div>
+          <h3 class="treasure-title">B.Tech in IT</h3>
+          <p style="font-family: var(--font-serif); font-weight: bold; font-size:1.2rem;">Techno India College</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TARGET CHEST -->
+    <section id="contact" style="min-height: 50vh; text-align:center;">
+      <h2 class="section-title" style="margin-bottom: 2rem;">Claim The Bounty</h2>
+
+      <div class="treasure-chest-wrapper" id="treasureChest">
+        <div class="chest-glow"></div>
+        <div class="chest-base"></div>
+        <div class="chest-lid"></div>
+        <div class="chest-loot">
+          <div class="loot-scroll">
+            <h3>Contact Scroll</h3>
+            <a href="mailto:aakanksha@example.com">Email</a>
+            <a href="https://linkedin.com">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 2rem; font-family: var(--font-serif); font-style:italic;" id="chestHint">Click to open...
+      </p>
+    </section>
+  </main>
+
+  <!-- FEATURE 4: MESSAGE IN A BOTTLE -->
+  <div class="bottle-wrapper" id="bottleWrapper">
+    <div class="bottle-trigger" id="bottleTrigger" title="Send a message to sea">🍾</div>
+    <div class="bottle-modal">
+      <h4>Message into the Sea</h4>
+      <textarea placeholder="Write your letter to Captain Aakanksha here..."></textarea>
+      <button class="bottle-send" id="bottleSend">Send to Sea</button>
+    </div>
+  </div>
+
+  <script>
+    // ── SOUND EFFECTS ENGINE ──────────────────────────────────────────────
+    const sfx = (() => {
+      let ctx = null;
+      function ac() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') ctx.resume();
+        return ctx;
+      }
+
+      // Deep cannon BOOM: low sine rumble + noise burst
+      function cannonBoom() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter();
+        lp.type = 'lowpass'; lp.frequency.value = 110;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(75, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(28, c.currentTime + 0.55);
+        g.gain.setValueAtTime(1.4, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.65);
+        osc.connect(lp); lp.connect(g); g.connect(c.destination);
+        osc.start(); osc.stop(c.currentTime + 0.7);
+        // noise crack
+        const bsz = c.sampleRate * 0.12, buf = c.createBuffer(1, bsz, c.sampleRate);
+        for (let i = 0; i < bsz; i++) buf.getChannelData(0)[i] = Math.random() * 2 - 1;
+        const ns = c.createBufferSource(); ns.buffer = buf;
+        const nf = c.createBiquadFilter(); nf.type = 'bandpass'; nf.frequency.value = 180; nf.Q.value = 0.6;
+        const ng = c.createGain(); ng.gain.setValueAtTime(1.0, c.currentTime); ng.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.12);
+        ns.connect(nf); nf.connect(ng); ng.connect(c.destination); ns.start();
+      }
+
+      // Cannonball WHOOSH: descending sawtooth sweep
+      function cannonWhoosh() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter();
+        lp.type = 'lowpass'; lp.frequency.value = 900;
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(520, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(70, c.currentTime + 0.6);
+        g.gain.setValueAtTime(0.18, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.6);
+        osc.connect(lp); lp.connect(g); g.connect(c.destination);
+        osc.start(); osc.stop(c.currentTime + 0.65);
+      }
+
+      // Bug SPLAT: low thud + crunchy high-pass noise burst
+      function bugSplat() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(35, c.currentTime + 0.14);
+        g.gain.setValueAtTime(1.0, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.15);
+        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 0.18);
+        // crunch
+        const bsz = c.sampleRate * 0.07, buf = c.createBuffer(1, bsz, c.sampleRate);
+        for (let i = 0; i < bsz; i++) buf.getChannelData(0)[i] = Math.random() * 2 - 1;
+        const ns = c.createBufferSource(); ns.buffer = buf;
+        const hf = c.createBiquadFilter(); hf.type = 'highpass'; hf.frequency.value = 2500;
+        const ng = c.createGain(); ng.gain.setValueAtTime(0.6, c.currentTime); ng.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.07);
+        ns.connect(hf); hf.connect(ng); ng.connect(c.destination); ns.start();
+      }
+
+      // Page TURN: bandpass-filtered paper rustle
+      function pageTurn() {
+        const c = ac();
+        const bsz = Math.floor(c.sampleRate * 0.38), buf = c.createBuffer(1, bsz, c.sampleRate);
+        for (let i = 0; i < bsz; i++) buf.getChannelData(0)[i] = Math.random() * 2 - 1;
+        const ns = c.createBufferSource(); ns.buffer = buf;
+        const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 1.8;
+        const g = c.createGain();
+        g.gain.setValueAtTime(0.001, c.currentTime);
+        g.gain.linearRampToValueAtTime(0.28, c.currentTime + 0.07);
+        g.gain.setValueAtTime(0.28, c.currentTime + 0.18);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.38);
+        ns.connect(bp); bp.connect(g); g.connect(c.destination); ns.start();
+      }
+
+      // Parrot SQUAWK: three quick chirp sweeps
+      function parrotSquawk() {
+        const c = ac();
+        [[0, 1200, 680], [0.11, 820, 1280], [0.22, 1350, 880]].forEach(([delay, f0, f1]) => {
+          const osc = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter();
+          lp.type = 'lowpass'; lp.frequency.value = 3000;
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(f0, c.currentTime + delay);
+          osc.frequency.exponentialRampToValueAtTime(f1, c.currentTime + delay + 0.09);
+          g.gain.setValueAtTime(0.1, c.currentTime + delay); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + 0.11);
+          osc.connect(lp); lp.connect(g); g.connect(c.destination);
+          osc.start(c.currentTime + delay); osc.stop(c.currentTime + delay + 0.13);
+        });
+      }
+
+      // Treasure chest CREAK: distorted sawtooth pitch-wobble
+      function chestCreak() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain(), ws = c.createWaveShaper();
+        const curve = new Float32Array(256);
+        for (let i = 0; i < 256; i++) { const x = (i * 2) / 256 - 1; curve[i] = (Math.PI + 180) * x / (Math.PI + 180 * Math.abs(x)); }
+        ws.curve = curve;
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(145, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(82, c.currentTime + 0.22);
+        osc.frequency.exponentialRampToValueAtTime(165, c.currentTime + 0.48);
+        g.gain.setValueAtTime(0.32, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.55);
+        osc.connect(ws); ws.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 0.6);
+      }
+
+      // Lantern CLICK: soft thump + flame flicker tone
+      function lanternClick() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(340, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(75, c.currentTime + 0.22);
+        g.gain.setValueAtTime(0.45, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.25);
+        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 0.28);
+        // brief high shimmer
+        const o2 = c.createOscillator(), g2 = c.createGain();
+        o2.type = 'sine'; o2.frequency.value = 2200;
+        g2.gain.setValueAtTime(0.06, c.currentTime); g2.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.08);
+        o2.connect(g2); g2.connect(c.destination); o2.start(); o2.stop(c.currentTime + 0.1);
+      }
+
+      // Bottle cork POP: pitched click
+      function bottlePop() {
+        const c = ac();
+        const osc = c.createOscillator(), g = c.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, c.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(120, c.currentTime + 0.08);
+        g.gain.setValueAtTime(0.55, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.12);
+        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 0.15);
+      }
+
+      // Bottle SPLASH: glass ring + water noise
+      function bottleSplash() {
+        const c = ac();
+        // glass clink
+        const osc = c.createOscillator(), g = c.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(860, c.currentTime); osc.frequency.exponentialRampToValueAtTime(680, c.currentTime + 0.5);
+        g.gain.setValueAtTime(0.22, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.55);
+        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 0.6);
+        // water splash noise
+        const bsz = Math.floor(c.sampleRate * 0.22), buf = c.createBuffer(1, bsz, c.sampleRate);
+        for (let i = 0; i < bsz; i++) buf.getChannelData(0)[i] = (Math.random() * 2 - 1) * (1 - i / bsz);
+        const ns = c.createBufferSource(); ns.buffer = buf;
+        const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.9;
+        const ng = c.createGain(); ng.gain.setValueAtTime(0.22, c.currentTime); ng.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.22);
+        ns.connect(bp); bp.connect(ng); ng.connect(c.destination); ns.start();
+      }
+
+      return { cannonBoom, cannonWhoosh, bugSplat, pageTurn, parrotSquawk, chestCreak, lanternClick, bottlePop, bottleSplash };
+    })();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // CLEAR BURN IN SO WE CAN INTERACT
+      setTimeout(() => {
+        const burnLayer = document.getElementById('burnInLayer');
+        if (burnLayer) burnLayer.style.display = 'none';
+      }, 2500);
+
+      // FEATURE 2: NIGHT VOYAGE & CONSTELLATION CANVAS
+      const nightToggle = document.getElementById('nightToggle');
+      const canvas = document.getElementById('starCanvas');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      let isNightMode = false;
+      let starAnimId;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function createStars() {
+        stars = [];
+        for (let i = 0; i < 80; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            radius: Math.random() * 2 + 1
+          });
+        }
+      }
+
+      function drawStars() {
+        if (!isNightMode) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1;
+
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          s.x += s.vx; s.y += s.vy;
+          if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
+          if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Connect stars
+          for (let j = i + 1; j < stars.length; j++) {
+            const s2 = stars[j];
+            const dist = Math.hypot(s.x - s2.x, s.y - s2.y);
+            if (dist < 150) {
+              ctx.beginPath();
+              ctx.moveTo(s.x, s.y);
+              ctx.lineTo(s2.x, s2.y);
+              ctx.stroke();
+            }
+          }
+        }
+        starAnimId = requestAnimationFrame(drawStars);
+      }
+
+      nightToggle.addEventListener('click', () => {
+        sfx.lanternClick();
+        isNightMode = !isNightMode;
+        document.body.classList.toggle('night-mode');
+        if (isNightMode) {
+          createStars();
+          drawStars();
+        } else {
+          cancelAnimationFrame(starAnimId);
+        }
+      });
+
+      // FEATURE 3: IRON CANNONBALLS COLLISION PHYSICS
+      const cannonballs = document.querySelectorAll('.cannonball');
+      const arsenal = document.getElementById('arsenalGrid');
+
+      // We only run physics when hovering over the Arsenal area to save CPU
+      arsenal.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        cannonballs.forEach(ball => {
+          ball.classList.add('repelled');
+          const rect = ball.getBoundingClientRect();
+          const ballX = rect.left + rect.width / 2;
+          const ballY = rect.top + rect.height / 2;
+
+          const dx = ballX - mouseX;
+          const dy = ballY - mouseY;
+          const distance = Math.hypot(dx, dy);
+
+          if (distance < 120) {
+            // Push away proportional to distance
+            const force = (120 - distance) / 3;
+            const pushX = (dx / distance) * force;
+            const pushY = (dy / distance) * force;
+
+            // Random spin
+            const spin = dx;
+            ball.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${spin}deg)`;
+          } else {
+            // Return spring
+            ball.style.transform = `translate(0px, 0px) rotate(0deg)`;
+          }
+        });
+      });
+      // Clear force when mouse leaves
+      arsenal.addEventListener('mouseleave', () => {
+        cannonballs.forEach(ball => {
+          ball.classList.remove('repelled');
+          ball.style.transform = `translate(0px, 0px) rotate(0deg)`;
+        });
+      });
+
+      // FEATURE 4: MESSAGE IN A BOTTLE
+      const bottleWrapper = document.getElementById('bottleWrapper');
+      const bottleTrigger = document.getElementById('bottleTrigger');
+      const bottleSend = document.getElementById('bottleSend');
+
+      bottleTrigger.addEventListener('click', () => {
+        sfx.bottlePop();
+        bottleWrapper.classList.toggle('open');
+      });
+
+      bottleSend.addEventListener('click', () => {
+        sfx.bottleSplash();
+        bottleWrapper.classList.remove('open');
+        setTimeout(() => {
+          bottleWrapper.classList.add('sent');
+        }, 500);
+      });
+
+      // EXISTING: PARALLAX ORA SHIP & KRAKEN
+      const ship = document.getElementById('pirateShip');
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const kraken = document.getElementById('kraken');
+      let lastScrollY = window.scrollY;
+      let krakenActive = false;
+
+      window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        // Ship Movement
+        const progress = scrolled / Math.max(1, docHeight);
+        ship.style.transform = `translateX(${progress * (window.innerWidth - 200)}px) translateY(${Math.sin(progress * 10) * 20}px) rotate(${Math.cos(progress * Math.PI * 4) * 15}deg)`;
+        // Kraken Speed Check
+        const speed = lastScrollY - scrolled;
+        lastScrollY = scrolled;
+        if (speed > 120 && !krakenActive) {
+          krakenActive = true; kraken.classList.add('attack');
+          setTimeout(() => { kraken.classList.remove('attack'); setTimeout(() => { krakenActive = false; }, 1000); }, 3000);
+        }
+      });
+
+      // EXISTING: CHEST & AUDIO
+      const chest = document.getElementById('treasureChest');
+      const hint = document.getElementById('chestHint');
+      chest.addEventListener('click', () => {
+        sfx.chestCreak();
+        chest.classList.toggle('opened');
+        hint.textContent = chest.classList.contains('opened') ? "Bounty revealed!" : "Click to open...";
+      });
+
+      // ── PARROT COMPANION ──────────────────────────────────────────
+      const parrotWrapper = document.getElementById('parrotWrapper');
+      const parrotBubble  = document.getElementById('parrotBubble');
+      const squawks = [
+        "Squawk! 32 Critical Vulnerabilities SUNK! Squawk!",
+        "Java Master of the High Seas! Rawk!",
+        "100% Remediation Rate! No Bug Survives Me!",
+        "MQTT + CORBA Dual-Protocol Architect! Squawk!",
+        "AI-Powered Dev! Claude, Copilot & Cursor! Rawk!",
+        "100+ Engineers Used My MapView Platform! Squawk!",
+        "B.Tech IT + Java Full Stack Master! Rawk!"
+      ];
+      let squawkIdx = 0, squawkTimer;
+      parrotWrapper.addEventListener('click', () => {
+        sfx.parrotSquawk();
+        parrotBubble.textContent = squawks[squawkIdx];
+        squawkIdx = (squawkIdx + 1) % squawks.length;
+        parrotWrapper.classList.remove('squawking');
+        void parrotWrapper.offsetWidth; // reflow to restart animation
+        parrotWrapper.classList.add('squawking');
+        clearTimeout(squawkTimer);
+        squawkTimer = setTimeout(() => parrotWrapper.classList.remove('squawking'), 3500);
+      });
+
+      // ── 3D LOGBOOK PAGE FLIP ──────────────────────────────────────
+      const logbookEl   = document.getElementById('logbook');
+      const bookSpreads = Array.from(document.querySelectorAll('.book-spread'));
+      const prevPageBtn = document.getElementById('prevPageBtn');
+      const nextPageBtn = document.getElementById('nextPageBtn');
+      const pageIndicator = document.getElementById('pageIndicator');
+      const pageFlipper = document.getElementById('pageFlipper');
+      const flipFront   = document.getElementById('flipFront');
+      const flipBack    = document.getElementById('flipBack');
+      let currentPage   = 0;
+      let isFlipping    = false;
+
+      function updateBookControls() {
+        prevPageBtn.disabled = currentPage === 0;
+        nextPageBtn.disabled = currentPage === bookSpreads.length - 1;
+        pageIndicator.textContent = `Page ${currentPage + 1} of ${bookSpreads.length}`;
+      }
+
+      function doFlip(direction) {
+        if (isFlipping) return;
+        sfx.pageTurn();
+        const nextIdx = currentPage + (direction === 'next' ? 1 : -1);
+        if (nextIdx < 0 || nextIdx >= bookSpreads.length) return;
+        isFlipping = true;
+        logbookEl.classList.add('is-flipping');
+
+        if (direction === 'next') {
+          pageFlipper.style.cssText = 'position:absolute;top:0;right:0;left:auto;width:50%;height:100%;transform-style:preserve-3d;z-index:15;transform-origin:left center;transform:rotateY(0deg);opacity:1;transition:none;';
+          flipFront.style.cssText = 'position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:1.6rem 1.6rem 2.5rem;overflow:hidden;background:linear-gradient(to left,#f0dfc0,#fdf5e6);border-radius:0 4px 4px 0;';
+          flipBack.style.cssText  = 'position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);padding:1.6rem 1.6rem 2.5rem;overflow:hidden;background:linear-gradient(to right,#f0dfc0,#fdf5e6);border-radius:4px 0 0 4px;';
+          flipFront.innerHTML = bookSpreads[currentPage].querySelector('.right-page').innerHTML;
+          flipBack.innerHTML  = bookSpreads[nextIdx].querySelector('.left-page').innerHTML;
+        } else {
+          pageFlipper.style.cssText = 'position:absolute;top:0;left:0;right:auto;width:50%;height:100%;transform-style:preserve-3d;z-index:15;transform-origin:right center;transform:rotateY(0deg);opacity:1;transition:none;';
+          flipFront.style.cssText = 'position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:1.6rem 1.6rem 2.5rem;overflow:hidden;background:linear-gradient(to right,#f0dfc0,#fdf5e6);border-radius:4px 0 0 4px;';
+          flipBack.style.cssText  = 'position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);padding:1.6rem 1.6rem 2.5rem;overflow:hidden;background:linear-gradient(to left,#f0dfc0,#fdf5e6);border-radius:0 4px 4px 0;';
+          flipFront.innerHTML = bookSpreads[currentPage].querySelector('.left-page').innerHTML;
+          flipBack.innerHTML  = bookSpreads[nextIdx].querySelector('.right-page').innerHTML;
+        }
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          pageFlipper.style.transition = 'transform 1.1s cubic-bezier(0.645,0.045,0.355,1.000)';
+          pageFlipper.style.transform  = direction === 'next' ? 'rotateY(-180deg)' : 'rotateY(180deg)';
+        }));
+
+        // Swap underlying spread at the midpoint (page is edge-on = invisible)
+        setTimeout(() => {
+          bookSpreads[currentPage].classList.remove('active');
+          currentPage = nextIdx;
+          bookSpreads[currentPage].classList.add('active');
+        }, 550);
+
+        setTimeout(() => {
+          pageFlipper.style.opacity = '0';
+          pageFlipper.style.transition = 'none';
+          logbookEl.classList.remove('is-flipping');
+          isFlipping = false;
+          updateBookControls();
+        }, 1150);
+      }
+
+      nextPageBtn.addEventListener('click', () => doFlip('next'));
+      prevPageBtn.addEventListener('click', () => doFlip('prev'));
+      updateBookControls();
+
+      // ── CANNON FIRE ───────────────────────────────────────────────
+      document.addEventListener('click', (e) => {
+        const cannonSvg = e.target.closest('#cannonSvg');
+        if (!cannonSvg) return;
+
+        const barrelGroup = document.getElementById('cannonBarrelGroup');
+        if (!barrelGroup) return;
+
+        sfx.cannonBoom();
+
+        // Kill hint label after first fire
+        const hintLabel = document.getElementById('cannonHintLabel');
+        if (hintLabel) {
+          hintLabel.style.transition = 'opacity 0.4s';
+          hintLabel.style.opacity = '0';
+          setTimeout(() => hintLabel.remove(), 400);
+        }
+        cannonSvg.style.animation = 'none';
+
+        // Spawn bug on right side of screen so cannon always aims forward
+        const bugX = window.innerWidth * 0.45 + Math.random() * (window.innerWidth * 0.48);
+        const bugY = 80 + Math.random() * (window.innerHeight - 200);
+        const bugCenterX = bugX + 18;
+        const bugCenterY = bugY + 18;
+
+        const bug = document.createElement('div');
+        bug.textContent = '🐛';
+        bug.style.cssText = `position:fixed;font-size:2.2rem;left:${bugX}px;top:${bugY}px;z-index:99998;pointer-events:none;transition:transform 0.3s;line-height:1;`;
+        document.body.appendChild(bug);
+        const wriggle = setInterval(() => {
+          bug.style.transform = `rotate(${(Math.random()-0.5)*30}deg) scale(${0.9+Math.random()*0.2})`;
+        }, 150);
+
+        // Cannon pivot in screen coords (SVG coordinate 26,36)
+        const svgRect = cannonSvg.getBoundingClientRect();
+        const scaleX  = svgRect.width  / 90;
+        const scaleY  = svgRect.height / 50;
+        const pivotSX = svgRect.left + 26 * scaleX;
+        const pivotSY = svgRect.top  + 36 * scaleY;
+
+        // Aim angle (clamped so barrel doesn't go backwards)
+        const rawAngle    = Math.atan2(bugCenterY - pivotSY, bugCenterX - pivotSX) * (180 / Math.PI);
+        const aimAngle    = Math.max(-65, Math.min(65, rawAngle));
+
+        // Rotate barrel to aim
+        barrelGroup.style.transform = `rotate(${aimAngle}deg)`;
+
+        // Fire cannonball after barrel finishes rotating
+        setTimeout(() => {
+          // Compute muzzle tip screen position after rotation
+          // Muzzle tip in SVG coords: (82, 36) → relative to pivot: (56, 0)
+          const angleRad  = aimAngle * Math.PI / 180;
+          const muzzleRelX = 56, muzzleRelY = 0;
+          const rotX = muzzleRelX * Math.cos(angleRad) - muzzleRelY * Math.sin(angleRad);
+          const rotY = muzzleRelX * Math.sin(angleRad) + muzzleRelY * Math.cos(angleRad);
+          const ballStartX = pivotSX + rotX * scaleX;
+          const ballStartY = pivotSY + rotY * scaleY;
+
+          sfx.cannonWhoosh();
+
+          // Smoke puff from muzzle
+          const smoke = document.createElement('div');
+          smoke.textContent = '💨';
+          smoke.style.cssText = `position:fixed;font-size:2rem;left:${ballStartX}px;top:${ballStartY}px;z-index:99997;pointer-events:none;transform:translate(-50%,-50%);animation:smokePuff 0.7s ease-out forwards;`;
+          document.body.appendChild(smoke);
+          setTimeout(() => smoke.remove(), 750);
+
+          // Cannonball travels from muzzle to bug
+          const ball = document.createElement('div');
+          ball.textContent = '⚫';
+          ball.style.cssText = `position:fixed;font-size:1.5rem;left:${ballStartX}px;top:${ballStartY}px;z-index:99999;pointer-events:none;line-height:1;transform:translate(-50%,-50%);transition:none;`;
+          document.body.appendChild(ball);
+
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            ball.style.transition = 'left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.45,0,0.55,1), font-size 0.65s';
+            ball.style.left      = `${bugCenterX}px`;
+            ball.style.top       = `${bugCenterY}px`;
+            ball.style.fontSize  = '0.4rem';
+          }));
+
+          // Impact explosion
+          setTimeout(() => {
+            sfx.bugSplat();
+            clearInterval(wriggle);
+            bug.remove();
+            ball.remove();
+
+            // Barrel returns to rest
+            setTimeout(() => { barrelGroup.style.transform = 'rotate(0deg)'; }, 300);
+
+            const pieces = ['💥','✨','🔥','⚡','💫','🐛','💀'];
+            const container = document.createElement('div');
+            container.style.cssText = `position:fixed;left:${bugCenterX}px;top:${bugCenterY}px;z-index:100000;pointer-events:none;`;
+            for (let i = 0; i < 8; i++) {
+              const p    = document.createElement('span');
+              p.textContent = pieces[i % pieces.length];
+              const ang  = (i / 8) * Math.PI * 2;
+              const dist = 55 + Math.random() * 65;
+              const tx   = Math.cos(ang) * dist;
+              const ty   = Math.sin(ang) * dist;
+              p.style.cssText = `position:absolute;font-size:${0.8+Math.random()*0.9}rem;--tx:${tx}px;--ty:${ty}px;animation:cannonExplode 0.8s ease-out forwards;`;
+              container.appendChild(p);
+            }
+            document.body.appendChild(container);
+            setTimeout(() => container.remove(), 850);
+          }, 680);
+
+        }, 600); // wait for barrel rotation to complete
+      });
+    });
+  </script>
+</body>
+
+</html>
