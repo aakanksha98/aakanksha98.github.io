@@ -7,7 +7,7 @@
   <title>Captain Aakanksha's Log</title>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Outfit:wght@300;600&family=Pirata+One&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap"
     rel="stylesheet">
 
   <style>
@@ -24,9 +24,9 @@
       --ocean-deep: #143542;
       --red-flag: #8a1f1b;
       --fog-color: rgba(234, 205, 161, 0.4);
-      --font-display: 'Pirata One', cursive;
-      --font-serif: 'IM Fell English', serif;
-      --font-body: 'Outfit', sans-serif;
+      --font-display: 'Uncial Antiqua', cursive;
+      --font-serif: 'Crimson Text', serif;
+      --font-body: 'Karla', sans-serif;
     }
 
     /* PIRATE THEME DESIGN SYSTEM (NIGHT VOYAGE) */
@@ -51,9 +51,10 @@
       background-color: var(--parchment);
       color: var(--ink);
       font-family: var(--font-body);
-      line-height: 1.6;
+      font-size: 17px;
+      line-height: 1.7;
       overflow-x: hidden;
-      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🔭</text></svg>") 16 16, auto;
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><path d='M28,2 Q34,13 20,22 L2,31 Q11,23 15,15 Q17,5 28,2 Z' fill='white' opacity='0.5'/><path d='M28,2 Q34,13 20,22 L9,27 Q19,17 23,9 Z' fill='%23f5e8a0'/><path d='M28,2 Q17,4 15,15 Q11,23 9,27 L2,31 Q9,24 13,17 Q15,7 28,2 Z' fill='%23e8d070'/><line x1='28' y1='2' x2='2' y2='31' stroke='%235c3a21' stroke-width='1.3' stroke-linecap='round'/><path d='M2,31 L7,26 L3,29 Z' fill='%233a2211'/><line x1='24' y1='6' x2='29' y2='9' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/><line x1='21' y1='10' x2='27' y2='14' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/><line x1='17' y1='15' x2='23' y2='20' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/><line x1='24' y1='6' x2='20' y2='3' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/><line x1='21' y1='10' x2='17' y2='7' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/><line x1='17' y1='15' x2='13' y2='11' stroke='%235c3a21' stroke-width='0.7' opacity='0.55'/></svg>") 2 31, default;
       transition: background-color 2s ease, color 2s ease;
     }
 
@@ -168,29 +169,6 @@
       opacity: 1;
     }
 
-    /* PARALLAX SHIP */
-    .ship-wrapper {
-      position: fixed;
-      left: 10%;
-      top: 10vh;
-      width: 120px;
-      height: 120px;
-      z-index: 50;
-      pointer-events: none;
-      transform-origin: center;
-      transition: transform 0.1s ease-out;
-      animation: bobbing 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes bobbing {
-      0% {
-        transform: translateY(0px) rotate(-3deg);
-      }
-
-      100% {
-        transform: translateY(15px) rotate(3deg);
-      }
-    }
 
     /* ROLLING FOG */
     .fog-container {
@@ -252,15 +230,21 @@
 
     .logo {
       font-family: var(--font-display);
-      font-size: 2.5rem;
+      font-size: 1.35rem;
       color: var(--wood-dark);
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-      transition: color 2s;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.08em;
+      padding-bottom: 4px;
+      padding-left: 2.4rem;
+      border-bottom: 1.5px solid var(--wood-dark);
+      transition: color 2s, border-color 2s;
+      white-space: nowrap;
     }
 
     body.night-mode .logo {
       color: #fdf5e6;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+      border-bottom-color: rgba(253,245,230,0.4);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
 
     .nav-links {
@@ -550,6 +534,254 @@
       border-bottom: 1px solid var(--ink-faded);
     }
 
+    /* ── WANTED POSTER ARSENAL ───────────────────────────────────── */
+    .arsenal-corkboard {
+      background: #8b6318;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+      padding: 2.8rem 2.5rem;
+      border-radius: 6px;
+      border: 14px solid var(--wood-dark);
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.4), 0 10px 35px rgba(0,0,0,0.35);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .wanted-poster {
+      background: #f2e0b0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 0.9 0 0 0 0 0 0.7 0 0 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+      position: relative;
+      padding: 1.8rem 1.6rem 2rem;
+      border: 2px solid #8b6318;
+      box-shadow: 4px 4px 0 #5c3a21, 9px 9px 14px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0s;
+    }
+
+    .wanted-poster:nth-child(1) { transform: rotate(-0.7deg); grid-column: 1 / -1; }
+    .wanted-poster:nth-child(2) { transform: rotate(-1.3deg); }
+    .wanted-poster:nth-child(3) { transform: rotate(0.8deg); }
+    .wanted-poster:nth-child(4) { transform: rotate(-0.5deg); }
+
+    .wanted-poster:hover {
+      transform: rotate(0deg) scale(1.025) !important;
+      box-shadow: 6px 6px 0 #5c3a21, 14px 14px 22px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+
+    /* Push-pin */
+    .wanted-poster::before {
+      content: '';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 20px;
+      background: radial-gradient(circle at 35% 35%, #ff7070, #cc1111 60%, #880000);
+      border-radius: 50%;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,210,210,0.45);
+      z-index: 10;
+    }
+
+    /* Torn-edge shadow at bottom */
+    .wanted-poster::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 4px; right: 4px; height: 6px;
+      background: rgba(0,0,0,0.18);
+      filter: blur(3px);
+      border-radius: 0 0 4px 4px;
+    }
+
+    .poster-heading-bar {
+      text-align: center;
+      border-top: 2.5px solid #3b2c1d;
+      border-bottom: 2.5px solid #3b2c1d;
+      padding: 3px 0;
+      margin-bottom: 0.7rem;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 0.4em;
+      color: #3b2c1d;
+    }
+
+    .poster-featured .poster-heading-bar { font-size: 1.8rem; }
+
+    .poster-name {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      text-align: center;
+      color: #2c1a0e;
+      line-height: 1.15;
+      margin-bottom: 0.35rem;
+    }
+
+    .poster-featured .poster-name { font-size: 2.8rem; }
+
+    .poster-desc {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.82rem;
+      text-align: center;
+      color: #6b4c35;
+      margin-bottom: 0;
+      line-height: 1.45;
+    }
+
+    .poster-stamp {
+      position: absolute;
+      top: 1.6rem;
+      right: 1.1rem;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      color: var(--red-flag);
+      border: 3px solid var(--red-flag);
+      padding: 5px 9px;
+      transform: rotate(13deg);
+      opacity: 0.8;
+      letter-spacing: 0.04em;
+      text-align: center;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .poster-divider {
+      border: none;
+      border-top: 1px dashed #9b7a3a;
+      margin: 0.9rem 0;
+    }
+
+    /* Powder keg bars */
+    .keg-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .poster-featured .keg-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 2.5rem;
+    }
+
+    .keg-item { display: flex; flex-direction: column; gap: 0.22rem; }
+
+    .keg-label {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #3b2c1d;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .keg-label span {
+      font-weight: 400;
+      font-style: italic;
+      opacity: 0.6;
+      text-transform: none;
+    }
+
+    .keg-track {
+      height: 18px;
+      background: #c8913a;
+      border-radius: 9px;
+      border: 2px solid #7a4a18;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.35), inset 0 -1px 3px rgba(255,210,120,0.2);
+    }
+
+    /* Barrel hoops */
+    .keg-track-inner {
+      position: absolute;
+      inset: 0;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .keg-track-inner::before,
+    .keg-track-inner::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 5px;
+      background: rgba(60,30,8,0.55);
+      z-index: 3;
+    }
+    .keg-track-inner::before { left: 27%; }
+    .keg-track-inner::after  { left: 63%; }
+
+    .keg-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #9b2206 0%, #c83a10 35%, #e05a20 70%, #f07030 100%);
+      border-radius: 7px;
+      transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .keg-fill::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 6%; right: 6%;
+      height: 3px;
+      background: rgba(255,255,255,0.22);
+      border-radius: 2px;
+    }
+
+    body.night-mode .wanted-poster {
+      background: #2a1f10;
+      background-image: none;
+      border-color: #5c3a21;
+      box-shadow: 4px 4px 0 #000, 9px 9px 14px rgba(0,0,0,0.6);
+    }
+    body.night-mode .poster-heading-bar,
+    body.night-mode .poster-name { color: #e2c98a; }
+    body.night-mode .poster-desc,
+    body.night-mode .keg-label   { color: #b8966a; }
+    body.night-mode .keg-label   { color: #d4b47a; }
+    body.night-mode .poster-divider { border-top-color: #5c3a21; }
+    body.night-mode .keg-track   { background: #5c3a21; border-color: #3a2211; }
+    body.night-mode .arsenal-corkboard { background: #1a0e04; border-color: #000; }
+
+    /* Skill tags replacing keg bars */
+    .poster-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .poster-skill-tag {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #3b2c1d;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1.5px solid #9b7a3a;
+      padding: 4px 11px;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .poster-skill-tag:hover {
+      background: rgba(139, 99, 24, 0.18);
+      transform: translateY(-1px);
+    }
+
+    body.night-mode .poster-skill-tag {
+      color: #e2c98a;
+      border-color: #5c3a21;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     /* TREASURE CHEST CONTACT */
     .treasure-chest-wrapper {
       position: relative;
@@ -780,21 +1012,6 @@
       background: #5c110e;
     }
 
-    /* FEATURE 5: THE KRAKEN EASTER EGG */
-    .kraken-container {
-      position: fixed;
-      bottom: -100vh;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 10000;
-      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .kraken-container.attack {
-      transform: translateY(-80vh);
-    }
 
     /* PARROT COMPANION */
     .parrot-wrapper {
@@ -822,15 +1039,16 @@
       100% { transform: scale(1.25) rotate(8deg);  }
     }
     .parrot-bubble {
-      position: absolute;
-      top: 56px;
-      right: 0;
+      position: fixed;
+      top: 70px;
+      right: 80px;
       background: #fdf5e6;
       border: 2px solid var(--wood-dark);
       border-radius: 12px;
-      padding: 8px 14px;
+      padding: 10px 18px;
       font-family: var(--font-serif);
-      font-size: 0.82rem;
+      font-size: 1rem;
+      line-height: 1.5;
       color: var(--ink);
       box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
       transform-origin: top right;
@@ -838,7 +1056,7 @@
       opacity: 0;
       transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.25s;
       z-index: 200;
-      max-width: 240px;
+      width: 280px;
       text-align: center;
       white-space: normal;
       pointer-events: none;
@@ -847,8 +1065,8 @@
       content: '';
       position: absolute;
       top: -10px;
-      right: 14px;
-      border: 5px solid transparent;
+      right: 20px;
+      border: 6px solid transparent;
       border-bottom-color: var(--wood-dark);
     }
     .parrot-wrapper.squawking .parrot-bubble {
@@ -1137,6 +1355,341 @@
       0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 1; }
       100% { transform: translate(calc(-50% + 30px), calc(-50% - 30px)) scale(3); opacity: 0; }
     }
+
+    /* ── STATS STRIP ─────────────────────────────────────────────── */
+    .stats-strip {
+      background: var(--wood);
+      border-top: 4px solid var(--wood-dark);
+      border-bottom: 4px solid var(--wood-dark);
+      padding: 2.2rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stats-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='w'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 0.6 0 0 0 0 0 0.3 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .stat-item {
+      text-align: center;
+      position: relative;
+      padding: 1rem 0.5rem;
+      border-right: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 3.2rem;
+      color: #f4d880;
+      line-height: 1;
+      display: block;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .stat-label {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(244, 220, 160, 0.7);
+      margin-top: 0.4rem;
+      display: block;
+    }
+    .stat-icon {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+    body.night-mode .stats-strip { background: #0f0a04; }
+    body.night-mode .stat-number  { color: #7dd3fc; }
+    body.night-mode .stat-label   { color: rgba(125, 211, 252, 0.65); }
+
+    /* ── DOWNLOAD RESUME BUTTON ──────────────────────────────────── */
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #d4af37, #aa8822);
+      color: #2c1a0e;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 12px 24px;
+      border: 2px solid #8b6914;
+      box-shadow: 4px 4px 0 #5c3a21;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .resume-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 #5c3a21;
+    }
+    .resume-btn:active {
+      transform: translateY(2px);
+      box-shadow: 2px 2px 0 #5c3a21;
+    }
+
+    /* ── MOBILE RESPONSIVENESS ───────────────────────────────────── */
+    @media (max-width: 900px) {
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .arsenal-corkboard { grid-template-columns: 1fr 1fr; }
+      .wanted-poster:nth-child(1) { grid-column: 1 / -1; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: PARALLAX OCEAN DEPTH HERO
+       ═══════════════════════════════════════════════ */
+    .hero { position: relative; overflow: hidden; }
+    .hero-ocean { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+    .hero-wave   { position:absolute; left:-5%; width:110%; will-change:transform; }
+    .hero-wave-1 { bottom:-6%;  opacity:0.18; }
+    .hero-wave-2 { bottom:-14%; opacity:0.11; }
+    .hero-wave-3 { bottom:-22%; opacity:0.07; }
+    .hero .wanted-poster { position:relative; z-index:2; }
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: TYPEWRITER INK BLEED
+       ═══════════════════════════════════════════════ */
+    .wanted-name { min-height:2.4em; line-height:1.1; }
+    .ink-letter {
+      display:inline-block; position:relative;
+      opacity:0; animation:inkSettle 0.55s ease-out forwards;
+    }
+    @keyframes inkSettle {
+      0%   { opacity:0; filter:blur(7px); transform:scale(1.4); color:var(--ocean-deep); }
+      45%  { opacity:1; filter:blur(2px); transform:scale(1.06); }
+      100% { opacity:1; filter:blur(0);   transform:scale(1); color:var(--red-flag); }
+    }
+    .ink-letter::after {
+      content:''; position:absolute; inset:-4px; border-radius:50%;
+      background:radial-gradient(circle,rgba(138,31,27,0.4) 0%,transparent 70%);
+      animation:inkBleed 0.65s ease-out forwards; pointer-events:none;
+    }
+    @keyframes inkBleed {
+      0%   { transform:scale(0.2); opacity:1; }
+      100% { transform:scale(2.8); opacity:0; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: SCROLL PAGE-CURL SECTION TRANSITIONS
+       ═══════════════════════════════════════════════ */
+    section.curl-target {
+      opacity:0;
+      transform:perspective(1400px) rotateY(9deg) translateX(70px) scale(0.97);
+      transition:opacity 0.95s ease, transform 0.95s cubic-bezier(0.16,1,0.3,1);
+    }
+    section.curl-target.is-even {
+      transform:perspective(1400px) rotateY(-9deg) translateX(-70px) scale(0.97);
+    }
+    section.curl-target.curl-in {
+      opacity:1;
+      transform:perspective(1400px) rotateY(0deg) translateX(0) scale(1);
+    }
+
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: ROPE SCROLLBAR
+       ═══════════════════════════════════════════════ */
+    .rope-scrollbar {
+      position:fixed; right:14px; top:90px; bottom:90px; width:22px;
+      z-index:500; pointer-events:none;
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .rope-line {
+      width:7px; flex:1;
+      background:repeating-linear-gradient(180deg,
+        #8b6318 0px,#8b6318 3px,#5c3a21 3px,#5c3a21 6px,
+        #a07830 6px,#a07830 9px,#5c3a21 9px,#5c3a21 12px);
+      border-radius:3px; opacity:0.65;
+      box-shadow:1px 0 3px rgba(0,0,0,0.3);
+    }
+    .rope-anchor {
+      font-size:1.3rem; position:absolute; left:50%;
+      transform:translate(-50%,-50%);
+      transition:top 0.18s ease-out;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      pointer-events:none; top:0;
+    }
+    .rope-top-ring, .rope-bot-ring {
+      width:14px; height:7px;
+      background:#6b4c1a; border-radius:50%; opacity:0.7;
+      flex-shrink:0;
+    }
+    @media (max-width:900px) { .rope-scrollbar { display:none; } }
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: CINEMATIC BOTTLE FULLSCREEN
+       ═══════════════════════════════════════════════ */
+    .bottle-cinematic-overlay {
+      position:fixed; inset:0; z-index:99000;
+      background:radial-gradient(ellipse at 60% 75%,#143542 0%,#0a1f2b 50%,#050d14 100%);
+      opacity:0; pointer-events:none; transition:opacity 0.6s ease;
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+    }
+    .bottle-cinematic-overlay.active { opacity:1; pointer-events:all; }
+    .cinematic-close {
+      position:absolute; top:22px; right:28px;
+      font-family:var(--font-serif); font-size:1rem; color:rgba(244,220,160,0.55);
+      cursor:pointer; letter-spacing:0.12em;
+      border:1px solid rgba(244,220,160,0.28); padding:6px 14px;
+      transition:color 0.2s,border-color 0.2s; z-index:10;
+    }
+    .cinematic-close:hover { color:#f4d880; border-color:#f4d880; }
+    .cinematic-shore {
+      position:absolute; bottom:0; left:0; right:0; height:35%;
+      background:linear-gradient(to top,#b89460 0%,#c8a870 40%,transparent 100%);
+      border-radius:55% 55% 0 0 / 18% 18% 0 0;
+    }
+    .cinematic-bottle {
+      position:absolute; font-size:6rem; bottom:26%;
+      left:-16%; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));
+      animation:bottleWashUp 2.3s cubic-bezier(0.16,1,0.3,1) 0.4s forwards; opacity:0;
+    }
+    @keyframes bottleWashUp {
+      0%   { left:-16%; opacity:0; transform:rotate(-28deg) scale(0.65); }
+      55%  { left:38%;  opacity:1; transform:rotate(10deg) scale(1.05); }
+      75%  { left:36%;  transform:rotate(-4deg) scale(1); }
+      100% { left:37%;  opacity:1; transform:rotate(4deg) scale(1); }
+    }
+    .cinematic-cork {
+      position:absolute; font-size:2rem; bottom:53%; left:38%; opacity:0;
+      pointer-events:none;
+      animation:corkPop 0.55s ease-out 2.9s forwards;
+    }
+    @keyframes corkPop {
+      0%   { opacity:1; transform:translate(0,0) rotate(0deg) scale(1); }
+      100% { opacity:0; transform:translate(-70px,-130px) rotate(-200deg) scale(0.2); }
+    }
+    .cinematic-scroll-wrap {
+      position:absolute; bottom:42%; left:37%; transform:translateX(-50%);
+      opacity:0; transform-origin:bottom center;
+      animation:scrollUnroll 1s cubic-bezier(0.16,1,0.3,1) 3.2s forwards;
+      width:min(420px,88vw);
+    }
+    @keyframes scrollUnroll {
+      0%   { opacity:0; transform:translateX(-50%) scaleY(0.04); }
+      100% { opacity:1; transform:translateX(-50%) scaleY(1); }
+    }
+    .cinematic-form-paper {
+      background:#fdf5e6; border:2px solid #8b6318;
+      padding:1.6rem 2rem; box-shadow:0 20px 60px rgba(0,0,0,0.75);
+    }
+    .cinematic-form-paper h4 {
+      font-family:var(--font-display); font-size:1.5rem; color:#3a2211;
+      text-align:center; margin-bottom:0.9rem;
+    }
+    .cinematic-form-paper textarea {
+      width:100%; height:90px; background:rgba(0,0,0,0.05);
+      border:1px solid #c8a87a; padding:10px; font-family:var(--font-serif);
+      font-size:1rem; resize:none; color:#312117; display:block;
+    }
+    .cinematic-form-paper .cin-send {
+      margin-top:0.7rem; background:var(--red-flag); color:#fff;
+      border:none; padding:10px 20px; font-family:var(--font-serif);
+      font-weight:bold; cursor:pointer; width:100%; font-size:1rem;
+      transition:background 0.3s;
+    }
+    .cinematic-form-paper .cin-send:hover { background:#5c110e; }
+
+
+    /* ═══════════════════════════════════════════════
+       FEATURE: THEATRICAL NIGHT TRANSITION
+       ═══════════════════════════════════════════════ */
+    /* Both sun and moon share the same resting spot — before "Captain's Log" */
+    .sky-sun, .sky-moon {
+      position:fixed; z-index:200; pointer-events:none;
+      top:0.65rem; left:5%;
+    }
+    .sky-sun  {
+      font-size:1.7rem;
+      filter:drop-shadow(0 0 10px rgba(255,220,50,0.9));
+    }
+    .sky-moon {
+      font-size:1.6rem;
+      filter:drop-shadow(0 0 10px rgba(180,200,255,0.8));
+      opacity:0;
+    }
+    /* Sun exits to bottom-right, moon enters from bottom-right to nav spot */
+    @keyframes sunSet {
+      0%   { top:0.65rem; left:5%;    opacity:1; transform:scale(1)    rotate(0deg); }
+      100% { top:105vh;   left:105vw; opacity:0; transform:scale(0.2) rotate(210deg); }
+    }
+    @keyframes sunRise {
+      0%   { top:105vh;   left:105vw; opacity:0; transform:scale(0.2); }
+      100% { top:0.65rem; left:5%;    opacity:1; transform:scale(1); }
+    }
+    @keyframes moonRise {
+      0%   { top:105vh;   left:105vw; opacity:0; transform:scale(0.2); }
+      100% { top:0.65rem; left:5%;    opacity:1; transform:scale(1); }
+    }
+    @keyframes moonSet {
+      0%   { top:0.65rem; left:5%;    opacity:1; transform:scale(1); }
+      100% { top:105vh;   left:105vw; opacity:0; transform:scale(0.2) rotate(-180deg); }
+    }
+    .sky-sun.setting  { animation:sunSet   2.5s ease-in          forwards; }
+    .sky-sun.rising   { animation:sunRise  2.5s ease-out         forwards; }
+    .sky-moon.rising  { animation:moonRise 2.5s ease-out 1.2s    forwards; }
+    .sky-moon.setting { animation:moonSet  2s   ease-in          forwards; }
+    @media (max-width:640px) {
+      .sky-sun, .sky-moon { left:1rem; }
+    }
+
+    @media (max-width: 640px) {
+      /* Nav */
+      nav { padding: 0.8rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+      .nav-links { gap: 0.8rem; flex-wrap: wrap; justify-content: flex-end; }
+      .nav-links a { font-size: 0.9rem; }
+
+      /* Hero */
+      .wanted-name { font-size: 2.4rem; }
+      .wanted-bio  { font-size: 0.95rem; }
+
+      /* Stats */
+      .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 1.5rem 1rem; }
+      .stat-number  { font-size: 2.4rem; }
+
+      /* Section titles */
+      .section-title { font-size: 2rem; }
+
+      /* Logbook */
+      .logbook { height: auto; min-height: 400px; }
+      .logbook-scene { perspective: 1200px; }
+      .book-spread { flex-direction: column; height: auto; }
+      .book-page { width: 100% !important; min-height: 300px; border-radius: 4px; }
+      .book-spine { display: none; }
+      .page-title { font-size: 1.8rem; }
+      .page-entry { font-size: 0.9rem; }
+
+      /* Arsenal */
+      .arsenal-corkboard { grid-template-columns: 1fr; padding: 1.8rem 1.2rem; gap: 2rem; }
+      .wanted-poster:nth-child(1) { grid-column: 1; }
+      .poster-featured .keg-list,
+      .poster-featured .poster-skills { grid-template-columns: 1fr; }
+
+      /* Education */
+      .treasure-grid { grid-template-columns: 1fr; }
+
+      /* Contact */
+      .treasure-chest-wrapper { width: 220px; height: 190px; }
+      .chest-base { height: 115px; }
+
+      /* Book controls */
+      .book-controls { gap: 1rem; }
+      .book-btn { padding: 0.4rem 0.9rem; font-size: 0.85rem; }
+
+      /* Bottle */
+      .bottle-wrapper { bottom: 16px; right: 16px; }
+    }
   </style>
 </head>
 
@@ -1166,37 +1719,11 @@
   </div>
 
   <!-- SCROLLING PIRATE SHIP -->
-  <div class="ship-wrapper" id="pirateShip">
-    <svg viewBox="0 0 100 100" width="120" height="120">
-      <path d="M10,70 Q50,90 90,70 L80,50 L20,50 Z" fill="#5c3a21" stroke="#3a2211" stroke-width="2" />
-      <path d="M45,20 L45,70" stroke="#1a1a1a" stroke-width="4" />
-      <path d="M45,20 Q65,40 45,60" fill="#f4ebd9" stroke="#3a2211" stroke-width="1" />
-      <polygon points="45,10 60,15 45,20" fill="#8a1f1b" /> <!-- Flag -->
-      <circle cx="30" cy="65" r="3" fill="#111" />
-      <circle cx="50" cy="65" r="3" fill="#111" />
-      <circle cx="70" cy="65" r="3" fill="#111" />
-      <path d="M0,75 Q20,65 30,75 T60,75 T90,75 T110,80" fill="none" stroke="#256e87" stroke-width="3" opacity="0.6" />
-    </svg>
-  </div>
 
-  <!-- THE KRAKEN -->
-  <div class="kraken-container" id="kraken">
-    <svg viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none">
-      <path d="M-10,100 C20,-20 40,50 10,-30 C15,0 -10,30 5,100 Z" fill="#1b2a33" stroke="#0f1b21" stroke-width="2" />
-      <circle cx="20" cy="40" r="3" fill="#eb4034" />
-      <circle cx="15" cy="55" r="2" fill="#eb4034" />
-      <path d="M110,100 C80,-10 60,60 90,-20 C85,10 110,40 95,100 Z" fill="#223540" stroke="#0f1b21" stroke-width="2" />
-      <circle cx="85" cy="45" r="3" fill="#eb4034" />
-      <circle cx="82" cy="60" r="2" fill="#eb4034" />
-      <path d="M30,120 Q50,60 70,120 Z" fill="#142129" />
-      <circle cx="45" cy="95" r="4" fill="#fcba03" />
-      <circle cx="55" cy="95" r="4" fill="#fcba03" />
-    </svg>
-  </div>
 
   <!-- NAVIGATION -->
   <nav>
-    <div class="logo">Aakanksha.</div>
+    <div class="logo">Captain's Log</div>
     <div class="nav-links">
       <a href="journey-map.html?section=experience" target="_blank">The Voyages</a>
       <a href="journey-map.html?section=skills" target="_blank">The Arsenal</a>
@@ -1226,21 +1753,57 @@
   <main>
     <!-- HERO SECTION (WANTED POSTER) -->
     <section class="hero" id="home">
+      <!-- Parallax ocean depth layers -->
+      <div class="hero-ocean" id="heroOcean">
+        <svg class="hero-wave hero-wave-1" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,60 C180,20 360,100 540,60 C720,20 900,100 1080,60 C1260,20 1380,80 1440,60 L1440,120 L0,120Z" fill="#143542"/>
+        </svg>
+        <svg class="hero-wave hero-wave-2" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,40 C220,90 440,10 660,55 C880,100 1100,20 1440,50 L1440,120 L0,120Z" fill="#0e2a38"/>
+        </svg>
+        <svg class="hero-wave hero-wave-3" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,70 C300,30 600,90 900,50 C1100,25 1280,80 1440,45 L1440,120 L0,120Z" fill="#091e28"/>
+        </svg>
+      </div>
       <div class="wanted-poster">
         <div class="wanted-header">Wanted By Authority of Code</div>
-        <h1 class="wanted-name">Aakanksha Kashyap</h1>
+        <h1 class="wanted-name" id="heroName"></h1>
         <div class="wanted-bounty">Bounty: High Enterprise Value</div>
         <p class="wanted-bio">
           Notorious Software Captain known for sinking 32 critical Open Redirect vulnerabilities, hijacking legacy FDB
           systems into modern GCT frameworks, and smuggling AI workflows into the deepest enterprise pipelines. Approach
           with extreme offers.
         </p>
-        <div class="loot-container" style="justify-content: center;">
-          <a href="#experience" class="loot-tag" style="text-decoration:none; padding:10px 20px; font-size:1.1rem;">View
-            the Logbook ↓</a>
+        <div class="loot-container" style="justify-content: center; gap: 1rem;">
+          <a href="#experience" class="loot-tag" style="text-decoration:none; padding:10px 20px; font-size:1.1rem;">View the Logbook ↓</a>
+          <a href="resume.pdf" download="Aakanksha_Kashyap_Resume.pdf" class="resume-btn">⬇ Download Resume</a>
         </div>
       </div>
     </section>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip" id="statsStrip">
+      <div class="stat-item">
+        <span class="stat-icon">⚔️</span>
+        <span class="stat-number" data-target="32" data-suffix="">0</span>
+        <span class="stat-label">Critical CVEs Sunk</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🧭</span>
+        <span class="stat-number" data-target="100" data-suffix="+">0</span>
+        <span class="stat-label">Engineers Served</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">⚓</span>
+        <span class="stat-number" data-target="4" data-suffix="+">0</span>
+        <span class="stat-label">Years at Sea</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🏴‍☠️</span>
+        <span class="stat-number" data-target="2" data-suffix="">0</span>
+        <span class="stat-label">Major Platforms Built</span>
+      </div>
+    </div>
 
     <!-- EXPERIENCE SECTION — 3D LOGBOOK -->
     <section id="experience">
@@ -1309,7 +1872,7 @@
               </div>
             </div>
 
-            <!-- SPREAD 1: Ericsson Product + Closing -->
+            <!-- SPREAD 1: Ericsson Product + Dopamine -->
             <div class="book-spread" id="spread-1">
               <div class="book-page left-page">
                 <div class="page-title">Ericsson</div>
@@ -1325,12 +1888,36 @@
                 <div class="page-number left">Page III</div>
               </div>
               <div class="book-page right-page">
-                <div class="page-decoration" style="margin-top:2rem;">🏴‍☠️</div>
+                <div class="page-title">Dopamine Enterprises</div>
+                <div class="page-subtitle">Java Developer · Intern</div>
+                <div class="page-date-tag">2022</div>
+                <hr class="page-rule">
+                <div class="page-entry">The voyage begins. Constructed a full-stack water ordering platform utilising Spring Boot, REST APIs, and Oracle DB — first production system built from keel to crow's nest.</div>
+                <div class="page-entry">Collaborated with a cross-functional crew to deliver end-to-end features on deadline, earning sea legs in enterprise Java development.</div>
+                <div class="page-loot-row" style="margin-top:1rem;">
+                  <span class="page-loot-tag">Java</span>
+                  <span class="page-loot-tag">Spring Boot</span>
+                  <span class="page-loot-tag">Oracle DB</span>
+                  <span class="page-loot-tag">REST API</span>
+                </div>
+                <div class="page-number right">Page IV</div>
+              </div>
+            </div>
+
+            <!-- SPREAD 2: Closing -->
+            <div class="book-spread" id="spread-2">
+              <div class="book-page left-page">
+                <div class="page-decoration" style="margin-top:3rem;">🏴‍☠️</div>
                 <div class="page-title" style="text-align:center; font-size:1.8rem; margin-top:1rem;">~ End of<br>Known Log ~</div>
                 <hr class="page-rule">
                 <p style="font-family:var(--font-serif); font-style:italic; text-align:center; font-size:0.9rem; color:#6b4c35; margin-top:1.5rem;">"The best Captain<br>is the one who<br>never stops sailing."</p>
                 <div class="page-decoration" style="font-size:1.2rem; margin-top:2rem;">⚓</div>
-                <div class="page-number right">Page IV</div>
+                <div class="page-number left">Page V</div>
+              </div>
+              <div class="book-page right-page" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-size:3rem; margin-bottom:1rem;">🧭</div>
+                <p style="font-family:var(--font-display); font-size:1.4rem; color:#8b6914; text-align:center;">More voyages<br>on the horizon.</p>
+                <div class="page-number right">Page VI</div>
               </div>
             </div>
 
@@ -1348,7 +1935,7 @@
 
         <div class="book-controls">
           <button class="book-btn" id="prevPageBtn" disabled>← Turn Back</button>
-          <span class="page-indicator" id="pageIndicator">Page 1 of 2</span>
+          <span class="page-indicator" id="pageIndicator">Page 1 of 3</span>
           <button class="book-btn" id="nextPageBtn">Turn Page →</button>
         </div>
       </div><!-- /logbook-desk -->
@@ -1360,38 +1947,73 @@
         <h2 class="section-title">The Buried Arsenal</h2>
       </div>
 
-      <div class="treasure-grid" id="arsenalGrid">
-        <div class="treasure-map"
-          style="grid-column: 1 / -1; background: var(--parchment-dark); border-color: var(--red-flag);">
-          <h3 class="treasure-title" style="color:var(--red-flag);">AI & Productivity Tools Expert</h3>
-          <p style="font-family: var(--font-serif); font-size: 1.1rem; margin-bottom: 1rem;">Seamlessly integrates AI
-            tooling directly into the development workflow to automate scaffolding and accelerate delivery speed.</p>
-          <div class="loot-container">
-            <!-- FEATURE 3: CANNONBALLS -->
-            <span class="cannonball">Claude</span>
-            <span class="cannonball">OpenClaw</span>
-            <span class="cannonball">Copilot</span>
-            <span class="cannonball">Cursor</span>
+      <div class="arsenal-corkboard" id="arsenalCorkboard">
+
+        <!-- FEATURED POSTER: AI & Productivity -->
+        <div class="wanted-poster poster-featured">
+          <div class="poster-stamp">BOUNTY<br>PRICELESS</div>
+          <div class="poster-heading-bar">WANTED</div>
+          <div class="poster-name">AI &amp; Productivity Expert</div>
+          <p class="poster-desc">"Wields AI tooling to automate scaffolding, squash bugs at warp speed &amp; accelerate delivery."</p>
+          <hr class="poster-divider">
+          <div class="poster-skills">
+            <span class="poster-skill-tag">Claude AI</span>
+            <span class="poster-skill-tag">GitHub Copilot</span>
+            <span class="poster-skill-tag">Cursor</span>
+            <span class="poster-skill-tag">OpenClaw</span>
+            <span class="poster-skill-tag">Prompt Engineering</span>
+            <span class="poster-skill-tag">Agentic Workflows</span>
           </div>
         </div>
 
-        <div class="treasure-map">
-          <h3 class="treasure-title">Core Engine</h3>
-          <div class="loot-container">
-            <span class="cannonball">Java</span>
-            <span class="cannonball">Spring</span>
-            <span class="cannonball">REST API</span>
+        <!-- POSTER: Core Engine -->
+        <div class="wanted-poster">
+          <div class="poster-stamp">DEAD OR<br>ALIVE</div>
+          <div class="poster-heading-bar">WANTED</div>
+          <div class="poster-name">Core Engine</div>
+          <p class="poster-desc">"Java &amp; enterprise backend — no server survives unscathed."</p>
+          <hr class="poster-divider">
+          <div class="poster-skills">
+            <span class="poster-skill-tag">Java</span>
+            <span class="poster-skill-tag">Spring Boot</span>
+            <span class="poster-skill-tag">REST API</span>
+            <span class="poster-skill-tag">Oracle DB</span>
+            <span class="poster-skill-tag">JSP / Servlet</span>
           </div>
         </div>
 
-        <div class="treasure-map">
-          <h3 class="treasure-title">Hull Assets</h3>
-          <div class="loot-container">
-            <span class="cannonball">JS</span>
-            <span class="cannonball">HTML5</span>
-            <span class="cannonball">CSS3</span>
+        <!-- POSTER: Frontend Hull -->
+        <div class="wanted-poster">
+          <div class="poster-stamp">MOST<br>WANTED</div>
+          <div class="poster-heading-bar">WANTED</div>
+          <div class="poster-name">Frontend Hull</div>
+          <p class="poster-desc">"Forges fast, interactive interfaces that hold no prisoners."</p>
+          <hr class="poster-divider">
+          <div class="poster-skills">
+            <span class="poster-skill-tag">JavaScript</span>
+            <span class="poster-skill-tag">HTML5</span>
+            <span class="poster-skill-tag">CSS3</span>
+            <span class="poster-skill-tag">Webpack</span>
+            <span class="poster-skill-tag">ES Modules</span>
           </div>
         </div>
+
+        <!-- POSTER: Architecture & Networks -->
+        <div class="wanted-poster">
+          <div class="poster-stamp">HIGH<br>VALUE</div>
+          <div class="poster-heading-bar">WANTED</div>
+          <div class="poster-name">Architecture &amp; Networks</div>
+          <p class="poster-desc">"Speaks old &amp; new tongues of the global telecom grid."</p>
+          <hr class="poster-divider">
+          <div class="poster-skills">
+            <span class="poster-skill-tag">MQTT</span>
+            <span class="poster-skill-tag">CORBA</span>
+            <span class="poster-skill-tag">Telecom Infrastructure</span>
+            <span class="poster-skill-tag">Legacy Modernisation</span>
+            <span class="poster-skill-tag">RHEL 8</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1425,8 +2047,8 @@
         <div class="chest-loot">
           <div class="loot-scroll">
             <h3>Contact Scroll</h3>
-            <a href="mailto:aakanksha@example.com">Email</a>
-            <a href="https://linkedin.com">LinkedIn</a>
+            <a href="mailto:aakanksha.kashyap@gmail.com">📧 Email</a>
+            <a href="https://linkedin.com/in/aakanksha-kashyap" target="_blank">💼 LinkedIn</a>
           </div>
         </div>
       </div>
@@ -1435,13 +2057,35 @@
     </section>
   </main>
 
-  <!-- FEATURE 4: MESSAGE IN A BOTTLE -->
+  <!-- ROPE SCROLLBAR -->
+  <div class="rope-scrollbar" id="ropeScrollbar">
+    <div class="rope-top-ring"></div>
+    <div class="rope-line"></div>
+    <div class="rope-bot-ring"></div>
+    <div class="rope-anchor" id="ropeAnchor">⚓</div>
+  </div>
+
+  <!-- SUN & MOON for theatrical night mode -->
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <!-- FEATURE 4: MESSAGE IN A BOTTLE (trigger only — cinematic handles form) -->
   <div class="bottle-wrapper" id="bottleWrapper">
     <div class="bottle-trigger" id="bottleTrigger" title="Send a message to sea">🍾</div>
-    <div class="bottle-modal">
-      <h4>Message into the Sea</h4>
-      <textarea placeholder="Write your letter to Captain Aakanksha here..."></textarea>
-      <button class="bottle-send" id="bottleSend">Send to Sea</button>
+  </div>
+
+  <!-- CINEMATIC BOTTLE OVERLAY -->
+  <div class="bottle-cinematic-overlay" id="bottleCinematic">
+    <div class="cinematic-close" id="cinematicClose">✕ Close</div>
+    <div class="cinematic-shore"></div>
+    <div class="cinematic-bottle">🍾</div>
+    <div class="cinematic-cork">🪨</div>
+    <div class="cinematic-scroll-wrap" id="cinematicScrollWrap">
+      <div class="cinematic-form-paper">
+        <h4>Message to the Captain</h4>
+        <textarea id="cinematicMessage" placeholder="Write your letter to Captain Aakanksha here..."></textarea>
+        <button class="cin-send" id="cinematicSend">⛵ Send to Sea</button>
+      </div>
     </div>
   </div>
 
@@ -1680,86 +2324,38 @@
         }
       });
 
-      // FEATURE 3: IRON CANNONBALLS COLLISION PHYSICS
-      const cannonballs = document.querySelectorAll('.cannonball');
-      const arsenal = document.getElementById('arsenalGrid');
-
-      // We only run physics when hovering over the Arsenal area to save CPU
-      arsenal.addEventListener('mousemove', (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        cannonballs.forEach(ball => {
-          ball.classList.add('repelled');
-          const rect = ball.getBoundingClientRect();
-          const ballX = rect.left + rect.width / 2;
-          const ballY = rect.top + rect.height / 2;
-
-          const dx = ballX - mouseX;
-          const dy = ballY - mouseY;
-          const distance = Math.hypot(dx, dy);
-
-          if (distance < 120) {
-            // Push away proportional to distance
-            const force = (120 - distance) / 3;
-            const pushX = (dx / distance) * force;
-            const pushY = (dy / distance) * force;
-
-            // Random spin
-            const spin = dx;
-            ball.style.transform = `translate(${pushX}px, ${pushY}px) rotate(${spin}deg)`;
-          } else {
-            // Return spring
-            ball.style.transform = `translate(0px, 0px) rotate(0deg)`;
+      // ── STATS STRIP COUNT-UP ─────────────────────────────────────
+      const statsStrip = document.getElementById('statsStrip');
+      if (statsStrip) {
+        const statNums = statsStrip.querySelectorAll('.stat-number');
+        let animated = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && !animated) {
+            animated = true;
+            statNums.forEach(el => {
+              const target = parseInt(el.dataset.target);
+              const suffix = el.dataset.suffix || '';
+              const duration = 1400;
+              const start = performance.now();
+              function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(ease * target) + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+              }
+              requestAnimationFrame(tick);
+            });
+            statsObserver.disconnect();
           }
-        });
-      });
-      // Clear force when mouse leaves
-      arsenal.addEventListener('mouseleave', () => {
-        cannonballs.forEach(ball => {
-          ball.classList.remove('repelled');
-          ball.style.transform = `translate(0px, 0px) rotate(0deg)`;
-        });
-      });
+        }, { threshold: 0.4 });
+        statsObserver.observe(statsStrip);
+      }
 
-      // FEATURE 4: MESSAGE IN A BOTTLE
-      const bottleWrapper = document.getElementById('bottleWrapper');
-      const bottleTrigger = document.getElementById('bottleTrigger');
-      const bottleSend = document.getElementById('bottleSend');
+      // Arsenal corkboard — skill tags (no JS needed)
 
-      bottleTrigger.addEventListener('click', () => {
-        sfx.bottlePop();
-        bottleWrapper.classList.toggle('open');
-      });
+      // FEATURE 4: MESSAGE IN A BOTTLE — handled by cinematic block below
 
-      bottleSend.addEventListener('click', () => {
-        sfx.bottleSplash();
-        bottleWrapper.classList.remove('open');
-        setTimeout(() => {
-          bottleWrapper.classList.add('sent');
-        }, 500);
-      });
-
-      // EXISTING: PARALLAX ORA SHIP & KRAKEN
-      const ship = document.getElementById('pirateShip');
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const kraken = document.getElementById('kraken');
-      let lastScrollY = window.scrollY;
-      let krakenActive = false;
-
-      window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        // Ship Movement
-        const progress = scrolled / Math.max(1, docHeight);
-        ship.style.transform = `translateX(${progress * (window.innerWidth - 200)}px) translateY(${Math.sin(progress * 10) * 20}px) rotate(${Math.cos(progress * Math.PI * 4) * 15}deg)`;
-        // Kraken Speed Check
-        const speed = lastScrollY - scrolled;
-        lastScrollY = scrolled;
-        if (speed > 120 && !krakenActive) {
-          krakenActive = true; kraken.classList.add('attack');
-          setTimeout(() => { kraken.classList.remove('attack'); setTimeout(() => { krakenActive = false; }, 1000); }, 3000);
-        }
-      });
 
       // EXISTING: CHEST & AUDIO
       const chest = document.getElementById('treasureChest');
@@ -1859,6 +2455,185 @@
       prevPageBtn.addEventListener('click', () => doFlip('prev'));
       updateBookControls();
 
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: TYPEWRITER INK BLEED
+      // ══════════════════════════════════════════════════════════════
+      const heroName = document.getElementById('heroName');
+      // Two words typed on separate lines
+      const nameLines = ['Aakanksha', 'Kashyap'];
+      let lineIdx = 0, letterIdx = 0;
+      // Each line gets its own block-level span so they stack
+      let currentLine = null;
+
+      function typeNextLetter() {
+        // Start a new line span if needed
+        if (!currentLine) {
+          currentLine = document.createElement('span');
+          currentLine.style.cssText = 'display:block;';
+          heroName.appendChild(currentLine);
+        }
+        const line = nameLines[lineIdx];
+        if (letterIdx >= line.length) {
+          // Move to next line after a pause
+          lineIdx++;
+          letterIdx = 0;
+          currentLine = null;
+          if (lineIdx < nameLines.length) setTimeout(typeNextLetter, 180);
+          return;
+        }
+        const ch = line[letterIdx];
+        const span = document.createElement('span');
+        span.className = 'ink-letter';
+        span.textContent = ch;
+        span.style.animationDelay = '0s';
+        currentLine.appendChild(span);
+        letterIdx++;
+        setTimeout(typeNextLetter, 72 + Math.random() * 40);
+      }
+      setTimeout(typeNextLetter, 2700); // after burn-in
+
+      // ══════════════════════════════════════════════════════════════
+
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: PARALLAX OCEAN DEPTH HERO
+      // ══════════════════════════════════════════════════════════════
+      const heroWaves = document.querySelectorAll('.hero-wave');
+      const heroPoster = document.querySelector('.hero .wanted-poster');
+      window.addEventListener('scroll', () => {
+        const sy = window.scrollY;
+        if (heroWaves.length) {
+          heroWaves[0].style.transform = `translateY(${sy * 0.15}px)`;
+          heroWaves[1].style.transform = `translateY(${sy * 0.25}px)`;
+          heroWaves[2].style.transform = `translateY(${sy * 0.38}px)`;
+        }
+        if (heroPoster && sy < window.innerHeight) {
+          heroPoster.style.transform = `rotate(-2deg) translateY(${sy * 0.06}px)`;
+        }
+      }, { passive: true });
+
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: SCROLL PAGE-CURL SECTION TRANSITIONS
+      // ══════════════════════════════════════════════════════════════
+      const curlSections = document.querySelectorAll('main section');
+      curlSections.forEach((sec, i) => {
+        sec.classList.add('curl-target');
+        if (i % 2 === 1) sec.classList.add('is-even');
+      });
+      const curlObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('curl-in');
+            curlObserver.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      curlSections.forEach(sec => curlObserver.observe(sec));
+
+      // ══════════════════════════════════════════════════════════════
+
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: ROPE SCROLLBAR
+      // ══════════════════════════════════════════════════════════════
+      const ropeAnchor   = document.getElementById('ropeAnchor');
+      const ropeScrollbar = document.getElementById('ropeScrollbar');
+
+      function updateRope() {
+        const scrolled  = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const pct       = maxScroll > 0 ? scrolled / maxScroll : 0;
+        const ropeH     = ropeScrollbar.getBoundingClientRect().height;
+        ropeAnchor.style.top = (pct * (ropeH - 24)) + 'px';
+      }
+      window.addEventListener('scroll', updateRope, { passive: true });
+      updateRope();
+
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: CINEMATIC BOTTLE
+      // ══════════════════════════════════════════════════════════════
+      const bottleTrigger    = document.getElementById('bottleTrigger');
+      const bottleCinematic  = document.getElementById('bottleCinematic');
+      const cinematicClose   = document.getElementById('cinematicClose');
+      const cinematicSend    = document.getElementById('cinematicSend');
+
+      bottleTrigger.addEventListener('click', () => {
+        sfx.bottlePop();
+        // Reset animations by cycling the overlay off/on
+        bottleCinematic.classList.remove('active');
+        // Re-clone animated children to restart their keyframes
+        const bottle = bottleCinematic.querySelector('.cinematic-bottle');
+        const cork   = bottleCinematic.querySelector('.cinematic-cork');
+        const scroll = bottleCinematic.querySelector('.cinematic-scroll-wrap');
+        [bottle, cork, scroll].forEach(el => {
+          const clone = el.cloneNode(true);
+          el.parentNode.replaceChild(clone, el);
+        });
+        // Rewire send button after clone
+        bottleCinematic.querySelector('.cin-send').addEventListener('click', () => {
+          const msg = bottleCinematic.querySelector('#cinematicMessage').value.trim();
+          if (!msg) return;
+          sfx.bottleSplash();
+          const subject = encodeURIComponent('Message from the Sea — Aakanksha CV');
+          const body    = encodeURIComponent(msg);
+          window.location.href = `mailto:aakanksha.kashyap@gmail.com?subject=${subject}&body=${body}`;
+          setTimeout(() => bottleCinematic.classList.remove('active'), 800);
+        });
+        requestAnimationFrame(() => bottleCinematic.classList.add('active'));
+      });
+      cinematicClose.addEventListener('click', () => {
+        bottleCinematic.classList.remove('active');
+      });
+      // Initial wire-up of send button (also re-wired on each open after clone)
+      cinematicSend.addEventListener('click', () => {
+        const msg = document.getElementById('cinematicMessage').value.trim();
+        if (!msg) return;
+        sfx.bottleSplash();
+        const subject = encodeURIComponent('Message from the Sea — Aakanksha CV');
+        const body    = encodeURIComponent(msg);
+        window.location.href = `mailto:aakanksha.kashyap@gmail.com?subject=${subject}&body=${body}`;
+        setTimeout(() => bottleCinematic.classList.remove('active'), 800);
+      });
+
+      // ══════════════════════════════════════════════════════════════
+      // FEATURE: THEATRICAL NIGHT MODE (replaces simple toggle)
+      // ══════════════════════════════════════════════════════════════
+      const skySun  = document.getElementById('skySun');
+      const skyMoon = document.getElementById('skyMoon');
+
+      // Remove the old night toggle listener and replace it
+      nightToggle.replaceWith(nightToggle.cloneNode(true));
+      const newNightToggle = document.getElementById('nightToggle');
+
+      newNightToggle.addEventListener('click', () => {
+        sfx.lanternClick();
+        isNightMode = !isNightMode;
+
+        // Clear previous animation classes
+        skySun.className  = 'sky-sun';
+        skyMoon.className = 'sky-moon';
+
+        void skySun.offsetWidth;  // reflow
+
+        if (isNightMode) {
+          // Sun sets, moon rises
+          skySun.classList.add('setting');
+          skyMoon.classList.add('rising');
+          // Delay body class for drama
+          setTimeout(() => {
+            document.body.classList.add('night-mode');
+            createStars();
+            drawStars();
+          }, 1400);
+        } else {
+          // Moon sets, sun rises
+          skyMoon.classList.add('setting');
+          skySun.classList.add('rising');
+          document.body.classList.remove('night-mode');
+          cancelAnimationFrame(starAnimId);
+          // After transition hide moon again
+          setTimeout(() => { skyMoon.className = 'sky-moon'; }, 2500);
+        }
+      });
+
       // ── CANNON FIRE ───────────────────────────────────────────────
       document.addEventListener('click', (e) => {
         const cannonSvg = e.target.closest('#cannonSvg');
@@ -1878,8 +2653,8 @@
         }
         cannonSvg.style.animation = 'none';
 
-        // Spawn bug on right side of screen so cannon always aims forward
-        const bugX = window.innerWidth * 0.45 + Math.random() * (window.innerWidth * 0.48);
+        // Spawn bug anywhere on screen
+        const bugX = 30 + Math.random() * (window.innerWidth - 80);
         const bugY = 80 + Math.random() * (window.innerHeight - 200);
         const bugCenterX = bugX + 18;
         const bugCenterY = bugY + 18;
@@ -1892,34 +2667,61 @@
           bug.style.transform = `rotate(${(Math.random()-0.5)*30}deg) scale(${0.9+Math.random()*0.2})`;
         }, 150);
 
-        // Cannon pivot in screen coords (SVG coordinate 26,36)
+        // ── SVG dimensions ────────────────────────────────────────
+        // We read getBoundingClientRect BEFORE applying any transform,
+        // so clear any previous flip first.
+        cannonSvg.style.transform = '';
         const svgRect = cannonSvg.getBoundingClientRect();
-        const scaleX  = svgRect.width  / 90;
-        const scaleY  = svgRect.height / 50;
-        const pivotSX = svgRect.left + 26 * scaleX;
-        const pivotSY = svgRect.top  + 36 * scaleY;
+        const sX = svgRect.width  / 90;   // SVG-unit → screen-px scale
+        const sY = svgRect.height / 50;
 
-        // Aim angle (clamped so barrel doesn't go backwards)
-        const rawAngle    = Math.atan2(bugCenterY - pivotSY, bugCenterX - pivotSX) * (180 / Math.PI);
-        const aimAngle    = Math.max(-65, Math.min(65, rawAngle));
+        // ── Decide firing side ────────────────────────────────────
+        // Cannon center in screen coords
+        const cannonMidX = svgRect.left + svgRect.width / 2;
+        const facingLeft = bugCenterX < cannonMidX;
 
-        // Rotate barrel to aim
+        // Flip SVG when shooting left (mirrors the whole carriage + barrel)
+        cannonSvg.style.transformOrigin = 'center center';
+        cannonSvg.style.transform = facingLeft ? 'scaleX(-1)' : 'scaleX(1)';
+
+        // ── Pivot position in screen coords ───────────────────────
+        // The breech circle is at SVG (26, 36).
+        // After scaleX(-1) the SVG mirrors around its centre,
+        // so SVG x=26 maps to screen x = svgRect.right − 26*sX.
+        const pivotSX = facingLeft
+          ? svgRect.right - 26 * sX
+          : svgRect.left  + 26 * sX;
+        const pivotSY = svgRect.top + 36 * sY;
+
+        // ── Aim angle in SVG / barrel space ──────────────────────
+        // The barrel extends in the +X direction from the pivot in SVG space.
+        // After scaleX(-1) the visual X-axis is negated on screen.
+        // So to aim at (bugCenterX, bugCenterY):
+        //   Normal  → angle = atan2( dy,  dx )
+        //   Flipped → angle = atan2( dy, -dx )   (mirror the x-component)
+        const dx = bugCenterX - pivotSX;
+        const dy = bugCenterY - pivotSY;
+        const rawAngle = Math.atan2(dy, facingLeft ? -dx : dx) * (180 / Math.PI);
+        const aimAngle = Math.max(-65, Math.min(65, rawAngle));
+
         barrelGroup.style.transform = `rotate(${aimAngle}deg)`;
 
-        // Fire cannonball after barrel finishes rotating
+        // ── Fire after barrel finishes rotating ──────────────────
         setTimeout(() => {
-          // Compute muzzle tip screen position after rotation
-          // Muzzle tip in SVG coords: (82, 36) → relative to pivot: (56, 0)
-          const angleRad  = aimAngle * Math.PI / 180;
-          const muzzleRelX = 56, muzzleRelY = 0;
-          const rotX = muzzleRelX * Math.cos(angleRad) - muzzleRelY * Math.sin(angleRad);
-          const rotY = muzzleRelX * Math.sin(angleRad) + muzzleRelY * Math.cos(angleRad);
-          const ballStartX = pivotSX + rotX * scaleX;
-          const ballStartY = pivotSY + rotY * scaleY;
+          const rad = aimAngle * Math.PI / 180;
+
+          // Muzzle is 56 SVG-units from pivot along barrel axis (SVG +X).
+          // Screen displacement of muzzle from pivot:
+          //   Normal  → (+cos(θ)·56·sX,  sin(θ)·56·sY)
+          //   Flipped → (−cos(θ)·56·sX,  sin(θ)·56·sY)  ← X negated by mirror
+          const muzzleDX = (facingLeft ? -1 : 1) * Math.cos(rad) * 56 * sX;
+          const muzzleDY = Math.sin(rad) * 56 * sY;
+          const ballStartX = pivotSX + muzzleDX;
+          const ballStartY = pivotSY + muzzleDY;
 
           sfx.cannonWhoosh();
 
-          // Smoke puff from muzzle
+          // Smoke puff erupts from muzzle
           const smoke = document.createElement('div');
           smoke.textContent = '💨';
           smoke.style.cssText = `position:fixed;font-size:2rem;left:${ballStartX}px;top:${ballStartY}px;z-index:99997;pointer-events:none;transform:translate(-50%,-50%);animation:smokePuff 0.7s ease-out forwards;`;
@@ -1934,9 +2736,9 @@
 
           requestAnimationFrame(() => requestAnimationFrame(() => {
             ball.style.transition = 'left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.45,0,0.55,1), font-size 0.65s';
-            ball.style.left      = `${bugCenterX}px`;
-            ball.style.top       = `${bugCenterY}px`;
-            ball.style.fontSize  = '0.4rem';
+            ball.style.left     = `${bugCenterX}px`;
+            ball.style.top      = `${bugCenterY}px`;
+            ball.style.fontSize = '0.4rem';
           }));
 
           // Impact explosion
@@ -1946,27 +2748,28 @@
             bug.remove();
             ball.remove();
 
-            // Barrel returns to rest
-            setTimeout(() => { barrelGroup.style.transform = 'rotate(0deg)'; }, 300);
+            // Reset barrel and unflip SVG
+            setTimeout(() => {
+              barrelGroup.style.transform = 'rotate(0deg)';
+              cannonSvg.style.transform   = 'scaleX(1)';
+            }, 300);
 
             const pieces = ['💥','✨','🔥','⚡','💫','🐛','💀'];
             const container = document.createElement('div');
             container.style.cssText = `position:fixed;left:${bugCenterX}px;top:${bugCenterY}px;z-index:100000;pointer-events:none;`;
             for (let i = 0; i < 8; i++) {
-              const p    = document.createElement('span');
+              const p   = document.createElement('span');
               p.textContent = pieces[i % pieces.length];
-              const ang  = (i / 8) * Math.PI * 2;
+              const ang = (i / 8) * Math.PI * 2;
               const dist = 55 + Math.random() * 65;
-              const tx   = Math.cos(ang) * dist;
-              const ty   = Math.sin(ang) * dist;
-              p.style.cssText = `position:absolute;font-size:${0.8+Math.random()*0.9}rem;--tx:${tx}px;--ty:${ty}px;animation:cannonExplode 0.8s ease-out forwards;`;
+              p.style.cssText = `position:absolute;font-size:${0.8+Math.random()*0.9}rem;--tx:${Math.cos(ang)*dist}px;--ty:${Math.sin(ang)*dist}px;animation:cannonExplode 0.8s ease-out forwards;`;
               container.appendChild(p);
             }
             document.body.appendChild(container);
             setTimeout(() => container.remove(), 850);
           }, 680);
 
-        }, 600); // wait for barrel rotation to complete
+        }, 600);
       });
     });
   </script>
