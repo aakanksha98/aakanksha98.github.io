@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captain's Parrot — Aakanksha Kashyap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <style>
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.45;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.12;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.4),inset 0 0 300px rgba(45,17,3,.2);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:#fdf5e6;border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+    .nav-dropdown{position:relative;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:#fdf5e6;}
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* PAGE */
+    .page-hero{padding:7rem 6% 2.5rem;text-align:center;}
+    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.2em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.4rem;}
+    .page-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3.2rem);color:var(--wood-dark);margin-bottom:.6rem;}
+    body.night-mode .page-title{color:#fdf5e6;}
+    .page-desc{font-family:var(--font-serif);font-size:1.2rem;color:var(--ink-faded);max-width:520px;margin:0 auto 1.2rem;}
+    .back-link{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:1rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.35rem .9rem;border-radius:4px;transition:all .2s;}
+    .back-link:hover{color:var(--ink);border-color:var(--wood);}
+
+    /* CHAT LAYOUT */
+    .chat-stage{padding:0 5% 5rem;display:grid;grid-template-columns:280px 1fr;gap:3rem;align-items:start;max-width:1000px;margin:0 auto;}
+    .parrot-col{display:flex;flex-direction:column;align-items:center;gap:1.2rem;position:sticky;top:6rem;}
+    .parrot-perch{width:220px;height:260px;background:linear-gradient(160deg,#143542 0%,#0e2438 100%);border-radius:16px;border:2px solid var(--wood);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;box-shadow:6px 8px 0 var(--wood-dark);position:relative;overflow:hidden;}
+    .parrot-perch::before{content:'';position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(to top,rgba(90,58,21,.5),transparent);border-radius:0 0 14px 14px;}
+    .perch-bar{position:absolute;bottom:18px;left:20%;right:20%;height:8px;background:var(--wood);border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.4);}
+    .parrot-big{width:120px;height:140px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));position:relative;z-index:1;}
+    .parrot-big.talking{animation:parrotBob .35s ease-in-out infinite alternate;}
+    @keyframes parrotBob{0%{transform:translateY(0) rotate(-4deg)}100%{transform:translateY(-10px) rotate(4deg)}}
+    .parrot-name{font-family:var(--font-display);font-size:.95rem;color:#fff;letter-spacing:.1em;text-align:center;z-index:1;}
+    .parrot-status{font-size:.75rem;color:rgba(255,255,255,.5);font-family:var(--font-body);letter-spacing:.08em;z-index:1;}
+    .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#28c840;margin-right:.3em;animation:pulse 2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+    /* CHAT BOX */
+    .chat-col{display:flex;flex-direction:column;gap:0;}
+    .chat-box{border:2px solid var(--wood);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.2);box-shadow:4px 6px 0 var(--parchment-dark);}
+    body.night-mode .chat-box{background:rgba(0,0,0,.25);border-color:var(--ink-faded);box-shadow:4px 6px 0 rgba(0,0,0,.4);}
+    .chat-header{background:var(--wood);padding:.7rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
+    .chat-header-title{font-family:var(--font-display);font-size:1rem;color:var(--parchment);letter-spacing:.08em;}
+    .chat-header-sub{font-family:var(--font-body);font-size:.75rem;color:rgba(234,205,161,.6);margin-left:auto;}
+    .chat-messages{height:420px;overflow-y:auto;padding:1.4rem;display:flex;flex-direction:column;gap:1.1rem;scrollbar-width:thin;scrollbar-color:var(--parchment-dark) transparent;}
+    .chat-messages::-webkit-scrollbar{width:5px;}
+    .chat-messages::-webkit-scrollbar-thumb{background:var(--parchment-dark);border-radius:3px;}
+    .msg{max-width:82%;padding:.7rem 1.1rem;border-radius:14px;font-size:1rem;line-height:1.55;}
+    .msg.user{align-self:flex-end;background:var(--wood);color:var(--parchment);border-bottom-right-radius:4px;font-family:var(--font-body);}
+    .msg.parrot{align-self:flex-start;background:var(--parchment);color:var(--ink);border:1.5px solid var(--parchment-dark);border-bottom-left-radius:4px;font-family:var(--font-serif);font-size:1.08rem;}
+    body.night-mode .msg.parrot{background:#1e293b;color:#e2e8f0;border-color:#334155;}
+    .typing-cursor{display:inline-block;width:2px;height:.95em;background:var(--ink);animation:blink .8s step-end infinite;vertical-align:text-bottom;margin-left:1px;}
+    body.night-mode .typing-cursor{background:#e2e8f0;}
+    .chat-typing-indicator{align-self:flex-start;background:var(--parchment);border:1.5px solid var(--parchment-dark);border-radius:14px;border-bottom-left-radius:4px;padding:.6rem 1rem;display:none;}
+    body.night-mode .chat-typing-indicator{background:#1e293b;border-color:#334155;}
+    .typing-dots{display:flex;gap:5px;align-items:center;}
+    .typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--ink-faded);animation:dotBounce 1.4s ease-in-out infinite;}
+    body.night-mode .typing-dots span{background:#94a3b8;}
+    .typing-dots span:nth-child(2){animation-delay:.2s;}
+    .typing-dots span:nth-child(3){animation-delay:.4s;}
+    @keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+    .chat-suggestions{padding:.6rem 1.2rem .8rem;display:flex;gap:.5rem;flex-wrap:wrap;border-top:1px solid rgba(90,75,61,.12);}
+    .suggest-chip{font-size:.8rem;padding:.25rem .75rem;border-radius:20px;border:1px solid var(--parchment-dark);color:var(--ink-faded);cursor:pointer;background:transparent;transition:all .2s;white-space:nowrap;font-family:var(--font-body);}
+    .suggest-chip:hover{background:var(--wood);color:var(--parchment);border-color:var(--wood);}
+    body.night-mode .suggest-chip{border-color:var(--ink-faded);color:var(--ink-faded);}
+    .chat-input-row{display:flex;border-top:1.5px solid rgba(90,75,61,.2);padding:.7rem;}
+    body.night-mode .chat-input-row{border-top-color:var(--ink-faded);}
+    .chat-input{flex:1;border:1.5px solid var(--parchment-dark);border-radius:6px;padding:.5rem .8rem;font-family:var(--font-body);font-size:1rem;background:transparent;color:var(--ink);outline:none;transition:border-color .2s;}
+    body.night-mode .chat-input{border-color:var(--ink-faded);background:rgba(255,255,255,.05);}
+    .chat-input:focus{border-color:var(--wood);}
+    .chat-send-btn{font-family:var(--font-display);font-size:.95rem;letter-spacing:.05em;background:var(--wood);color:var(--parchment);border:none;padding:.5rem 1.2rem;border-radius:6px;cursor:pointer;transition:background .2s,transform .15s;margin-left:.5rem;}
+    .chat-send-btn:hover{background:var(--wood-dark);transform:translateY(-1px);}
+    .chat-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+    @media(max-width:720px){
+      .chat-stage{grid-template-columns:1fr;}
+      .parrot-col{position:static;flex-direction:row;justify-content:center;}
+      .parrot-perch{width:120px;height:140px;}
+      .parrot-big{width:70px;height:82px;}
+      nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+      .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
+      .nav-links a{font-size:.9rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">⊳ Navigator's Console</a>
+          <a href="project-parrot.html" class="current-page">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <div class="page-label">Project II · AI Chat</div>
+      <h1 class="page-title">Captain's Parrot</h1>
+      <p class="page-desc">Ask Polly anything about Aakanksha — skills, experience, why you should hire her. The parrot has been thoroughly briefed.</p>
+      <a href="projects.html" class="back-link">← Back to Workshop</a>
+    </div>
+
+    <div class="chat-stage">
+      <!-- Parrot avatar -->
+      <div class="parrot-col">
+        <div class="parrot-perch">
+          <svg class="parrot-big" id="parrotBigSvg" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="30" cy="45" rx="14" ry="16" fill="#e63946"/>
+            <ellipse cx="21" cy="47" rx="8" ry="11" fill="#c1121f" transform="rotate(-10 21 47)"/>
+            <path d="M22,60 Q17,72 13,78 Q19,70 25,68 Q21,74 27,80 Q29,72 33,70 Q39,75 41,80 Q38,72 36,66 Z" fill="#4361ee"/>
+            <circle cx="30" cy="26" r="13" fill="#e63946"/>
+            <path d="M38,29 Q44,26 42,32 Q40,35 36,32 Z" fill="#ffb703"/>
+            <circle cx="35" cy="22" r="4" fill="white"/>
+            <circle cx="36" cy="22" r="2.5" fill="#1a1a2e"/>
+            <circle cx="37" cy="21" r="0.8" fill="white"/>
+            <path d="M22,14 Q20,5 24,9 Q25,3 28,8 Q29,2 32,7 Q36,4 34,10" fill="#f77f00" stroke="#e63946" stroke-width="0.5"/>
+            <path d="M23,60 L19,67 M23,60 L21,69 M23,60 L25,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+            <path d="M37,60 L33,67 M37,60 L35,69 M37,60 L39,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="perch-bar"></div>
+          <div class="parrot-name">Polly</div>
+          <div class="parrot-status"><span class="status-dot"></span>Ship's AI · Online</div>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="chat-col">
+        <div class="chat-box">
+          <div class="chat-header">
+            <span>🦜</span>
+            <span class="chat-header-title">Polly — Ship's Intelligence</span>
+            <span class="chat-header-sub">Fully briefed on Aakanksha</span>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg parrot">Squawk! Ahoy there, recruiter! Ask me anything about Captain Aakanksha — her skills, her voyages, or why she'd be a fine addition to your crew! ⚓</div>
+            <div class="chat-typing-indicator" id="typingIndicator">
+              <div class="typing-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="chat-suggestions" id="chatSuggestions">
+            <button class="suggest-chip" data-q="What are your skills?">Skills?</button>
+            <button class="suggest-chip" data-q="Tell me about your experience">Experience?</button>
+            <button class="suggest-chip" data-q="Why should I hire you?">Why hire?</button>
+            <button class="suggest-chip" data-q="What's your tech stack?">Tech stack?</button>
+            <button class="suggest-chip" data-q="Tell me about AI tools">AI tooling?</button>
+            <button class="suggest-chip" data-q="Tell me about your security work">Security?</button>
+          </div>
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask Polly anything..." autocomplete="off"/>
+            <button class="chat-send-btn" id="chatSendBtn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="rope-scrollbar"><div class="rope-top-ring"></div><div class="rope-line"></div><div class="rope-bot-ring"></div><div class="rope-anchor" id="ropeAnchor">⚓</div></div>
+
+  <script>
+    /* NIGHT MODE */
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    let isNight=false;
+    nightToggle.addEventListener('click',()=>{isNight=!isNight;document.body.classList.toggle('night-mode',isNight);if(isNight){skySun.style.animation='sunSet 2.8s ease-in-out forwards';setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);}else{skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);}});
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>workshopDd.classList.toggle('open'));
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('ropeAnchor').style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+
+    /* PARROT CHAT */
+    const chatMessages=document.getElementById('chatMessages'),chatInput=document.getElementById('chatInput'),chatSendBtn=document.getElementById('chatSendBtn'),parrotSvg=document.getElementById('parrotBigSvg'),typingIndicator=document.getElementById('typingIndicator');
+    let isTyping=false;
+
+    const PARROT_KB=[
+      {keys:['skill','stack','know','language','technology','tech','what can','capable'],responses:["Squawk! The Captain wields Java and Spring Boot like a cutlass! Full stack: Java, Spring Boot, REST API, Oracle DB on the backend; JavaScript, HTML5, CSS3, Webpack on the frontend. Plus MQTT and CORBA for telecom battles. And — the secret weapon — AI tooling: Claude AI, GitHub Copilot, prompt engineering! 🦜","Polly's seen it all! Backend: Java, Spring Boot, Oracle DB, JSP/Servlet. Frontend: JavaScript, Webpack, HTML5, CSS3. Networks: MQTT, CORBA, telecom infra. And AI tools: Claude, Copilot, Cursor, agentic workflows. Quite the arsenal! ⚔️"]},
+      {keys:['experience','work','job','employ','company','verizon','ericsson','career','history','voyage'],responses:["Three voyages on the logbook! Currently at Verizon (via Ericsson) — where she eradicated 32 critical security vulnerabilities, 100% remediation, zero escapes. Before that, Ericsson proper, building NWT MapView for 100+ engineers. First ship: Dopamine Enterprises. Java all the way! 🗺","2+ years at sea! Verizon (2024–present): security hardening, MQTT architecture, JSP modernisation. Ericsson (2022–2023): NWT MapView for 100+ network engineers, ES module refactoring. Dopamine (2022): full-stack water ordering platform. Squawk!"]},
+      {keys:['hire','recruit','team','join','offer','consider','worth','good fit','recommend','should i'],responses:["SQUAWK! Is she worth hiring?! She eliminated 32 critical vulnerabilities at 100% rate, built platforms used by 100+ engineers, brings AI tooling to every project, and she speaks both pirate AND enterprise Java. I'd run `sudo hire aakanksha` if I had fingers! 🏴‍☠️","Let Polly count: ① 100% security remediation rate. ② Full-stack Java + frontend. ③ Telecom protocol expertise (MQTT, CORBA). ④ AI-assisted development. ⑤ Ships code that actually works in production. What more do you need? Squawk!"]},
+      {keys:['project','built','made','portfolio','work on','created','developed'],responses:["Ooh! Projects! NWT MapView (Ericsson) — live tool, 100+ engineers. GCT MQTT extension (Verizon) — dual-protocol RHEL 8 architecture. Fortify remediation — 32 vulns to zero. Water ordering platform (Dopamine) — full Spring Boot. And this portfolio! Squawk! 🗺","The treasure chest: NWT MapView for Ericsson, MQTT/CORBA extension for Verizon, Fortify SAST security hardening, a full-stack water ordering app, and agentic AI workflows. Not bad for 2 years! 🏴‍☠️"]},
+      {keys:['education','degree','study','university','college','learn','qualification','academic'],responses:["Academy records: B.Tech in Information Technology from Techno India College (2017–2021), then Java Full Stack Master's from Simplilearn (2022). Then she went straight to sea — and never looked back! Squawk! 🎓","Schooled at Techno India College in IT, then sharpened her cutlass with a Java Full Stack Master's at Simplilearn. Then she joined the fleet. Education: ✓. Sea legs: ✓✓✓. 🎓"]},
+      {keys:['ai','artificial intelligence','machine learning','gpt','claude','copilot','automation','agentic'],responses:["Ohhh now we're talking! Claude AI, GitHub Copilot, Cursor, prompt engineering, agentic workflows — she doesn't just use AI, she BUILDS workflows around it. Automates scaffolding, squashes bugs at warp speed, accelerates delivery. The future of software is here! ✨","AI is a MASSIVE part of the arsenal! Claude AI, GitHub Copilot, Cursor IDE, prompt engineering — she uses these to 10x development speed. Also building n8n agentic workflows as a side project. The parrot is impressed! Squawk! 🦜"]},
+      {keys:['security','vulnerability','fortify','sast','safe','secure','harden'],responses:["The Fortify saga! Armed with Fortify SAST analysis, she tackled 32 critical Open Redirect vulnerabilities and achieved 100% remediation. Zero left standing. At Verizon's telecom fleet. Security isn't a checkbox for her — it's a mission! Squawk! 🛡️"]},
+      {keys:['telecom','mqtt','corba','network','protocol','infrastructure','rhel'],responses:["Telecom is her territory! MQTT, CORBA, dual-protocol architecture, RHEL 8 deployments, legacy modernisation — she extended the GCT platform at Verizon to support both old and new protocol stacks simultaneously. The network engineers trust her with production! 📡"]},
+      {keys:['contact','email','reach','linkedin','connect','message'],responses:["To reach the Captain: 📧 aakanksha.kashyap@gmail.com or 💼 linkedin.com/in/aakanksha-kashyap — very responsive. Unlike some parrots who shall remain nameless. Squawk! 📬"]},
+      {keys:['hello','hi','hey','ahoy','greet','morning','afternoon'],responses:["Ahoy there! Polly at your service! Fully briefed on Captain Aakanksha's skills, voyages, and career highlights. Ask me anything! Squawk! 🦜","Squawk! Welcome aboard! I'm Polly — AI parrot, career advisor, and Aakanksha's biggest fan. What can I answer for you? ⚓"]},
+      {keys:['salary','pay','compensation','rate','package','money','cost'],responses:["Squawk! Polly doesn't discuss treasure numbers — that's captain's business! But I'll say this: whatever you're thinking, she's worth it. 100% vuln remediation doesn't come cheap! 💰 Reach her at aakanksha.kashyap@gmail.com."]},
+    ];
+    const FALLBACK=["Squawk! Polly's not sure about that one. Try asking about skills, experience, or why you should hire the Captain! 🦜","Hmm, that's outside my briefing. But I do know about Java, Spring Boot, security work, and why hiring the Captain is an excellent decision! Squawk!","The parrot heard you, but needs more context! Try: 'What are your skills?' or 'Why should I hire you?' Squawk!"];
+
+    function getReply(input){const l=input.toLowerCase();for(const e of PARROT_KB){if(e.keys.some(k=>l.includes(k)))return e.responses[Math.floor(Math.random()*e.responses.length)];}return FALLBACK[Math.floor(Math.random()*FALLBACK.length)];}
+    function addMsg(text,role){const d=document.createElement('div');d.className='msg '+role;if(role==='user')d.textContent=text;else d.innerHTML=text;chatMessages.insertBefore(d,typingIndicator);chatMessages.scrollTop=chatMessages.scrollHeight;return d;}
+    async function typeReply(text){isTyping=true;parrotSvg.classList.add('talking');chatSendBtn.disabled=true;chatInput.disabled=true;typingIndicator.style.display='block';chatMessages.scrollTop=chatMessages.scrollHeight;await new Promise(r=>setTimeout(r,700+Math.random()*500));typingIndicator.style.display='none';const d=document.createElement('div');d.className='msg parrot';chatMessages.insertBefore(d,typingIndicator);const cur=document.createElement('span');cur.className='typing-cursor';d.appendChild(cur);let printed='';for(const ch of text.split('')){printed+=ch;d.innerHTML=printed;d.appendChild(cur);chatMessages.scrollTop=chatMessages.scrollHeight;await new Promise(r=>setTimeout(r,16+Math.random()*12));}cur.remove();parrotSvg.classList.remove('talking');chatSendBtn.disabled=false;chatInput.disabled=false;chatInput.focus();isTyping=false;}
+    async function sendChat(text){if(!text.trim()||isTyping)return;addMsg(text,'user');chatInput.value='';chatMessages.scrollTop=chatMessages.scrollHeight;await typeReply(getReply(text));}
+    chatSendBtn.addEventListener('click',()=>sendChat(chatInput.value));
+    chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendChat(chatInput.value);});
+    document.querySelectorAll('.suggest-chip').forEach(c=>c.addEventListener('click',()=>{if(!isTyping)sendChat(c.dataset.q);}));
+  </script>
+</body>
+</html>

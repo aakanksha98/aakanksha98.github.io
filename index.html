@@ -269,6 +269,47 @@
       color: var(--red-flag);
     }
 
+    /* WORKSHOP DROPDOWN */
+    .nav-dropdown { position: relative; }
+    .dropdown-trigger {
+      font-family: var(--font-serif); font-size: 1.2rem; font-weight: bold;
+      color: var(--ink); text-transform: uppercase; letter-spacing: 2px;
+      display: flex; align-items: center; gap: .3em;
+      cursor: pointer; transition: color .3s; user-select: none;
+    }
+    .nav-dropdown:hover .dropdown-trigger,
+    .nav-dropdown.open .dropdown-trigger { color: var(--red-flag); }
+    .caret { font-size: .7em; transition: transform .25s; display: inline-block; }
+    .nav-dropdown:hover .caret,
+    .nav-dropdown.open .caret { transform: rotate(180deg); }
+    .dropdown-menu {
+      position: absolute; top: calc(100% + 1rem); right: 0;
+      min-width: 240px; background: var(--parchment);
+      border: 2px solid var(--wood-dark);
+      box-shadow: 4px 4px 0 rgba(0,0,0,.15);
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none; transform: translateY(-8px);
+      transition: opacity .2s, transform .2s; z-index: 500;
+    }
+    .nav-dropdown:hover .dropdown-menu,
+    .nav-dropdown.open .dropdown-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .dropdown-section-label {
+      font-family: var(--font-display); font-size: .7rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ink-faded); padding: .5rem 1.2rem .2rem;
+    }
+    .dropdown-menu a {
+      font-family: var(--font-serif); font-size: 1.05rem; color: var(--ink);
+      text-decoration: none; padding: .6rem 1.2rem;
+      border-bottom: 1px solid rgba(90,75,61,.2);
+      transition: background .15s, color .15s; letter-spacing: .05em;
+    }
+    .dropdown-menu a:last-child { border-bottom: none; }
+    .dropdown-menu a:hover { background: var(--wood); color: var(--parchment); }
+    .dd-divider { height: 1px; background: var(--parchment-dark); margin: 0; }
+    body.night-mode .dropdown-menu { background: var(--parchment-dark); border-color: var(--ink-faded); }
+    body.night-mode .dropdown-menu a { color: var(--ink); border-bottom-color: rgba(255,255,255,.1); }
+    body.night-mode .dropdown-menu a:hover { background: var(--wood); color: #fdf5e6; }
+
     .lantern-toggle {
       font-size: 2rem;
       cursor: pointer;
@@ -1728,6 +1769,17 @@
       <a href="journey-map.html?section=experience" target="_blank">The Voyages</a>
       <a href="journey-map.html?section=skills" target="_blank">The Arsenal</a>
       <a href="journey-map.html?section=education" target="_blank">The Academy</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html" target="_blank">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html" target="_blank">⊳ Navigator's Console</a>
+          <a href="project-parrot.html" target="_blank">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html" target="_blank">⚓ Recruiter Mode</a>
+        </div>
+      </div>
       <!-- FEATURE 2 TOGGLE -->
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage (Constellations)">🏮</div>
       <!-- PARROT COMPANION -->
@@ -2090,6 +2142,17 @@
   </div>
 
   <script>
+    // ── WORKSHOP DROPDOWN (mobile click toggle) ───────────────────────────
+    const workshopDd = document.getElementById('workshopDropdown');
+    if (workshopDd) {
+      workshopDd.querySelector('.dropdown-trigger').addEventListener('click', () => {
+        workshopDd.classList.toggle('open');
+      });
+      document.addEventListener('click', e => {
+        if (!workshopDd.contains(e.target)) workshopDd.classList.remove('open');
+      });
+    }
+
     // ── SOUND EFFECTS ENGINE ──────────────────────────────────────────────
     const sfx = (() => {
       let ctx = null;

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigator's Console — Aakanksha Kashyap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --parchment:#eacda1; --parchment-dark:#ccaa77; --wood:#5c3a21;
+      --wood-dark:#3a2211; --ink:#312117; --ink-faded:#5a4b3d;
+      --red-flag:#8a1f1b; --font-display:'Uncial Antiqua',cursive;
+      --font-serif:'Crimson Text',serif; --font-body:'Karla',sans-serif;
+      --font-mono:'VT323',monospace;
+      --term-bg:#0d0f0b; --term-green:#39ff14; --term-green-dim:#1f8a0a; --term-amber:#ffb300;
+    }
+    body.night-mode { --parchment:#0f172a; --parchment-dark:#1e293b; --wood:#1e1b4b; --wood-dark:#000; --ink:#e2e8f0; --ink-faded:#94a3b8; --red-flag:#38bdf8; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body { background:var(--parchment); color:var(--ink); font-family:var(--font-body); overflow-x:hidden; transition:background-color 2s,color 2s; }
+
+    /* BURN-IN */
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.45;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.12;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.4),inset 0 0 300px rgba(45,17,3,.2);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+
+    /* NAV */
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:#fdf5e6;border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+
+    /* DROPDOWN */
+    .nav-dropdown{position:relative;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:#fdf5e6;}
+
+    /* ROPE SCROLLBAR */
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+
+    /* NIGHT ANIMS */
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* PAGE HERO */
+    .page-hero{padding:7rem 6% 2rem;text-align:center;}
+    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.2em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.4rem;}
+    .page-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3.2rem);color:var(--wood-dark);margin-bottom:.6rem;}
+    body.night-mode .page-title{color:#fdf5e6;}
+    .page-desc{font-family:var(--font-serif);font-size:1.2rem;color:var(--ink-faded);max-width:580px;margin:0 auto 1.2rem;}
+    .back-link{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:1rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.35rem .9rem;border-radius:4px;transition:all .2s;margin-bottom:2rem;}
+    .back-link:hover{color:var(--ink);border-color:var(--wood);background:rgba(0,0,0,.05);}
+    .cmd-tags{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2rem;}
+    .cmd-tag{font-family:var(--font-mono);font-size:1rem;padding:.2rem .7rem;border:1.5px solid var(--wood);border-radius:4px;color:var(--ink-faded);}
+
+    /* TERMINAL */
+    .terminal-wrap{padding:0 4% 5rem;max-width:1000px;margin:0 auto;}
+    .terminal-window{background:var(--term-bg);border:1px solid #1a2a1a;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(57,255,20,.12),0 20px 60px rgba(0,0,0,.5);font-family:var(--font-mono);font-size:1.2rem;height:65vh;min-height:400px;position:relative;}
+    .terminal-titlebar{background:#111;padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;border-bottom:1px solid #222;flex-shrink:0;}
+    .term-dot{width:12px;height:12px;border-radius:50%;}
+    .term-dot.red{background:#ff5f57;cursor:pointer;}
+    .term-dot.yellow{background:#febc2e;}
+    .term-dot.green{background:#28c840;}
+    .term-title-text{margin-left:.5rem;color:#555;font-size:.95rem;letter-spacing:.1em;}
+    .terminal-body{flex:1;padding:1rem 1.4rem;overflow-y:auto;cursor:text;scrollbar-width:thin;scrollbar-color:var(--term-green-dim) transparent;}
+    .terminal-body::-webkit-scrollbar{width:6px;}
+    .terminal-body::-webkit-scrollbar-thumb{background:var(--term-green-dim);border-radius:3px;}
+    .term-output{white-space:pre;color:var(--term-green);line-height:1.6;}
+    .term-output .dim{color:var(--term-green-dim);}
+    .term-output .bright{color:#fff;}
+    .term-output .amber{color:var(--term-amber);}
+    .term-output .red{color:#ff4444;}
+    .term-output .gr{color:var(--term-green);}
+    .term-input-row{display:flex;align-items:center;padding:.4rem 0;flex-shrink:0;}
+    .term-prompt{color:var(--term-amber);user-select:none;white-space:nowrap;}
+    .term-input{background:transparent;border:none;outline:none;caret-color:var(--term-green);color:var(--term-green);font-family:var(--font-mono);font-size:1.2rem;flex:1;padding-left:.4rem;}
+    .scanline{position:absolute;inset:0;pointer-events:none;border-radius:10px;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);z-index:2;}
+    .crt-glow{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 80px rgba(57,255,20,.05);border-radius:10px;z-index:1;}
+
+    @media(max-width:640px){
+      .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
+      .nav-links a{font-size:.9rem;}
+      nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+      .terminal-window{font-size:1rem;height:60vh;}
+    }
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html" class="current-page">⊳ Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <div class="page-label">Project I · Terminal</div>
+      <h1 class="page-title">The Navigator's Console</h1>
+      <p class="page-desc">A fully-featured SSH-style terminal. Type commands to explore skills, experience, and a few hidden surprises.</p>
+      <a href="projects.html" class="back-link">← Back to Workshop</a>
+      <div class="cmd-tags">
+        <span class="cmd-tag">help</span>
+        <span class="cmd-tag">ls skills/</span>
+        <span class="cmd-tag">cat exp.txt</span>
+        <span class="cmd-tag">neofetch</span>
+        <span class="cmd-tag">sudo hire aakanksha</span>
+        <span class="cmd-tag">ping aakanksha</span>
+      </div>
+    </div>
+
+    <div class="terminal-wrap">
+      <div class="terminal-window">
+        <div class="scanline"></div>
+        <div class="crt-glow"></div>
+        <div class="terminal-titlebar">
+          <div class="term-dot red" id="termClose" title="Close (back to workshop)"></div>
+          <div class="term-dot yellow"></div>
+          <div class="term-dot green"></div>
+          <span class="term-title-text">aakanksha@pirate-ship — Navigator's Console</span>
+        </div>
+        <div class="terminal-body" id="termBody">
+          <div id="termOutput"></div>
+          <div class="term-input-row">
+            <span class="term-prompt">aakanksha@ship:~$ </span>
+            <input type="text" class="term-input" id="termInput" autocomplete="off" autocorrect="off" spellcheck="false" autofocus>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="rope-scrollbar" id="ropeScrollbar">
+    <div class="rope-top-ring"></div>
+    <div class="rope-line"></div>
+    <div class="rope-bot-ring"></div>
+    <div class="rope-anchor" id="ropeAnchor">⚓</div>
+  </div>
+
+  <script>
+    /* NIGHT MODE */
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    let isNight=false;
+    nightToggle.addEventListener('click',()=>{
+      isNight=!isNight;document.body.classList.toggle('night-mode',isNight);
+      if(isNight){skySun.style.animation='sunSet 2.8s ease-in-out forwards';setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);}
+      else{skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);}
+    });
+
+    /* DROPDOWN CLICK FOR MOBILE */
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>{workshopDd.classList.toggle('open');});
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+
+    /* ROPE */
+    const ropeAnchor=document.getElementById('ropeAnchor');
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);ropeAnchor.style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+
+    /* STARS */
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+
+    /* TERMINAL */
+    const termOutput=document.getElementById('termOutput'),termInput=document.getElementById('termInput'),termBody=document.getElementById('termBody');
+
+    const WELCOME=`<span class="bright">
+  ╔══════════════════════════════════════════════════════╗
+  ║        NAVIGATOR'S CONSOLE  v2.4.1                  ║
+  ║        SSH aakanksha@pirate-ship -p 22               ║
+  ╚══════════════════════════════════════════════════════╝
+</span><span class="dim">Connection established. Last login: Today, from recruiter@hiring.co
+
+</span>Type <span class="amber">help</span> for a list of commands.
+`;
+
+    const CMDS={
+      help:()=>`\n<span class="amber">Available Commands</span>\n<span class="dim">─────────────────────────────────────────</span>\n  <span class="bright">ls</span>                  List home directory\n  <span class="bright">ls skills/</span>          View the skill arsenal\n  <span class="bright">ls projects/</span>        View project inventory\n  <span class="bright">cat about.txt</span>       Captain's profile\n  <span class="bright">cat exp.txt</span>         Experience log\n  <span class="bright">cat contact.txt</span>     Contact details\n  <span class="bright">whoami</span>              Identify yourself\n  <span class="bright">ping aakanksha</span>      Test connection\n  <span class="bright">sudo hire aakanksha</span> <span class="amber">⚠ Highly recommended</span>\n  <span class="bright">neofetch</span>            System information\n  <span class="bright">clear</span>               Clear the terminal\n<span class="dim">\n  Tip: Use ↑ / ↓ to navigate command history\n</span>`,
+      ls:()=>`\n<span class="bright">total 6</span>\n<span class="amber">drwxr-xr-x</span>  skills/\n<span class="amber">drwxr-xr-x</span>  experience/\n<span class="amber">drwxr-xr-x</span>  projects/\n<span class="bright">-rw-r--r--</span>  about.txt\n<span class="bright">-rw-r--r--</span>  exp.txt\n<span class="bright">-rw-r--r--</span>  contact.txt\n`,
+      'ls skills/':()=>`\nskills/\n<span class="amber">├── ai-tools/</span>\n│   ├── <span class="bright">claude_ai.sh</span>\n│   ├── <span class="bright">github_copilot.sh</span>\n│   ├── <span class="bright">cursor.sh</span>\n│   └── <span class="bright">prompt_engineering.sh</span>\n<span class="amber">├── backend/</span>\n│   ├── <span class="bright">java.class</span>\n│   ├── <span class="bright">spring_boot.jar</span>\n│   ├── <span class="bright">rest_api.json</span>\n│   └── <span class="bright">oracle_db.sql</span>\n<span class="amber">├── frontend/</span>\n│   ├── <span class="bright">javascript.js</span>\n│   ├── <span class="bright">html5.html</span>\n│   ├── <span class="bright">css3.css</span>\n│   └── <span class="bright">webpack.config.js</span>\n<span class="amber">└── networks/</span>\n    ├── <span class="bright">mqtt.proto</span>\n    ├── <span class="bright">corba.idl</span>\n    └── <span class="bright">telecom_infra.conf</span>\n`,
+      'ls projects/':()=>`\nprojects/\n├── <span class="bright">nwt-mapview/</span>          <span class="dim"># Ericsson · 100+ engineers</span>\n├── <span class="bright">gct-mqtt-extension/</span>   <span class="dim"># Verizon · RHEL 8 dual-protocol</span>\n├── <span class="bright">fortify-remediation/</span>  <span class="dim"># 32 vulns → 0 vulns</span>\n├── <span class="bright">water-order-platform/</span> <span class="dim"># Dopamine · full-stack Java</span>\n└── <span class="bright">this-portfolio/</span>       <span class="dim"># you are here ⚓</span>\n`,
+      'cat about.txt':()=>`\n<span class="bright">╔══════════════════════════════════════════╗\n║      CAPTAIN AAKANKSHA KASHYAP          ║\n╚══════════════════════════════════════════╝</span>\n\n  Software Developer with 2+ years navigating\n  enterprise Java systems, telecom infrastructure,\n  and AI-assisted development workflows.\n\n  Docked at:  <span class="amber">Verizon (Ericsson Fleet)</span>\n  Mission:    Build fast, secure, scalable software\n  Superpower: Eliminating 100% of security vulnerabilities\n  Side quest: Building agentic AI workflows\n\n  <span class="dim">Email   : aakanksha.kashyap@gmail.com\n  LinkedIn: linkedin.com/in/aakanksha-kashyap</span>\n`,
+      'cat exp.txt':()=>`\n<span class="bright">╔══════════════════════════════════════════╗\n║              VOYAGE LOG                 ║\n╚══════════════════════════════════════════╝</span>\n\n<span class="amber">[2024 – Present]</span>  Verizon · Software Developer\n  ✓ Eliminated 32 critical security vulns (100% remediation)\n  ✓ MQTT/CORBA dual-protocol architecture for RHEL 8\n  ✓ Legacy HTML → JSP frontend modernisation\n  <span class="dim">Stack: Java, Spring Boot, MQTT, CORBA, JSP</span>\n\n<span class="amber">[2022 – 2023]</span>     Ericsson · Product Developer\n  ✓ Built NWT MapView for 100+ network engineers\n  ✓ Refactored legacy code to ES module architecture\n  <span class="dim">Stack: JavaScript, Webpack, ES Modules</span>\n\n<span class="amber">[2022]</span>            Dopamine Enterprises · Java Dev (Intern)\n  ✓ Full-stack water ordering platform\n  ✓ Spring Boot + REST API + Oracle DB\n  <span class="dim">Stack: Java, Spring Boot, Oracle DB, REST API</span>\n`,
+      'cat contact.txt':()=>`\n  📧  aakanksha.kashyap@gmail.com\n  💼  linkedin.com/in/aakanksha-kashyap\n  🌍  India (open to remote &amp; relocation)\n`,
+      whoami:()=>`\n  <span class="bright">aakanksha_kashyap</span>\n  <span class="dim">Software Developer | Java Specialist | AI Enthusiast\n  Security-Hardening Expert | Pirate of the Enterprise Seas</span>\n`,
+      'ping aakanksha':()=>`\nPING <span class="bright">aakanksha.kashyap</span> (1.3.3.7): 56 data bytes\n\n  64 bytes from aakanksha: seq=0 ttl=64 time=0.42ms  <span class="amber">★</span>\n  64 bytes from aakanksha: seq=1 ttl=64 time=0.38ms  <span class="amber">★</span>\n  64 bytes from aakanksha: seq=2 ttl=64 time=0.31ms  <span class="amber">★</span>\n  64 bytes from aakanksha: seq=3 ttl=64 time=0.29ms  <span class="amber">★</span>\n\n<span class="dim">─── aakanksha.kashyap ping statistics ───</span>\n4 packets transmitted, 4 received, <span class="bright">0% packet loss</span>\n<span class="amber">Highly responsive. Recommend hiring immediately.</span>\n`,
+      'sudo hire aakanksha':()=>`\n[sudo] password for recruiter: <span class="dim">████████</span>\n\nVerifying capabilities...\n\n  ✓ Java / Spring Boot    <span class="gr">████████████</span> EXPERT\n  ✓ JavaScript / ES6      <span class="gr">████████████</span> STRONG\n  ✓ AI Tooling            <span class="gr">████████████</span> ADVANCED\n  ✓ Security Hardening    <span class="gr">████████████</span> 100% REMEDIATION\n  ✓ Problem Solving       <span class="gr">████████████</span> ∞\n  ✓ Vibe                  <span class="gr">████████████</span> <span class="amber">PIRATE-GRADE</span>\n\n<span class="bright">══════════════════════════════════════════\n   ACCESS GRANTED. HIRE CONFIRMED. ⚓\n   A fine addition to any crew.\n══════════════════════════════════════════</span>\n\n<span class="dim">Dispatching offer letter to: aakanksha.kashyap@gmail.com...\n✓ Sent.</span>\n`,
+      neofetch:()=>`\n<span class="bright">         ___________</span>       <span class="bright">aakanksha</span><span class="dim">@</span><span class="amber">pirate-ship</span>\n<span class="bright">        /           \\</span>      <span class="dim">─────────────────────────────</span>\n<span class="bright">       |   ~~~  ~~~ |</span>      OS:       <span class="bright">Caffeine-Driven v3.1</span>\n<span class="bright">       |  (O)  (O)  |</span>      Host:     <span class="bright">HMS Enterprise Java</span>\n<span class="bright">        \\     v     /</span>      Uptime:   <span class="bright">2 yrs 4 months</span>\n<span class="bright">         \\   ───   /</span>       Shell:    <span class="bright">bash 5.2</span>\n<span class="bright">          \\_______/</span>        Terminal: <span class="bright">Navigator's Console</span>\n<span class="bright">             |||</span>           CPU:      <span class="bright">Overthinking Engine™</span>\n<span class="bright">          //|||\\\\</span>         GPU:      <span class="bright">Visualisation Suite</span>\n<span class="bright">         // ||| \\\\</span>        Memory:   <span class="bright">42 TB of insights</span>\n<span class="bright">        //  |||  \\\\</span>       Skills:   <span class="gr">████████████</span> MAX\n<span class="bright">       /    |||    \\</span>       Attitude: <span class="amber">████████████</span> ∞\n`,
+      clear:()=>'__CLEAR__',
+    };
+
+    let cmdHistory=[],histIdx=-1,printTimeout=null;
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function termPrint(html){const d=document.createElement('div');d.className='term-output';d.innerHTML=html;termOutput.appendChild(d);termBody.scrollTop=termBody.scrollHeight;}
+    function echoCmd(cmd){termPrint(`<span class="dim">aakanksha@ship:~$</span> <span class="bright">${esc(cmd)}</span>`);}
+    async function typeOut(html){const tmp=document.createElement('div');tmp.innerHTML=html;const text=tmp.textContent;if(text.length<40){termPrint(html);return;}return new Promise(res=>{const d=document.createElement('div');d.className='term-output';termOutput.appendChild(d);let i=0,chunk='';const chars=html.split('');function next(){for(let b=0;b<8&&i<chars.length;b++,i++)chunk+=chars[i];d.innerHTML=chunk;termBody.scrollTop=termBody.scrollHeight;if(i<chars.length){printTimeout=setTimeout(next,4);}else res();}next();});}
+    async function runCmd(raw){const cmd=raw.trim();if(!cmd)return;if(printTimeout)clearTimeout(printTimeout);cmdHistory.unshift(cmd);histIdx=-1;echoCmd(cmd);termInput.value='';const handler=CMDS[cmd.toLowerCase()];if(handler){const out=handler();if(out==='__CLEAR__'){termOutput.innerHTML='';}else{await typeOut(out);}}else{termPrint(`<span class="red">bash: ${esc(cmd)}: command not found</span>\nType <span class="amber">help</span> for available commands.`);}termBody.scrollTop=termBody.scrollHeight;}
+    termInput.addEventListener('keydown',e=>{if(e.key==='Enter'){runCmd(termInput.value);}else if(e.key==='ArrowUp'){e.preventDefault();if(histIdx<cmdHistory.length-1)histIdx++;termInput.value=cmdHistory[histIdx]||'';}else if(e.key==='ArrowDown'){e.preventDefault();if(histIdx>0)histIdx--;else{histIdx=-1;termInput.value='';return;}termInput.value=cmdHistory[histIdx]||'';}});
+    termBody.addEventListener('click',()=>termInput.focus());
+    document.getElementById('termClose').addEventListener('click',()=>{window.location.href='projects.html';});
+    // Auto-start
+    termPrint(WELCOME);
+    termInput.focus();
+  </script>
+</body>
+</html>

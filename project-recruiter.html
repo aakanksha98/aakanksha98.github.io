@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Mode — Aakanksha Kashyap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <style>
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.45;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.12;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.4),inset 0 0 300px rgba(45,17,3,.2);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:#fdf5e6;border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+    .nav-dropdown{position:relative;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:#fdf5e6;}
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+
+    /* PAGE */
+    .page-hero{padding:7rem 6% 2.5rem;text-align:center;}
+    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.2em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.4rem;}
+    .page-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3.2rem);color:var(--wood-dark);margin-bottom:.6rem;}
+    body.night-mode .page-title{color:#fdf5e6;}
+    .page-desc{font-family:var(--font-serif);font-size:1.2rem;color:var(--ink-faded);max-width:520px;margin:0 auto 1.2rem;}
+    .back-link{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:1rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.35rem .9rem;border-radius:4px;transition:all .2s;}
+    .back-link:hover{color:var(--ink);border-color:var(--wood);}
+
+    /* TOGGLE */
+    .toggle-section{padding:2rem 6% 3rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem;}
+    .toggle-row{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;}
+    .mode-label{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.08em;transition:opacity .4s,transform .4s;cursor:pointer;}
+    .mode-label.pirate{color:var(--red-flag);}
+    .mode-label.pro{color:#1e3a5f;}
+    body.night-mode .mode-label.pro{color:#7dd3fc;}
+    .mode-label.inactive{opacity:.3;transform:scale(.9);}
+    .toggle-input{opacity:0;width:0;height:0;position:absolute;}
+    .toggle-slider{display:block;width:90px;height:46px;background:var(--red-flag);border-radius:46px;cursor:pointer;position:relative;transition:background .5s;border:2.5px solid var(--wood-dark);box-shadow:4px 4px 0 var(--wood-dark);}
+    .toggle-slider::before{content:'⚓';display:flex;align-items:center;justify-content:center;position:absolute;left:5px;top:50%;transform:translateY(-50%);width:34px;height:34px;background:var(--parchment);border-radius:50%;font-size:1.1rem;transition:left .4s cubic-bezier(.34,1.56,.64,1),background .4s;box-shadow:1px 1px 4px rgba(0,0,0,.3);}
+    .toggle-input:checked+.toggle-slider{background:#1e3a5f;}
+    body.night-mode .toggle-input:checked+.toggle-slider{background:#0369a1;}
+    .toggle-input:checked+.toggle-slider::before{left:49px;content:'💼';background:#e2e8f0;}
+    .mode-hint{font-family:var(--font-serif);font-style:italic;font-size:1rem;color:var(--ink-faded);}
+
+    /* RESUME CARD */
+    .resume-wrap{padding:0 5% 5rem;max-width:860px;margin:0 auto;}
+    .resume-card{border-radius:12px;overflow:hidden;transition:box-shadow .4s;box-shadow:0 8px 32px rgba(0,0,0,.12);}
+    .resume-card.switching{animation:cardFlip .55s ease-in-out;}
+    @keyframes cardFlip{0%{transform:perspective(1400px) rotateY(0)}50%{transform:perspective(1400px) rotateY(90deg);opacity:.3}100%{transform:perspective(1400px) rotateY(0)}}
+
+    /* PIRATE RESUME */
+    .pirate-mode{background:var(--parchment);border:3px solid var(--wood);font-family:var(--font-serif);}
+    .pirate-header{background:var(--wood-dark);color:var(--parchment);padding:2.5rem 3rem;text-align:center;position:relative;}
+    .pirate-header::after{content:'';display:block;height:4px;background:repeating-linear-gradient(90deg,var(--red-flag) 0 22px,transparent 22px 32px);margin-top:1.3rem;}
+    .pirate-stamp{position:absolute;top:1.2rem;right:1.8rem;border:3px solid var(--red-flag);color:var(--red-flag);padding:.3rem .7rem;font-family:var(--font-display);font-size:.9rem;transform:rotate(15deg);opacity:.85;letter-spacing:.05em;}
+    .pirate-name{font-family:var(--font-display);font-size:2.4rem;letter-spacing:.06em;text-shadow:2px 2px 4px rgba(0,0,0,.4);}
+    .pirate-rank{font-family:var(--font-serif);font-style:italic;font-size:1.2rem;color:rgba(234,205,161,.7);margin-top:.4rem;}
+    .resume-body{padding:2.5rem 3rem;}
+    .sec-title{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;border-bottom:1.5px solid currentColor;padding-bottom:.35rem;margin-bottom:1.1rem;margin-top:2rem;}
+    .sec-title:first-child{margin-top:0;}
+    .pirate-sec-title{color:var(--wood);font-family:var(--font-display);}
+    .skill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem;}
+    .skill-tag{padding:.25rem .85rem;border-radius:4px;font-size:.88rem;}
+    .pirate-skill{background:var(--wood);color:var(--parchment);font-family:var(--font-serif);}
+    .entry{margin-bottom:1.4rem;}
+    .entry-title{font-weight:bold;font-size:1.1rem;font-family:var(--font-serif);}
+    .entry-meta{font-size:.9rem;opacity:.65;margin-bottom:.3rem;}
+    .entry-desc{font-size:.97rem;line-height:1.65;}
+
+    /* PRO RESUME */
+    .pro-mode{background:#0f1923;border:3px solid #1e3a5f;color:#e2e8f0;font-family:var(--font-body);}
+    .pro-header{background:linear-gradient(135deg,#1e3a5f,#0f1923);padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.2rem;}
+    .pro-name{font-size:2.1rem;font-weight:700;color:#f1f5f9;letter-spacing:.02em;}
+    .pro-title{font-size:1rem;color:#7dd3fc;letter-spacing:.1em;text-transform:uppercase;margin-top:.25rem;}
+    .pro-contacts{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;}
+    .pro-contact-item{font-size:.85rem;color:#94a3b8;}
+    .pro-body{padding:2.5rem 3rem;}
+    .pro-sec-title{color:#7dd3fc;font-size:.75rem;letter-spacing:.22em;border-bottom:1px solid #1e3a5f;}
+    .pro-skill{background:#1e3a5f;color:#7dd3fc;border:1px solid #1e4d7a;}
+    .pro-entry-title{color:#f1f5f9;}
+    .pro-entry-meta{color:#64748b;}
+    .pro-entry-desc{color:#94a3b8;}
+    .pro-badge{display:inline-block;background:#0c4a6e;color:#38bdf8;padding:.15rem .65rem;border-radius:12px;font-size:.8rem;letter-spacing:.05em;border:1px solid #0369a1;margin-left:.5rem;}
+
+    @media(max-width:640px){
+      .pirate-header,.pro-header,.resume-body,.pro-body{padding:1.5rem 1.5rem;}
+      .pirate-name{font-size:1.7rem;}
+      nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+      .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
+      .nav-links a{font-size:.9rem;}
+      .pro-header{flex-direction:column;align-items:flex-start;}
+      .pro-contacts{align-items:flex-start;}
+    }
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">⊳ Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html" class="current-page">⚓ Recruiter Mode</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <div class="page-label">Project III · Mode Toggle</div>
+      <h1 class="page-title">Recruiter Mode</h1>
+      <p class="page-desc">Same person. Two very different ships. Flip the switch and watch the parchment transform into a polished professional resume.</p>
+      <a href="projects.html" class="back-link">← Back to Workshop</a>
+    </div>
+
+    <div class="toggle-section">
+      <div class="toggle-row">
+        <span class="mode-label pirate" id="pirateLabel" onclick="if(isPro)flip()">⚓ Pirate Mode</span>
+        <label class="toggle-switch-wrap" style="position:relative;">
+          <input type="checkbox" id="modeToggle" class="toggle-input">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="mode-label pro inactive" id="proLabel" onclick="if(!isPro)flip()">💼 Professional Mode</span>
+      </div>
+      <p class="mode-hint" id="modeHint">"Showing the pirate within — click to reveal the professional."</p>
+    </div>
+
+    <div class="resume-wrap">
+      <div class="resume-card pirate-mode" id="resumeCard">
+        <!-- PIRATE -->
+        <div id="pirateContent">
+          <div class="pirate-header">
+            <div class="pirate-stamp">FOR HIRE</div>
+            <div class="pirate-name">⚓ Captain Aakanksha Kashyap</div>
+            <div class="pirate-rank">High Seas Software Developer · Plunderer of Legacy Code</div>
+          </div>
+          <div class="resume-body">
+            <div class="sec-title pirate-sec-title">⚔ Weapons of Choice</div>
+            <div class="skill-row">
+              <span class="skill-tag pirate-skill">Java</span><span class="skill-tag pirate-skill">Spring Boot</span><span class="skill-tag pirate-skill">JavaScript</span><span class="skill-tag pirate-skill">Oracle DB</span><span class="skill-tag pirate-skill">MQTT</span><span class="skill-tag pirate-skill">CORBA</span><span class="skill-tag pirate-skill">REST API</span><span class="skill-tag pirate-skill">Claude AI</span><span class="skill-tag pirate-skill">HTML5 / CSS3</span><span class="skill-tag pirate-skill">Webpack</span><span class="skill-tag pirate-skill">JSP / Servlet</span>
+            </div>
+            <div class="sec-title pirate-sec-title">🗺 Voyage Log</div>
+            <div class="entry">
+              <div class="entry-title">Verizon (via Ericsson Fleet)</div>
+              <div class="entry-meta">Software Developer · 2024 – Present · The High Seas</div>
+              <div class="entry-desc">Eradicated 32 critical Open Redirect vulnerabilities — 100% remediation, zero enemies escaped. Extended the GCT ship with MQTT/CORBA dual-protocol cannons for RHEL 8. Modernised a creaking HTML frontend to battle-ready JSP.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title">Ericsson</div>
+              <div class="entry-meta">Product Developer · 2022 – 2023 · German Waters</div>
+              <div class="entry-desc">Charted the NWT MapView for 100+ network engineers across German B2B telecom fleets. Refactored spaghetti-rigged legacy codebase into clean ES module architecture.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title">Dopamine Enterprises</div>
+              <div class="entry-meta">Java Developer Intern · 2022 · First Voyage</div>
+              <div class="entry-desc">Built a full-stack water ordering galleon from keel to crow's nest — Spring Boot, REST APIs, Oracle DB. First production system. First taste of sea legs.</div>
+            </div>
+            <div class="sec-title pirate-sec-title">🎓 The Academies</div>
+            <div class="entry">
+              <div class="entry-title">Java Full Stack — Master's</div>
+              <div class="entry-meta">Simplilearn · 2022</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title">B.Tech in Information Technology</div>
+              <div class="entry-meta">Techno India College · 2017 – 2021</div>
+            </div>
+          </div>
+        </div>
+        <!-- PRO -->
+        <div id="proContent" style="display:none;">
+          <div class="pro-header">
+            <div>
+              <div class="pro-name">Aakanksha Kashyap</div>
+              <div class="pro-title">Software Developer</div>
+            </div>
+            <div class="pro-contacts">
+              <div class="pro-contact-item">📧 aakanksha.kashyap@gmail.com</div>
+              <div class="pro-contact-item">💼 linkedin.com/in/aakanksha-kashyap</div>
+              <div class="pro-contact-item">📍 India · Open to remote</div>
+            </div>
+          </div>
+          <div class="pro-body">
+            <div class="sec-title pro-sec-title">Technical Skills</div>
+            <div class="skill-row" style="margin-top:.9rem;">
+              <span class="skill-tag pro-skill">Java</span><span class="skill-tag pro-skill">Spring Boot</span><span class="skill-tag pro-skill">JavaScript</span><span class="skill-tag pro-skill">Oracle DB</span><span class="skill-tag pro-skill">MQTT</span><span class="skill-tag pro-skill">CORBA</span><span class="skill-tag pro-skill">REST API</span><span class="skill-tag pro-skill">Claude AI</span><span class="skill-tag pro-skill">HTML5 / CSS3</span><span class="skill-tag pro-skill">Webpack</span><span class="skill-tag pro-skill">JSP / Servlet</span>
+            </div>
+            <div class="sec-title pro-sec-title" style="margin-top:2rem;">Experience</div>
+            <div class="entry" style="margin-top:1.1rem;">
+              <div class="entry-title pro-entry-title">Software Developer <span class="pro-badge">2024 – Present</span></div>
+              <div class="entry-meta pro-entry-meta">Verizon · Ericsson Fleet</div>
+              <div class="entry-desc pro-entry-desc">Eliminated 32 critical Open Redirect vulnerabilities via Fortify SAST (100% remediation). Extended GCT with MQTT/CORBA dual-protocol architecture for RHEL 8. Frontend modernisation from legacy HTML to JSP.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title pro-entry-title">Product Developer <span class="pro-badge">2022 – 2023</span></div>
+              <div class="entry-meta pro-entry-meta">Ericsson · Product Development</div>
+              <div class="entry-desc pro-entry-desc">Built and enhanced NWT MapView platform used by 100+ network engineers. Refactored legacy codebase to modular ES module architecture improving scalability and maintainability.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title pro-entry-title">Java Developer Intern <span class="pro-badge">2022</span></div>
+              <div class="entry-meta pro-entry-meta">Dopamine Enterprises</div>
+              <div class="entry-desc pro-entry-desc">Developed full-stack water ordering platform using Spring Boot, REST APIs, and Oracle DB. Collaborated with cross-functional team to deliver production-ready features on deadline.</div>
+            </div>
+            <div class="sec-title pro-sec-title" style="margin-top:2rem;">Education</div>
+            <div class="entry" style="margin-top:1.1rem;">
+              <div class="entry-title pro-entry-title">Java Full Stack — Master's Program</div>
+              <div class="entry-meta pro-entry-meta">Simplilearn · 2022</div>
+            </div>
+            <div class="entry">
+              <div class="entry-title pro-entry-title">B.Tech in Information Technology</div>
+              <div class="entry-meta pro-entry-meta">Techno India College · 2017 – 2021</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="rope-scrollbar"><div class="rope-top-ring"></div><div class="rope-line"></div><div class="rope-bot-ring"></div><div class="rope-anchor" id="ropeAnchor">⚓</div></div>
+
+  <script>
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    let isNight=false;
+    nightToggle.addEventListener('click',()=>{isNight=!isNight;document.body.classList.toggle('night-mode',isNight);if(isNight){skySun.style.animation='sunSet 2.8s ease-in-out forwards';setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);}else{skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);}});
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>workshopDd.classList.toggle('open'));
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('ropeAnchor').style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+
+    const resumeCard=document.getElementById('resumeCard'),pirateContent=document.getElementById('pirateContent'),proContent=document.getElementById('proContent'),pirateLabel=document.getElementById('pirateLabel'),proLabel=document.getElementById('proLabel'),modeHint=document.getElementById('modeHint'),modeToggle=document.getElementById('modeToggle');
+    let isPro=false;
+    function flip(){isPro=!isPro;modeToggle.checked=isPro;resumeCard.classList.add('switching');resumeCard.addEventListener('animationend',()=>resumeCard.classList.remove('switching'),{once:true});setTimeout(()=>{if(isPro){resumeCard.classList.remove('pirate-mode');resumeCard.classList.add('pro-mode');pirateContent.style.display='none';proContent.style.display='block';pirateLabel.classList.add('inactive');proLabel.classList.remove('inactive');modeHint.textContent='"Professional mode: ready for any boardroom."';}else{resumeCard.classList.add('pirate-mode');resumeCard.classList.remove('pro-mode');pirateContent.style.display='block';proContent.style.display='none';pirateLabel.classList.remove('inactive');proLabel.classList.add('inactive');modeHint.textContent='"Showing the pirate within — click to reveal the professional."';}},280);}
+    modeToggle.addEventListener('change',flip);
+  </script>
+</body>
+</html>

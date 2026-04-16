@@ -81,6 +81,43 @@
     }
     .back-btn:hover { background:var(--ink); color:var(--parchment); }
 
+    /* ── WORKSHOP DROPDOWN ───────────────────── */
+    .workshop-dd-wrap {
+      position:fixed; top:28px; right:30px; z-index:60;
+    }
+    .workshop-dd-trigger {
+      font-family:var(--f-ui); font-weight:700; font-size:0.78rem;
+      text-transform:uppercase; letter-spacing:0.12em;
+      color:var(--ink); background:rgba(240,220,160,0.92);
+      border:2px solid var(--ink-mid); padding:7px 16px;
+      backdrop-filter:blur(4px); cursor:pointer; display:flex; align-items:center; gap:.4em;
+      transition:all 0.2s; user-select:none;
+    }
+    .workshop-dd-trigger:hover { background:var(--ink); color:var(--parchment); }
+    .workshop-dd-caret { font-size:.7em; transition:transform .25s; display:inline-block; }
+    .workshop-dd-wrap.open .workshop-dd-caret { transform:rotate(180deg); }
+    .workshop-dd-menu {
+      position:absolute; top:calc(100% + 6px); right:0;
+      min-width:220px; background:rgba(240,220,160,0.97);
+      border:2px solid var(--ink-mid); box-shadow:4px 4px 0 rgba(0,0,0,.18);
+      display:flex; flex-direction:column;
+      opacity:0; pointer-events:none; transform:translateY(-6px);
+      transition:opacity .2s, transform .2s;
+    }
+    .workshop-dd-wrap.open .workshop-dd-menu { opacity:1; pointer-events:all; transform:translateY(0); }
+    .workshop-dd-menu a {
+      font-family:var(--f-ui); font-weight:600; font-size:0.78rem;
+      text-transform:uppercase; letter-spacing:0.1em;
+      color:var(--ink); text-decoration:none; padding:9px 14px;
+      border-bottom:1px solid rgba(0,0,0,.1); transition:background .15s, color .15s;
+    }
+    .workshop-dd-menu a:last-child { border-bottom:none; }
+    .workshop-dd-menu a:hover { background:var(--ink); color:var(--parchment); }
+    .workshop-dd-menu .dd-label {
+      font-size:.6rem; letter-spacing:.18em; color:var(--ink-mid);
+      padding:6px 14px 2px; border-bottom:1px solid rgba(0,0,0,.1);
+    }
+
     /* ── MAP HEADER ──────────────────────────── */
     .map-header {
       position:fixed; top:22px; left:50%; transform:translateX(-50%);
@@ -446,6 +483,17 @@
 <!-- Back button -->
 <a href="index.html" class="back-btn">← Return to Present</a>
 
+<div class="workshop-dd-wrap" id="workshopDdWrap">
+  <div class="workshop-dd-trigger" id="workshopDdTrigger">The Workshop <span class="workshop-dd-caret">▾</span></div>
+  <div class="workshop-dd-menu">
+    <div class="dd-label">Projects</div>
+    <a href="projects.html">All Projects</a>
+    <a href="project-terminal.html">⊳ Navigator's Console</a>
+    <a href="project-parrot.html">🦜 Captain's Parrot</a>
+    <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+  </div>
+</div>
+
 <!-- Header -->
 <div class="map-header">
   <h1 class="map-title" id="mapTitle">The Waters of Enterprise</h1>
@@ -545,6 +593,14 @@
 </div>
 
 <script>
+// ── WORKSHOP DROPDOWN ─────────────────────────────────────────────────
+(function(){
+  const wrap=document.getElementById('workshopDdWrap');
+  if(!wrap)return;
+  document.getElementById('workshopDdTrigger').addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('open');});
+  document.addEventListener('click',()=>wrap.classList.remove('open'));
+})();
+
 // ── DATA ─────────────────────────────────────────────────────────────
 const DATA = {
   experience: {

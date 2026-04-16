@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Workshop — Captain Aakanksha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;--font-mono:'VT323',monospace;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.45;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.12;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.4),inset 0 0 300px rgba(45,17,3,.2);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+
+    /* NAV */
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:#fdf5e6;border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+
+    /* DROPDOWN */
+    .nav-dropdown{position:relative;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:#fdf5e6;}
+
+    /* ROPE */
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+
+    /* NIGHT ANIMS */
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+
+    /* ── HERO ────────────────────────────────────────── */
+    .workshop-hero{min-height:40vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 3rem;position:relative;}
+    .hero-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.25em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.5rem;}
+    .hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,7vw,5rem);color:var(--wood-dark);text-shadow:3px 3px 0 var(--parchment-dark),5px 5px 10px rgba(0,0,0,.15);margin-bottom:.5rem;}
+    body.night-mode .hero-title{color:#fdf5e6;text-shadow:0 0 30px rgba(255,200,100,.2);}
+    .hero-divider{width:180px;height:2px;background:var(--wood);opacity:.35;margin:.8rem auto;}
+    .hero-sub{font-family:var(--font-serif);font-style:italic;font-size:1.3rem;color:var(--ink-faded);max-width:560px;}
+    .hero-back{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:.95rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.3rem .85rem;border-radius:4px;margin-top:1.5rem;transition:all .2s;}
+    .hero-back:hover{color:var(--ink);border-color:var(--wood);}
+
+    /* ── CARD GRID ───────────────────────────────────── */
+    .cards-section{padding:2rem 5% 6rem;}
+    .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1160px;margin:0 auto;}
+    @media(max-width:960px){.cards-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:580px){.cards-grid{grid-template-columns:1fr;}}
+
+    /* CARD */
+    .project-card{display:flex;flex-direction:column;border:2px solid var(--wood);border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;background:rgba(255,255,255,.1);cursor:pointer;position:relative;}
+    body.night-mode .project-card{background:rgba(255,255,255,.04);border-color:var(--ink-faded);}
+    .project-card:hover{transform:translateY(-10px) rotate(-0.4deg);box-shadow:8px 14px 0 var(--wood-dark);}
+    body.night-mode .project-card:hover{box-shadow:8px 14px 0 rgba(0,0,0,.5);}
+    .card-badge{position:absolute;top:12px;right:12px;font-family:var(--font-display);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;background:var(--red-flag);color:#fff;padding:.25rem .65rem;border-radius:3px;z-index:2;}
+
+    /* CARD PREVIEW AREAS */
+    .card-preview{height:200px;position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+
+    /* Terminal preview */
+    .preview-terminal{background:#0d0f0b;border-bottom:2px solid #1a2a1a;}
+    .fake-terminal{width:88%;max-width:320px;font-family:var(--font-mono);font-size:1.05rem;color:#39ff14;line-height:1.6;}
+    .fake-terminal .ft-dim{color:#1f8a0a;}
+    .fake-terminal .ft-amber{color:#ffb300;}
+    .fake-terminal .ft-bright{color:#fff;}
+    .fake-cursor{display:inline-block;width:9px;height:1.1em;background:#39ff14;vertical-align:text-bottom;animation:blinkCursor .9s step-end infinite;}
+    @keyframes blinkCursor{0%,100%{opacity:1}50%{opacity:0}}
+    .terminal-scanline{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);pointer-events:none;}
+    .terminal-glow{position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(57,255,20,.08);pointer-events:none;}
+
+    /* Parrot preview */
+    .preview-parrot{background:linear-gradient(155deg,#143542 0%,#0e2438 60%,#1a3a2a 100%);border-bottom:2px solid var(--wood);}
+    .parrot-preview-svg{width:100px;height:116px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));animation:parrotFloat 3s ease-in-out infinite;}
+    @keyframes parrotFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+    .parrot-preview-bubble{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.92);border-radius:12px 12px 12px 0;padding:.3rem .7rem;font-family:var(--font-serif);font-size:.9rem;color:#143542;box-shadow:2px 2px 6px rgba(0,0,0,.2);}
+    .ocean-shimmer{position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(to top,rgba(20,53,66,.8),transparent);pointer-events:none;}
+
+    /* Recruiter preview */
+    .preview-recruiter{border-bottom:2px solid var(--wood);overflow:hidden;}
+    .recruit-split{display:flex;width:100%;height:100%;}
+    .recruit-half{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;padding:1rem .8rem;transition:flex .5s ease;}
+    .recruit-half.pirate-half{background:var(--parchment);border-right:2px solid var(--wood);}
+    .recruit-half.pro-half{background:#0f1923;}
+    .project-card:hover .recruit-half.pirate-half{flex:.4;}
+    .project-card:hover .recruit-half.pro-half{flex:1.6;}
+    .rh-icon{font-size:1.8rem;line-height:1;}
+    .rh-label{font-family:var(--font-display);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;}
+    .pirate-half .rh-label{color:var(--wood-dark);}
+    .pro-half .rh-label{color:#7dd3fc;font-family:var(--font-body);font-weight:700;}
+    .rh-line{font-size:.7rem;opacity:.6;}
+    .pirate-half .rh-line{color:var(--ink-faded);}
+    .pro-half .rh-line{color:#64748b;}
+
+    /* CARD BODY */
+    .card-body{padding:1.5rem 1.6rem;display:flex;flex-direction:column;gap:.8rem;flex:1;}
+    .card-num{font-family:var(--font-display);font-size:.75rem;letter-spacing:.2em;color:var(--red-flag);text-transform:uppercase;}
+    .card-title{font-family:var(--font-display);font-size:1.5rem;color:var(--wood-dark);line-height:1.2;}
+    body.night-mode .card-title{color:#fdf5e6;}
+    .card-desc{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink-faded);line-height:1.6;flex:1;}
+    .card-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .card-tag{font-family:var(--font-body);font-size:.75rem;padding:.18rem .6rem;border-radius:3px;border:1.5px solid var(--parchment-dark);color:var(--ink-faded);}
+    body.night-mode .card-tag{border-color:var(--ink-faded);}
+    .card-cta{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-display);font-size:.95rem;letter-spacing:.06em;color:var(--wood-dark);border:2px solid var(--wood);padding:.45rem 1.1rem;border-radius:5px;transition:all .2s;align-self:flex-start;margin-top:.2rem;}
+    body.night-mode .card-cta{color:#fdf5e6;border-color:#fdf5e6;}
+    .project-card:hover .card-cta{background:var(--wood);color:var(--parchment);}
+    body.night-mode .project-card:hover .card-cta{background:#fdf5e6;color:var(--wood-dark);}
+    .card-cta .arrow{transition:transform .2s;}
+    .project-card:hover .card-cta .arrow{transform:translateX(4px);}
+
+    @media(max-width:640px){
+      nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+      .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
+      .nav-links a{font-size:.9rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html" class="current-page">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">⊳ Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="workshop-hero">
+      <div class="hero-label">Interactive Demos</div>
+      <h1 class="hero-title">The Workshop</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-sub">"Three fully working projects, built for recruiters brave enough to click."</p>
+      <a href="index.html" class="hero-back">← Return to Main Log</a>
+    </section>
+
+    <section class="cards-section">
+      <div class="cards-grid">
+
+        <!-- CARD 1: TERMINAL -->
+        <a href="project-terminal.html" class="project-card">
+          <div class="card-badge">Live Demo</div>
+          <div class="card-preview preview-terminal">
+            <div class="terminal-scanline"></div>
+            <div class="terminal-glow"></div>
+            <div class="fake-terminal">
+              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="ft-bright">neofetch</span></div>
+              <div><span class="ft-amber">OS:</span> Caffeine-Driven v3.1</div>
+              <div><span class="ft-amber">Host:</span> HMS Enterprise Java</div>
+              <div><span class="ft-amber">Skills:</span> <span style="color:#39ff14">████████</span> MAX</div>
+              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="fake-cursor"></span></div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project I · Terminal</div>
+            <div class="card-title">Navigator's Console</div>
+            <div class="card-desc">A fully-featured SSH-style terminal. Type commands to explore skills, experience, and hidden secrets. Arrow keys for history.</div>
+            <div class="card-tags">
+              <span class="card-tag">neofetch</span>
+              <span class="card-tag">ls skills/</span>
+              <span class="card-tag">sudo hire</span>
+              <span class="card-tag">ping</span>
+            </div>
+            <div class="card-cta">Launch Terminal <span class="arrow">→</span></div>
+          </div>
+        </a>
+
+        <!-- CARD 2: PARROT CHAT -->
+        <a href="project-parrot.html" class="project-card">
+          <div class="card-badge">Interactive</div>
+          <div class="card-preview preview-parrot">
+            <div class="ocean-shimmer"></div>
+            <div class="parrot-preview-bubble">Squawk! Ask me! 🦜</div>
+            <svg class="parrot-preview-svg" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="30" cy="45" rx="14" ry="16" fill="#e63946"/>
+              <ellipse cx="21" cy="47" rx="8" ry="11" fill="#c1121f" transform="rotate(-10 21 47)"/>
+              <path d="M22,60 Q17,72 13,78 Q19,70 25,68 Q21,74 27,80 Q29,72 33,70 Q39,75 41,80 Q38,72 36,66 Z" fill="#4361ee"/>
+              <circle cx="30" cy="26" r="13" fill="#e63946"/>
+              <path d="M38,29 Q44,26 42,32 Q40,35 36,32 Z" fill="#ffb703"/>
+              <circle cx="35" cy="22" r="4" fill="white"/>
+              <circle cx="36" cy="22" r="2.5" fill="#1a1a2e"/>
+              <circle cx="37" cy="21" r="0.8" fill="white"/>
+              <path d="M22,14 Q20,5 24,9 Q25,3 28,8 Q29,2 32,7 Q36,4 34,10" fill="#f77f00" stroke="#e63946" stroke-width="0.5"/>
+              <path d="M23,60 L19,67 M23,60 L21,69 M23,60 L25,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+              <path d="M37,60 L33,67 M37,60 L35,69 M37,60 L39,68" stroke="#ffb703" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project II · AI Chat</div>
+            <div class="card-title">Captain's Parrot</div>
+            <div class="card-desc">Ask Polly anything about Aakanksha's skills, experience, or why she should be your next hire. Streaming typewriter responses.</div>
+            <div class="card-tags">
+              <span class="card-tag">Skills</span>
+              <span class="card-tag">Experience</span>
+              <span class="card-tag">Why hire?</span>
+              <span class="card-tag">AI tools</span>
+            </div>
+            <div class="card-cta">Chat with Polly <span class="arrow">→</span></div>
+          </div>
+        </a>
+
+        <!-- CARD 3: RECRUITER MODE -->
+        <a href="project-recruiter.html" class="project-card">
+          <div class="card-badge">Toggle</div>
+          <div class="card-preview preview-recruiter">
+            <div class="recruit-split">
+              <div class="recruit-half pirate-half">
+                <div class="rh-icon">⚓</div>
+                <div class="rh-label">Pirate</div>
+                <div class="rh-line">Captain Aakanksha</div>
+              </div>
+              <div class="recruit-half pro-half">
+                <div class="rh-icon">💼</div>
+                <div class="rh-label">Professional</div>
+                <div class="rh-line">Software Developer</div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project III · Mode Toggle</div>
+            <div class="card-title">Recruiter Mode</div>
+            <div class="card-desc">Same person, two very different ships. Flip the switch to watch the parchment transform into a polished professional resume.</div>
+            <div class="card-tags">
+              <span class="card-tag">Pirate CV</span>
+              <span class="card-tag">Pro Resume</span>
+              <span class="card-tag">3D Flip</span>
+            </div>
+            <div class="card-cta">Flip the Switch <span class="arrow">→</span></div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <div class="rope-scrollbar"><div class="rope-top-ring"></div><div class="rope-line"></div><div class="rope-bot-ring"></div><div class="rope-anchor" id="ropeAnchor">⚓</div></div>
+
+  <script>
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    let isNight=false;
+    nightToggle.addEventListener('click',()=>{isNight=!isNight;document.body.classList.toggle('night-mode',isNight);if(isNight){skySun.style.animation='sunSet 2.8s ease-in-out forwards';setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);}else{skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);}});
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>workshopDd.classList.toggle('open'));
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('ropeAnchor').style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+  </script>
+</body>
+</html>
