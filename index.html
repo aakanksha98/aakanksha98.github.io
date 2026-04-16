@@ -271,6 +271,8 @@
 
     /* WORKSHOP DROPDOWN */
     .nav-dropdown { position: relative; }
+    /* Bridge the gap between trigger and menu so hover doesn't break */
+    .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: -12px; right: -12px; height: 1.2rem; z-index: 499; }
     .dropdown-trigger {
       font-family: var(--font-serif); font-size: 1.2rem; font-weight: bold;
       color: var(--ink); text-transform: uppercase; letter-spacing: 2px;
