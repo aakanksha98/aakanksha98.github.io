@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Voice Demo — Aakanksha Kashyap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Karla:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: rgba(255,255,255,0.08);
+      --gold: #d4a843;
+      --gold-glow: rgba(212,168,67,0.3);
+      --gold-dim: #8a6a1c;
+      --amber: #f59e0b;
+      --red-flag: #8a1f1b;
+      --ink: #e8dcc8;
+      --muted: #8a7d6a;
+      --font-display: 'Uncial Antiqua', cursive;
+      --font-serif: 'Crimson Text', serif;
+      --font-body: 'Karla', sans-serif;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* parchment texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='n'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3cfeColorMatrix type='saturate' values='0'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3e%3c/svg%3e");
+      pointer-events: none; z-index: 0;
+    }
+
+    .app {
+      position: relative; z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      border-bottom: 1px solid rgba(212,168,67,0.12);
+      background: rgba(9,9,11,0.8);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: inherit;
+    }
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, #8a1f1b, #d4a843);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 16px var(--gold-glow);
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--ink);
+      letter-spacing: .05em;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .back-btn {
+      font-family: var(--font-serif);
+      font-size: .95rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid rgba(212,168,67,0.2);
+      padding: .3rem .8rem;
+      border-radius: 6px;
+      transition: all .2s;
+    }
+    .back-btn:hover { color: var(--ink); border-color: var(--gold-dim); }
+
+    .status-pill {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-body);
+      font-size: .75rem; font-weight: 600;
+      color: var(--gold);
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.25);
+      padding: 4px 12px; border-radius: 20px;
+      letter-spacing: .03em;
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      background: var(--gold); border-radius: 50%;
+      box-shadow: 0 0 8px var(--gold);
+      animation: statusPulse 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes statusPulse { 0% { opacity: 1; } 100% { opacity: .35; } }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 48px 24px 24px;
+      text-align: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(circle, rgba(212,168,67,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: .75rem; letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold); margin-bottom: 10px;
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      color: var(--ink);
+      line-height: 1.25; margin-bottom: 8px;
+    }
+    .hero-headline .highlight {
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--muted);
+    }
+
+    /* ── VOICE PANEL ── */
+    .voice-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      position: relative;
+      padding: 32px 24px;
+      text-align: center;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    /* floating bubbles */
+    .float-bubble {
+      position: absolute;
+      background: rgba(212,168,67,0.1);
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 18px;
+      padding: 10px 14px;
+      font-family: var(--font-serif);
+      font-size: .85rem;
+      color: var(--ink);
+      backdrop-filter: blur(6px);
+      white-space: normal; text-align: center;
+      max-width: 150px;
+      box-shadow: 0 4px 20px rgba(212,168,67,0.12);
+      pointer-events: none; z-index: 0; opacity: .8;
+      line-height: 1.4;
+    }
+    .float-bubble.blowing { animation: bubbleBlow .5s cubic-bezier(.175,.885,.32,1.275) forwards; }
+    .float-bubble.popping { animation: bubblePop .3s ease-out forwards; }
+    @keyframes bubbleBlow { 0%{transform:scale(0);opacity:0} 70%{transform:scale(1.08);opacity:.85} 100%{transform:scale(1);opacity:.8} }
+    @keyframes bubblePop  { 0%{transform:scale(1);opacity:.8} 50%{transform:scale(1.2);opacity:.4} 100%{transform:scale(1.4);opacity:0} }
+    @media(max-width:768px) { .float-bubble { display: none; } }
+
+    /* orb */
+    .orb-group {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 14px;
+      position: relative; z-index: 2;
+      min-height: 180px;
+    }
+
+    .voice-orb {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: linear-gradient(135deg, #5c3a21, #d4a843);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 42px;
+      box-shadow: 0 0 40px var(--gold-glow);
+      cursor: pointer;
+      transition: transform .2s;
+      animation: orbIdle 3.5s ease-in-out infinite;
+    }
+    .voice-orb:hover { transform: scale(1.06); }
+
+    @keyframes orbIdle    { 0%,100%{box-shadow:0 0 30px var(--gold-glow)} 50%{box-shadow:0 0 55px rgba(212,168,67,.45)} }
+    @keyframes orbListen  { 0%,100%{box-shadow:0 0 0 0 var(--gold-glow),0 0 30px var(--gold-glow)} 50%{box-shadow:0 0 0 22px rgba(212,168,67,0),0 0 50px rgba(212,168,67,.4)} }
+    @keyframes orbSpeak   { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.6),0 0 40px rgba(245,158,11,.4)} 50%{box-shadow:0 0 0 26px rgba(245,158,11,0),0 0 60px rgba(245,158,11,.5)} }
+
+    .voice-orb.idle     { animation: orbIdle 3.5s ease-in-out infinite; }
+    .voice-orb.connecting { background: linear-gradient(135deg,#1a2a3a,#3b82f6); animation: orbListen 1s ease-in-out infinite; }
+    .voice-orb.listening  { background: linear-gradient(135deg,#4c1d95,#d4a843); animation: orbListen 2s ease-in-out infinite; }
+    .voice-orb.speaking   { background: linear-gradient(135deg,#78350f,#f59e0b); animation: orbSpeak .7s ease-in-out infinite; }
+    .voice-orb.ended      { background: linear-gradient(135deg,#1f2937,#374151); animation: none; }
+
+    .voice-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem; color: var(--ink);
+      position: relative; z-index: 2;
+    }
+    .voice-sub {
+      font-family: var(--font-serif);
+      font-size: 1rem; color: var(--muted);
+      max-width: 300px; line-height: 1.6;
+      display: none; position: relative; z-index: 2;
+    }
+    .voice-sub.visible { display: block; }
+
+    .session-timer {
+      font-family: var(--font-body);
+      font-size: .78rem; color: var(--muted);
+      letter-spacing: .06em; font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      position: relative; z-index: 2;
+    }
+    .session-timer.urgent { color: #f87171; }
+
+    /* starter chips */
+    .starters {
+      display: none; flex-direction: column;
+      align-items: center; gap: 14px;
+      width: 100%; position: relative; z-index: 2;
+    }
+    .starters.visible { display: flex; }
+    .starters-label {
+      font-family: var(--font-display);
+      font-size: .7rem; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .chips {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      width: 100%; max-width: 460px; padding: 0 20px;
+    }
+    .chip {
+      padding: 11px 20px;
+      border: 1px solid rgba(212,168,67,0.25);
+      border-radius: 100px;
+      background: rgba(212,168,67,0.05);
+      color: var(--ink);
+      font-family: var(--font-serif); font-size: .95rem;
+      cursor: pointer; transition: all .2s;
+      text-align: center; width: 100%;
+    }
+    .chip:hover {
+      background: rgba(212,168,67,0.12);
+      border-color: var(--gold-dim);
+      color: #fff; transform: translateY(-1px);
+    }
+
+    .stop-btn {
+      font-family: var(--font-serif); font-size: .9rem;
+      color: var(--muted); background: transparent;
+      border: 1px solid rgba(255,255,255,.1); border-radius: 8px;
+      padding: .5rem 1.4rem; cursor: pointer; transition: all .2s;
+      display: none; position: relative; z-index: 2;
+    }
+    .stop-btn:hover { color: #f87171; border-color: rgba(239,68,68,.3); }
+
+    /* ── DIVIDER ── */
+    .scroll-divider {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0 8%; margin: 20px 0 0;
+      opacity: .4;
+    }
+    .scroll-divider::before, .scroll-divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--gold-dim);
+    }
+    .scroll-divider span {
+      font-family: var(--font-display);
+      font-size: .8rem; color: var(--gold-dim); white-space: nowrap;
+    }
+
+    /* ── CAPABILITY CHECKLIST ── */
+    .checklist-section {
+      padding: 40px 5% 20px;
+      max-width: 900px; margin: 0 auto; width: 100%;
+    }
+    .checklist-heading {
+      text-align: center; margin-bottom: 28px;
+    }
+    .checklist-heading h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem,3vw,1.9rem);
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .checklist-heading p {
+      font-family: var(--font-serif);
+      font-size: 1rem; color: var(--muted);
+    }
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+      gap: 10px;
+    }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+      transition: border-color .2s, transform .2s;
+    }
+    .check-item:hover { border-color: rgba(212,168,67,.25); transform: translateY(-1px); }
+    .check-icon {
+      font-size: 1rem; flex-shrink: 0; margin-top: 1px;
+    }
+    .check-text {
+      font-family: var(--font-serif); font-size: .95rem;
+      color: var(--ink); line-height: 1.4;
+    }
+
+    /* ── STAT CARDS ── */
+    .stats-section {
+      padding: 40px 5%;
+      max-width: 1000px; margin: 0 auto; width: 100%;
+    }
+    .stats-heading {
+      text-align: center; margin-bottom: 24px;
+    }
+    .stats-heading h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem,3vw,1.9rem);
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .stats-heading p {
+      font-family: var(--font-serif);
+      font-size: 1rem; color: var(--muted);
+    }
+    .stat-cards {
+      display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px 20px;
+      flex: 1 1 220px; max-width: 280px;
+      text-align: center;
+      transition: transform .2s, border-color .2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); border-color: rgba(212,168,67,.3); }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.4rem; color: var(--gold);
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px var(--gold-glow);
+    }
+    .stat-desc {
+      font-family: var(--font-serif);
+      font-size: .95rem; color: var(--ink); line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    .demo-footer {
+      margin-top: auto;
+      padding: 24px 5%;
+      border-top: 1px solid rgba(212,168,67,0.1);
+      text-align: center;
+    }
+    .demo-footer p {
+      font-family: var(--font-serif);
+      font-size: .85rem; color: var(--muted);
+    }
+    .demo-footer a {
+      color: var(--gold-dim); text-decoration: none;
+      transition: color .2s;
+    }
+    .demo-footer a:hover { color: var(--gold); }
+
+    /* ── MOBILE ── */
+    @media(max-width:480px) {
+      .hero { padding: 28px 16px 20px; }
+      .voice-orb { width: 88px; height: 88px; font-size: 32px; }
+      .voice-title { font-size: 1rem; }
+      .chips { padding: 0 8px; }
+      .chip { font-size: .85rem; padding: 8px 14px; }
+      .header { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="project-voice.html" class="brand">
+      <div class="brand-icon">⚓</div>
+      <div class="brand-name">Captain's Log</div>
+    </a>
+    <div class="header-right">
+      <a href="project-voice.html" class="back-btn">← Back</a>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span>Oracle is live</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Live AI Voice Demo</div>
+    <div class="hero-headline" id="heroHeadline">
+      Meet your <span class="highlight">AI Voice Agent</span>
+    </div>
+    <div class="hero-sub" id="heroSub">Click the orb and speak naturally — ask anything a customer would call about.</div>
+  </div>
+
+  <!-- VOICE PANEL -->
+  <div class="voice-panel" id="voicePanel">
+    <div class="orb-group">
+      <div class="voice-orb idle" id="voiceOrb" onclick="toggleVoice()">🔮</div>
+      <div class="voice-title" id="voiceTitle">Click to start the demo</div>
+      <div class="voice-sub" id="voiceSub"></div>
+      <div class="session-timer" id="sessionTimer"></div>
+    </div>
+
+    <div id="stopWrap">
+      <button class="stop-btn" id="stopBtn" onclick="stopVoice()">⏹ End Session</button>
+    </div>
+
+    <div class="starters" id="starters">
+      <div class="starters-label">Try saying</div>
+      <div class="chips" id="chipsContainer"></div>
+    </div>
+  </div>
+
+  <div class="scroll-divider"><span>⚓ &nbsp; What this agent can do &nbsp; ⚓</span></div>
+
+  <!-- CHECKLIST -->
+  <div class="checklist-section">
+    <div class="checklist-heading">
+      <h2 id="checklistTitle">This agent can handle…</h2>
+      <p id="checklistSub">Customised for your industry, active 24/7</p>
+    </div>
+    <div class="checklist-grid" id="checklistGrid"></div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stats-section">
+    <div class="stats-heading">
+      <h2 id="statsTitle">The problem businesses face</h2>
+      <p id="statsSub">Real data from your industry</p>
+    </div>
+    <div class="stat-cards" id="statCards"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="demo-footer">
+    <p>Demo conjured by <a href="index.html">Aakanksha Kashyap</a> · AI Engineering Portfolio &nbsp;·&nbsp; <a href="project-voice.html">← Back to project page</a></p>
+  </div>
+
+</div>
+
+<script type="module">
+  /* ── READ URL PARAMS ── */
+  const params = new URLSearchParams(window.location.search);
+  const lead = {
+    name:     params.get('name')     || '',
+    business: params.get('business') || 'your business',
+    niche:    params.get('niche')    || '',
+    city:     params.get('city')     || '',
+  };
+
+  /* ── HERO personalisation ── */
+  const role = getAgentRole(lead.niche);
+  document.getElementById('heroHeadline').innerHTML =
+    `<span class="highlight">${escHtml(lead.business)}</span> — AI ${escHtml(role)}`;
+  document.getElementById('heroSub').textContent =
+    `${lead.city ? lead.city + ' · ' : ''}Click the orb and speak naturally — ask anything a customer would call about.`;
+  document.title = `${lead.business} — AI Voice Demo · Aakanksha Kashyap`;
+
+  buildChecklist(lead.niche, lead.business);
+  buildStatCards(lead.niche);
+
+  /* ── HELPERS ── */
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function getAgentRole(niche) {
+    const n = (niche||'').toLowerCase();
+    if(n.includes('dental')||n.includes('dentist')) return 'Receptionist';
+    if(n.includes('real estate')||n.includes('realtor')) return 'Lead Qualifier';
+    if(n.includes('hvac')||n.includes('plumb')||n.includes('electr')||n.includes('roofing')||n.includes('contrac')) return 'Booking Agent';
+    if(n.includes('legal')||n.includes('law')||n.includes('attorney')) return 'Intake Agent';
+    if(n.includes('med')||n.includes('clinic')||n.includes('health')||n.includes('doctor')) return 'Patient Coordinator';
+    if(n.includes('salon')||n.includes('spa')||n.includes('beauty')||n.includes('barber')) return 'Booking Agent';
+    if(n.includes('restaurant')||n.includes('cafe')||n.includes('food')) return 'Reservations Agent';
+    if(n.includes('gym')||n.includes('fitness')||n.includes('yoga')) return 'Membership Agent';
+    if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'Service Advisor';
+    if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'Intake Scheduler';
+    if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'Lead Qualifier';
+    return 'Business Assistant';
+  }
+
+  function getNicheRoles(niche) {
+    const n = (niche||'').toLowerCase();
+    if(n.includes('dental')||n.includes('dentist')) return 'Receptionist, Appointment Reminder Agent, New Patient Qualifier, and Insurance Verification Agent';
+    if(n.includes('real estate')||n.includes('realtor')) return 'Lead Qualifier, Showing Scheduler, Listing Info Agent, and Follow-up Agent';
+    if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return 'Booking Agent, Emergency Call Router, After-Hours Agent, and Estimate Request Handler';
+    if(n.includes('legal')||n.includes('law')) return 'Intake Agent, Appointment Scheduler, Case Qualifier, and After-Hours Answering Agent';
+    if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return 'Patient Coordinator, Appointment Reminder Agent, Prescription Refill Handler, and After-Hours Triage Agent';
+    if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return 'Booking Agent, Cancellation Handler, Loyalty Reminder Agent, and After-Hours Appointment Taker';
+    if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return 'Reservations Agent, Hours & Menu Info Agent, Catering Inquiry Handler, and Waitlist Manager';
+    if(n.includes('gym')||n.includes('fitness')) return 'Membership Agent, Class Booking Agent, Trial Sign-up Handler, and Cancellation Retention Agent';
+    if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'Service Advisor, Sales Lead Qualifier, Test Drive Scheduler, and Parts Inquiry Agent';
+    if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'Intake Scheduler, Tax Season Overflow Agent, New Client Qualifier, and Document Request Handler';
+    if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'Lead Qualifier, Policy Info Agent, Quote Request Handler, and Appointment Setter';
+    return 'Receptionist, Lead Qualifier, Appointment Booking Agent, and FAQ Handler';
+  }
+
+  function getNicheStarters(niche) {
+    const n = (niche||'').toLowerCase();
+    if(n.includes('dental')||n.includes('dentist')) return ["I'd like to book a cleaning","Do you accept Delta Dental?","What are your opening hours?"];
+    if(n.includes('real estate')||n.includes('realtor')) return ["I saw a listing on Zillow","Can I schedule a showing?","What's the price range in this area?"];
+    if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return ["My AC stopped working","Can I get a quote for a repair?","Do you do emergency calls?"];
+    if(n.includes('legal')||n.includes('law')) return ["I need to speak with an attorney","Do you handle personal injury cases?","What are your consultation fees?"];
+    if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return ["I need to book an appointment","Do you accept Blue Cross?","What are your after-hours options?"];
+    if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return ["I'd like to book a haircut","Do you have availability this Saturday?","How much is a balayage?"];
+    if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return ["I'd like to make a reservation for 4","Do you have vegan options?","What time do you close tonight?"];
+    if(n.includes('gym')||n.includes('fitness')) return ["How much is a membership?","Do you offer a free trial?","What classes do you have on weekends?"];
+    if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return ["I need to schedule a service","Do you have any SUVs under $40K?","What's your service center's availability?"];
+    if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return ["I need help with my business taxes","Do you handle QuickBooks?","What's your fee for a consultation?"];
+    if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return ["I need a home insurance quote","What's your current mortgage rate?","Can I speak to a financial advisor?"];
+    return ["What services do you offer?","Can I book an appointment?","What are your hours?"];
+  }
+
+  function getNicheChecklist(niche) {
+    const n = (niche||'').toLowerCase();
+    if(n.includes('dent')) return [
+      "Answer after-hours patient calls","Confirm and cancel appointments",
+      "Answer standard insurance questions","Collect new patient information",
+      "Handle prescription refill requests","Route dental emergencies",
+      "Quote cleaning and X-ray prices","Give post-extraction care instructions",
+      "Schedule routine 6-month checkups","Follow up on missed appointments"
+    ];
+    if(n.includes('hvac')||n.includes('plumb')||n.includes('electr')||n.includes('roofing')||n.includes('contrac')) return [
+      "Handle emergency call routing 24/7","Book service appointments to calendar",
+      "Provide standard quote estimates","Follow up on open job quotes",
+      "Field repeat customer inquiries","Send dispatch notifications",
+      "Answer warranty and guarantee questions","Capture leads when you're on-site",
+      "Schedule routine maintenance visits","Process cancellations or rescheduling"
+    ];
+    if(n.includes('real estate')||n.includes('realtor')||n.includes('property')) return [
+      "Pre-qualify buyers by budget and timeline","Schedule property showings",
+      "Answer listing questions instantly","Follow up with warm leads",
+      "Capture walk-in and cold inquiries","Handle after-hours enquiries",
+      "Answer neighbourhood and pricing FAQs","Route urgent calls to agents",
+      "Manage open-house RSVPs","Collect seller contact details"
+    ];
+    if(n.includes('legal')||n.includes('law')||n.includes('attorney')) return [
+      "Qualify new client enquiries","Schedule consultations",
+      "Collect intake information","Answer practice area FAQs",
+      "Handle after-hours calls","Route urgent matters to partners",
+      "Explain fee structures","Manage appointment reminders",
+      "Capture referral source data","Follow up on pending cases"
+    ];
+    if(n.includes('med')||n.includes('clinic')||n.includes('health')||n.includes('doctor')) return [
+      "Book and reschedule appointments","Answer insurance and coverage questions",
+      "Handle prescription refill requests","Route clinical emergencies",
+      "Send appointment reminders","Collect new patient information",
+      "Manage after-hours triage","Answer common medical FAQs",
+      "Follow up on missed appointments","Process cancellation requests"
+    ];
+    if(n.includes('salon')||n.includes('spa')||n.includes('beauty')||n.includes('barber')) return [
+      "Book appointments 24/7","Handle cancellations and rescheduling",
+      "Answer pricing and service questions","Send loyalty reminders",
+      "Capture after-hours booking requests","Answer stylist availability queries",
+      "Process group booking enquiries","Handle gift certificate questions",
+      "Follow up on no-shows","Answer FAQ about products used"
+    ];
+    if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')||n.includes('catering')) return [
+      "Take reservations at any hour","Answer menu and dietary questions",
+      "Handle private event enquiries","Manage waitlist entries",
+      "Provide opening hours and location info","Handle large group bookings",
+      "Answer catering package questions","Process reservation cancellations",
+      "Answer parking and accessibility FAQs","Capture special occasion requests"
+    ];
+    if(n.includes('gym')||n.includes('fitness')||n.includes('yoga')||n.includes('pilates')) return [
+      "Explain membership tiers and pricing","Book free trial sessions",
+      "Answer class schedule questions","Handle membership cancellations",
+      "Capture new member leads","Answer personal training enquiries",
+      "Process class booking requests","Handle facility and equipment FAQs",
+      "Send renewal reminders","Answer parking and access questions"
+    ];
+    if(n.includes('auto')||n.includes('car')||n.includes('dealer')||n.includes('vehicle')) return [
+      "Schedule service appointments","Qualify new vehicle leads",
+      "Book test drives","Answer parts and inventory questions",
+      "Handle after-hours enquiries","Route urgent service issues",
+      "Answer financing and lease questions","Capture trade-in information",
+      "Follow up on open repair orders","Answer warranty coverage questions"
+    ];
+    if(n.includes('account')||n.includes('tax')||n.includes('cpa')||n.includes('bookkeep')) return [
+      "Qualify new client enquiries","Schedule intake consultations",
+      "Answer services and pricing questions","Handle after-hours calls during tax season",
+      "Capture referral and lead information","Answer payroll and bookkeeping FAQs",
+      "Process document request queries","Route urgent IRS-related calls",
+      "Follow up on outstanding proposals","Answer turnaround time questions"
+    ];
+    if(n.includes('insur')||n.includes('financ')||n.includes('loan')||n.includes('mortgage')) return [
+      "Qualify new policy and loan enquiries","Schedule advisor consultations",
+      "Answer coverage and rate questions","Route urgent claim calls",
+      "Capture lead information 24/7","Handle after-hours new business calls",
+      "Answer policy renewal questions","Process quote request submissions",
+      "Follow up with warm leads","Answer basic eligibility questions"
+    ];
+    return [
+      "Handle inbound enquiries 24/7","Book appointments and consultations",
+      "Answer common customer questions","Qualify and capture new leads",
+      "Route urgent calls appropriately","Send follow-up reminders",
+      "Collect caller contact information","Handle after-hours calls",
+      "Answer pricing and availability questions","Process cancellation and rescheduling requests"
+    ];
+  }
+
+  function getNicheStats(niche) {
+    const n = (niche||'').toLowerCase();
+    if(n.includes('dent')) return [
+      {num:'30%',desc:'of dental calls go unanswered — 86% of those callers never leave a voicemail'},
+      {num:'67%',desc:'of patients say they would switch providers after one unanswered call'},
+      {num:'$1,400',desc:'average revenue per new patient — every missed call is money left on the table'}
+    ];
+    if(n.includes('real estate')||n.includes('realtor')) return [
+      {num:'40%',desc:'of real estate enquiry calls go unanswered'},
+      {num:'78%',desc:'of buyers sign with whoever responds first'},
+      {num:'5 min',desc:'the average window before a warm lead goes cold'}
+    ];
+    if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return [
+      {num:'62%',desc:'of HVAC service calls happen outside business hours'},
+      {num:'3×',desc:'higher close rate when calls are answered within 1 minute'},
+      {num:'$240',desc:'average value of a single missed service call'}
+    ];
+    if(n.includes('legal')||n.includes('law')) return [
+      {num:'42%',desc:'of callers who hit a law firm voicemail never call back'},
+      {num:'$1,000+',desc:'average value per new legal client inquiry'},
+      {num:'35%',desc:'of after-hours enquiries never get a response'}
+    ];
+    if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return [
+      {num:'30%',desc:'of medical appointments are no-shows without automated reminders'},
+      {num:'28%',desc:'of patient calls go unanswered during peak hours'},
+      {num:'1 in 3',desc:'patients say they left a practice because of poor phone communication'}
+    ];
+    if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return [
+      {num:'40%',desc:'of salon booking attempts happen after your doors close'},
+      {num:'38%',desc:'of unanswered calls go to a competitor immediately'},
+      {num:'$75',desc:'average value of a single missed booking'}
+    ];
+    if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return [
+      {num:'60%',desc:'of restaurant calls go unanswered during peak service hours'},
+      {num:'$85',desc:'average revenue per table reservation that gets missed'},
+      {num:'3×',desc:'more likely to book if the call is answered on the first try'}
+    ];
+    if(n.includes('gym')||n.includes('fitness')) return [
+      {num:'55%',desc:'of gym membership inquiries arrive evenings and weekends'},
+      {num:'45%',desc:'of fitness enquiries that go to voicemail never convert'},
+      {num:'$195',desc:'average monthly revenue from a single missed member sign-up'}
+    ];
+    if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return [
+      {num:'$853K',desc:'average annual revenue lost per dealership from missed service calls'},
+      {num:'45%',desc:'of after-hours sales enquiries never receive a follow-up'},
+      {num:'3',desc:'missed service calls per day average at a typical dealership'}
+    ];
+    return [
+      {num:'35%',desc:'of businesses miss calls outside standard working hours'},
+      {num:'62%',desc:'of callers will not leave a voicemail — they go elsewhere'},
+      {num:'24/7',desc:'the coverage window your competitors are already filling with AI'}
+    ];
+  }
+
+  function buildChecklist(niche, business) {
+    const items  = getNicheChecklist(niche);
+    const grid   = document.getElementById('checklistGrid');
+    const title  = document.getElementById('checklistTitle');
+    const sub    = document.getElementById('checklistSub');
+    title.textContent = `What the AI can handle for ${business}`;
+    sub.textContent   = `Customised for ${niche || 'your industry'}, active 24/7`;
+    grid.innerHTML = items.map(item => `
+      <div class="check-item">
+        <span class="check-icon">⚓</span>
+        <span class="check-text">${escHtml(item)}</span>
+      </div>`).join('');
+  }
+
+  function buildStatCards(niche) {
+    const stats  = getNicheStats(niche);
+    const cards  = document.getElementById('statCards');
+    const title  = document.getElementById('statsTitle');
+    const sub    = document.getElementById('statsSub');
+    const n = (niche||'').toLowerCase();
+    title.textContent = `The problem ${n || 'businesses'} face`;
+    sub.textContent   = 'Real data from your industry';
+    cards.innerHTML = stats.map(s => `
+      <div class="stat-card">
+        <div class="stat-number">${escHtml(s.num)}</div>
+        <div class="stat-desc">${escHtml(s.desc)}</div>
+      </div>`).join('');
+  }
+
+  /* ── FLOATING BUBBLES ── */
+  const BUBBLE_PHRASES = [
+    "Book me in for Tuesday","Do you have availability this weekend?",
+    "What are your hours?","Is the doctor in today?",
+    "I need a quote please","Can I reschedule my appointment?",
+    "Do you accept my insurance?","What services do you offer?",
+    "I have a question about my bill","Can I speak to someone?",
+    "I'd like to make a reservation","What's the wait time?",
+    "I'm calling about my account","Do you do home visits?"
+  ];
+  let bubbleTexts = [...BUBBLE_PHRASES];
+  let activeBubbles = [];
+
+  function spawnBubble() {
+    if (bubbleTexts.length === 0) bubbleTexts = [...BUBBLE_PHRASES];
+    const idx  = Math.floor(Math.random() * bubbleTexts.length);
+    const text = bubbleTexts.splice(idx, 1)[0];
+    const panel = document.getElementById('voicePanel');
+    const pw = panel.offsetWidth || window.innerWidth;
+    const ph = panel.offsetHeight || 400;
+    const el = document.createElement('div');
+    el.className = 'float-bubble blowing';
+    const cx = pw / 2;
+    const margin = Math.min(280, pw * .35);
+    const isLeft = Math.random() > .5;
+    let x = isLeft
+      ? 20 + Math.random() * Math.max(0, cx - margin - 160)
+      : cx + margin + Math.random() * Math.max(0, pw - (cx + margin) - 160);
+    let y = Math.random() * Math.max(0, ph - 80);
+    const angle = Math.random() * Math.PI * 2;
+    const speed = .5 + Math.random() * .4;
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    el.textContent = text;
+    panel.appendChild(el);
+    activeBubbles.push({ el, x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, w:0, h:0 });
+    requestAnimationFrame(() => { el.getBoundingClientRect(); el.classList.remove('blowing'); });
+  }
+
+  function popBubble(b) {
+    b.el.classList.add('popping');
+    setTimeout(() => b.el.remove(), 350);
+    activeBubbles = activeBubbles.filter(x => x !== b);
+  }
+
+  let lastBubbleTime = 0;
+  function animateBubbles(ts) {
+    if (ts - lastBubbleTime > 2800 && activeBubbles.length < 6) {
+      spawnBubble(); lastBubbleTime = ts;
+    }
+    const panel = document.getElementById('voicePanel');
+    const pw = panel.offsetWidth; const ph = panel.offsetHeight;
+    activeBubbles.forEach(b => {
+      if (!b.w) { b.w = b.el.offsetWidth; b.h = b.el.offsetHeight; }
+      b.x += b.vx; b.y += b.vy;
+      if (b.x < -20 || b.x > pw + 20 || b.y < -20 || b.y > ph + 20) {
+        popBubble(b); return;
+      }
+      b.el.style.left = b.x + 'px'; b.el.style.top = b.y + 'px';
+    });
+    requestAnimationFrame(animateBubbles);
+  }
+  requestAnimationFrame(animateBubbles);
+
+  /* ── ELEVENLABS VOICE ── */
+  const AGENT_ID = 'agent_3601kpdppq22etd9dpmq1dz7f6ts';
+  const MAX_SECONDS = 180;
+  let ElevenLabsConversation = null;
+  let conversation = null;
+  let voiceActive  = false;
+  let timerInterval = null;
+
+  async function loadSDK() {
+    if (ElevenLabsConversation) return ElevenLabsConversation;
+    const mod = await import('https://cdn.jsdelivr.net/npm/@11labs/client@latest/+esm');
+    ElevenLabsConversation = mod.Conversation;
+    return ElevenLabsConversation;
+  }
+
+  function buildVoicePrompt(lead) {
+    const role  = getAgentRole(lead.niche);
+    const biz   = lead.business || 'this business';
+    const city  = lead.city     || 'your area';
+    const owner = lead.name     || 'the owner';
+    const niche = lead.niche    || 'business';
+    return `You are the AI ${role} for ${biz}, located in ${city}. You were set up by ${owner} to handle customer inquiries for their ${niche} business.
+
+PRIMARY ROLE — Business Demo:
+- Greet every caller warmly and professionally
+- Answer common questions a customer would have about a ${niche} business
+- Help schedule appointments, bookings, or consultations naturally
+- Collect caller name and contact info when relevant
+- Qualify leads where appropriate
+
+SECONDARY ROLE — Portfolio Assistant:
+If the caller shifts topic and asks about Aakanksha Kashyap (the developer who built this demo), her background, skills, experience, or projects, answer from the following information. Switch naturally between roles mid-conversation.
+
+═══ ABOUT AAKANKSHA KASHYAP ═══
+
+Full-stack Software Developer with 3+ years at Ericsson, based in Bangalore, India.
+Contact: aaku.mas@gmail.com | LinkedIn: linkedin.com/in/aakanksha-kashyap-760800150 | Phone: +91 9113302599
+
+PROFESSIONAL SUMMARY:
+Full-stack Java Developer with 3+ years at Ericsson building and migrating enterprise systems for Verizon's telecom infrastructure. Specialises in Java, Spring Boot, REST APIs, and legacy system modernisation. Actively integrates AI tooling — Claude, Claude Code, GitHub Copilot, and Cursor — directly into development workflows to accelerate delivery, improve code quality, and reduce manual effort.
+
+EXPERIENCE:
+
+1. Ericsson – Verizon Software Developer (2024 – Present)
+   - Eliminated all 32 critical Open Redirect vulnerabilities (100% remediation) using Fortify SAST, removing phishing and redirect-based attack risk across the entire codebase
+   - Extended GCT application with MQTT-based server communication for RHEL 8 server, implementing a backward-compatible CORBA + MQTT dual-protocol architecture
+   - Migrated FDB database access layer from decommissioned NSRS to GCT, preserving full CRUD functionality and modernising the frontend from legacy HTML to JSP with a redesigned UI
+
+2. Ericsson – Product Development (2022 – 2023)
+   - Built and enhanced the NWT MapView platform used by 100+ network engineers and operators across German B2B telecom clients including Telefónica Deutschland
+   - Refactored NWT MapView codebase from legacy to modular ES module architecture, improving maintainability and scalability
+   - Integrated Webpack into NWT codebase, optimising asset loading and reducing page load time
+   - Built RSVP link visualisation enhancements enabling network engineers to detect and diagnose faults faster
+   - Optimised LSP path arrows, NE cluster sorting, and context menus, improving operator navigation efficiency
+   - Redesigned sidebar navigation with hyperlinks and meaningful icon replacements, reducing navigation time for operators
+   - Embedded NE and alarm status into cluster context menus, enabling one-click network element health checks
+
+3. Dopamine Enterprises – Java Developer Intern (2022)
+   - Built a full-stack water ordering platform using Spring Boot, REST API, Oracle DB (backend) and JavaScript, HTML, CSS (frontend)
+
+AI PROJECTS (Portfolio — not on traditional CV):
+   - AI Voice Agent Demo (this demo): Integrated ElevenLabs Conversational AI SDK with real-time voice sessions, per-business prompt overrides, session timer, and starter chips — built entirely in vanilla JavaScript
+   - UGC Ads Creator Demo: Built a standalone Next.js API on Vercel with IP-based rate limiting (Upstash Redis), Supabase storage and database, n8n workflow automation for AI video generation, and full CORS setup — no login required
+   - Portfolio Website: Pirate-themed CV site built in pure HTML/CSS/JS, deployed on GitHub Pages — includes interactive terminal, recruiter mode, and live AI demos
+
+EDUCATION:
+- Master's Program (Jan–Aug 2022): Java Full Stack Development, certified from Simplilearn
+- B.Tech in IT (2017–2021): DGPA 8.0, Techno India College of Technology, Kolkata
+- Higher Secondary (2014–2016): 76.2%, Shree Krishna Public School, CBSE
+- Secondary School (2002–2014): 92.6%, Mount Assisi School, Bhagalpur, ICSE
+
+SKILLS:
+- Tech Stack: HTML, CSS, JavaScript, SQL, Core Java, JSP, Servlet, Spring Boot, REST API, MQTT, CORBA
+- Tools: Git, GitLab, Apache Tomcat, Agile, Linux
+- AI & Productivity Tools:
+  * Claude (Anthropic) — Prompt engineering, API integration, Claude Code for agentic coding workflows, artifact generation
+  * GitHub Copilot — Daily pair programming, code generation, test writing
+  * ChatGPT, Gemini — Code review, documentation, debugging
+  * ElevenLabs — Conversational AI SDK integration, voice agent deployment
+  * n8n — Workflow automation, webhook orchestration
+  * Supabase — Database, storage, authentication
+  * Vercel — Serverless API deployment
+
+ACHIEVEMENTS:
+- Co-Founder at Zarvis.in (2019): Delivered MAKAUT organizers within Kolkata — managed end-to-end client relationships including pitching, negotiation, contracting, payment collection, result tracking, and troubleshooting
+- District Level Topper in National Talent Search Exam
+
+INTERESTS: Tennis, Reading
+
+═══ END OF PORTFOLIO CONTEXT ═══
+
+Rules:
+- Keep ALL responses to 2–3 sentences maximum — this is a voice call
+- Be warm, confident, and natural
+- When acting as business receptionist, use typical ${niche} knowledge if you don't know ${biz}'s specific details
+- NEVER mention any company name, platform, or software product unless directly asked
+- If asked whether you are an AI: "I'm the virtual assistant for ${biz} — happy to help! How can I assist you today?"
+- If asked who built this: "This demo was built by Aakanksha Kashyap as part of her AI engineering portfolio."
+- If a recruiter asks about Aakanksha's skills, experience, or projects, answer confidently and accurately from the portfolio context above
+- Stay natural — transition smoothly between the business demo and portfolio questions`;
+  }
+
+  function buildFirstMessage(lead) {
+    const role  = getAgentRole(lead.niche);
+    const roles = getNicheRoles(lead.niche);
+    const biz   = lead.business || 'your business';
+    const owner = lead.name     || 'there';
+    return `Hey ${owner}! This live AI voice demo was built by Aakanksha Kashyap to showcase her AI engineering work. For ${biz}, I can act as a ${roles}. In this demo I'm your AI ${role} — go ahead and ask me anything a customer would call about. And if you're a recruiter, feel free to ask me about Aakanksha's background, skills, or projects too!`;
+  }
+
+  function setOrb(state, emoji) {
+    const orb = document.getElementById('voiceOrb');
+    orb.className = 'voice-orb ' + state;
+    orb.textContent = emoji;
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    let used = 0;
+    const el = document.getElementById('sessionTimer');
+    timerInterval = setInterval(() => {
+      used++;
+      const rem = MAX_SECONDS - used;
+      const m = Math.floor(rem/60), s = rem%60;
+      el.textContent = `${m}:${String(s).padStart(2,'0')} remaining`;
+      el.classList.toggle('urgent', rem <= 30);
+      if (rem <= 0) stopVoice('time_up');
+    }, 1000);
+  }
+  function stopTimer() {
+    clearInterval(timerInterval);
+    document.getElementById('sessionTimer').textContent = '';
+  }
+
+  function showChips(niche) {
+    const phrases = getNicheStarters(niche);
+    const container = document.getElementById('chipsContainer');
+    container.innerHTML = phrases.map(p =>
+      `<button class="chip" onclick="this.style.background='rgba(212,168,67,.18)';setTimeout(()=>this.style.background='',900)">"${escHtml(p)}"</button>`
+    ).join('');
+    document.getElementById('starters').classList.add('visible');
+  }
+
+  window.toggleVoice = async function() {
+    if (voiceActive) { stopVoice(); return; }
+    await startVoice();
+  };
+
+  async function startVoice() {
+    voiceActive = true;
+    setOrb('connecting','⏳');
+    document.getElementById('voiceTitle').textContent = 'Connecting...';
+    document.getElementById('voiceSub').classList.remove('visible');
+    document.getElementById('stopBtn').style.display = 'none';
+    document.getElementById('starters').classList.remove('visible');
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      const Conversation = await loadSDK();
+
+      conversation = await Conversation.startSession({
+        agentId: AGENT_ID,
+        overrides: {
+          agent: {
+            prompt:       { prompt: buildVoicePrompt(lead) },
+            firstMessage: buildFirstMessage(lead)
+          }
+        },
+        onConnect: () => {
+          setOrb('listening','🔮');
+          document.getElementById('voiceTitle').textContent = 'Listening…';
+          const sub = document.getElementById('voiceSub');
+          sub.textContent = 'Speak naturally — ask to book an appointment, enquire about services, or just say hello.';
+          sub.classList.add('visible');
+          document.getElementById('stopBtn').style.display = 'inline-block';
+          startTimer();
+          showChips(lead.niche);
+        },
+        onModeChange: ({ mode }) => {
+          if (mode === 'speaking') {
+            setOrb('speaking','🔊');
+            document.getElementById('voiceTitle').textContent = 'Speaking…';
+          } else {
+            setOrb('listening','🔮');
+            document.getElementById('voiceTitle').textContent = 'Listening…';
+          }
+        },
+        onDisconnect: () => { stopVoice(); },
+        onError: (err) => {
+          console.error('Voice error:', err);
+          setOrb('idle','🔮');
+          document.getElementById('voiceTitle').textContent = 'Connection error — please try again';
+          document.getElementById('voiceSub').classList.remove('visible');
+          voiceActive = false; stopTimer();
+          document.getElementById('stopBtn').style.display = 'none';
+        }
+      });
+    } catch(err) {
+      setOrb('idle','🔮');
+      document.getElementById('voiceTitle').textContent = err.name === 'NotAllowedError'
+        ? 'Microphone access denied — please allow mic and try again'
+        : 'Error: ' + err.message;
+      document.getElementById('voiceSub').classList.remove('visible');
+      voiceActive = false; stopTimer();
+      document.getElementById('stopBtn').style.display = 'none';
+    }
+  }
+
+  window.stopVoice = async function(reason) {
+    voiceActive = false; stopTimer();
+    document.getElementById('starters').classList.remove('visible');
+    document.getElementById('stopBtn').style.display = 'none';
+    if (conversation) { await conversation.endSession(); conversation = null; }
+    setOrb('ended','⚓');
+    document.getElementById('voiceTitle').textContent =
+      reason === 'time_up' ? 'Demo time reached' : 'Session ended';
+    const sub = document.getElementById('voiceSub');
+    sub.textContent = reason === 'time_up'
+      ? 'Your 3-minute demo has ended. Thanks for trying it out!'
+      : 'Thanks for trying the demo.';
+    sub.classList.add('visible');
+  };
+</script>
+</body>
+</html>

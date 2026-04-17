@@ -36,10 +36,10 @@
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
     .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
-    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:265px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
     .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
     .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
-    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;white-space:nowrap;}
     .dropdown-menu a:last-child{border-bottom:none;}
     .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
     .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
@@ -121,6 +121,13 @@
     .pro-entry-desc{color:#94a3b8;}
     .pro-badge{display:inline-block;background:#0c4a6e;color:#38bdf8;padding:.15rem .65rem;border-radius:12px;font-size:.8rem;letter-spacing:.05em;border:1px solid #0369a1;margin-left:.5rem;}
 
+    /* RECRUITER TECH BANNER */
+    .recruiter-tech-banner{background:var(--wood-dark);border:2px solid var(--wood);border-radius:6px;padding:.9rem 1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-bottom:1.5rem;}
+    .rtb-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--parchment-dark);white-space:nowrap;margin-right:.4rem;}
+    .rtb-tag{background:var(--parchment);color:var(--wood-dark);padding:.2rem .65rem;border-radius:3px;font-family:var(--font-body);font-size:.78rem;font-weight:700;white-space:nowrap;}
+    body.night-mode .recruiter-tech-banner{background:#1e1b4b;border-color:#94a3b8;}
+    body.night-mode .rtb-tag{background:#e2e8f0;color:#1e1b4b;}
+
     @media(max-width:640px){
       .pirate-header,.pro-header,.resume-body,.pro-body{padding:1.5rem 1.5rem;}
       .pirate-name{font-size:1.7rem;}
@@ -148,14 +155,14 @@
       <div class="nav-dropdown" id="workshopDropdown">
         <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
         <div class="dropdown-menu">
-          <div class="dropdown-section-label">Projects</div>
-          <a href="projects.html">All Projects</a>
+          <a href="projects.html">Explore All Projects</a>
           <div class="dd-divider"></div>
-          <a href="project-terminal.html">⊳ Navigator's Console</a>
-          <a href="project-parrot.html">🦜 Captain's Parrot</a>
-          <a href="project-recruiter.html" class="current-page">⚓ Recruiter Mode</a>
           <a href="project-voice.html">🔮 AI Voice Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">🧭 Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html" class="current-page">⚓ Recruiter Mode</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
@@ -168,6 +175,17 @@
       <h1 class="page-title">Recruiter Mode</h1>
       <p class="page-desc">Same person. Two very different ships. Flip the switch and watch the parchment transform into a polished professional resume.</p>
       <a href="projects.html" class="back-link">← Back to Workshop</a>
+    </div>
+
+    <div class="resume-wrap" style="margin-bottom:0;padding-bottom:0;">
+      <div class="recruiter-tech-banner">
+        <span class="rtb-label">Built with →</span>
+        <span class="rtb-tag">CSS 3D Transforms</span>
+        <span class="rtb-tag">JavaScript Toggle</span>
+        <span class="rtb-tag">Dual Theme Design</span>
+        <span class="rtb-tag">CSS Custom Properties</span>
+        <span class="rtb-tag">Responsive Layout</span>
+      </div>
     </div>
 
     <div class="toggle-section">

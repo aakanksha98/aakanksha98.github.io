@@ -302,7 +302,7 @@
     .dropdown-menu a {
       font-family: var(--font-serif); font-size: 1.05rem; color: var(--ink);
       text-decoration: none; padding: .6rem 1.2rem;
-      border-bottom: 1px solid rgba(90,75,61,.2);
+      border-bottom: 1px solid rgba(90,75,61,.2); white-space: nowrap;
       transition: background .15s, color .15s; letter-spacing: .05em;
     }
     .dropdown-menu a:last-child { border-bottom: none; }
@@ -1774,14 +1774,14 @@
       <div class="nav-dropdown" id="workshopDropdown">
         <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
         <div class="dropdown-menu">
-          <div class="dropdown-section-label">Projects</div>
-          <a href="projects.html" target="_blank">All Projects</a>
+          <a href="projects.html" target="_blank">Explore All Projects</a>
           <div class="dd-divider"></div>
-          <a href="project-terminal.html" target="_blank">⊳ Navigator's Console</a>
-          <a href="project-parrot.html" target="_blank">🦜 Captain's Parrot</a>
-          <a href="project-recruiter.html" target="_blank">⚓ Recruiter Mode</a>
           <a href="project-voice.html" target="_blank">🔮 AI Voice Agent</a>
           <a href="project-ugc.html" target="_blank">🎥 UGC Ads Creator</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html" target="_blank">🧭 Navigator's Console</a>
+          <a href="project-parrot.html" target="_blank">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html" target="_blank">⚓ Recruiter Mode</a>
         </div>
       </div>
       <!-- FEATURE 2 TOGGLE -->

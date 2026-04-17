@@ -41,10 +41,10 @@
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
     .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
-    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:265px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
     .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
     .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
-    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;white-space:nowrap;}
     .dropdown-menu a:last-child{border-bottom:none;}
     .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
     .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
@@ -170,14 +170,14 @@
       <div class="nav-dropdown" id="workshopDropdown">
         <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
         <div class="dropdown-menu">
-          <div class="dropdown-section-label">Projects</div>
-          <a href="projects.html" class="current-page">All Projects</a>
+          <a href="projects.html" class="current-page">Explore All Projects</a>
           <div class="dd-divider"></div>
-          <a href="project-terminal.html">⊳ Navigator's Console</a>
-          <a href="project-parrot.html">🦜 Captain's Parrot</a>
-          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
           <a href="project-voice.html">🔮 AI Voice Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">🧭 Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
@@ -196,35 +196,46 @@
     <section class="cards-section">
       <div class="cards-grid">
 
-        <!-- CARD 1: TERMINAL -->
-        <a href="project-terminal.html" class="project-card">
+        <!-- CARD 1: VOICE AGENT -->
+        <a href="project-voice.html" class="project-card">
           <div class="card-badge">Live Demo</div>
-          <div class="card-preview preview-terminal">
-            <div class="terminal-scanline"></div>
-            <div class="terminal-glow"></div>
-            <div class="fake-terminal">
-              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="ft-bright">neofetch</span></div>
-              <div><span class="ft-amber">OS:</span> Caffeine-Driven v3.1</div>
-              <div><span class="ft-amber">Host:</span> HMS Enterprise Java</div>
-              <div><span class="ft-amber">Skills:</span> <span style="color:#39ff14">████████</span> MAX</div>
-              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="fake-cursor"></span></div>
-            </div>
+          <div class="card-preview preview-siren">
+            <div class="siren-orb-preview">🔮</div>
           </div>
           <div class="card-body">
-            <div class="card-num">Project I · Terminal</div>
-            <div class="card-title">Navigator's Console</div>
-            <div class="card-desc">A fully-featured SSH-style terminal. Type commands to explore skills, experience, and hidden secrets. Arrow keys for history.</div>
+            <div class="card-num">Project I · Interactive Voice</div>
+            <div class="card-title">AI Voice Agent</div>
+            <div class="card-desc">Connected directly to ElevenLabs, speak naturally with the Ship's Siren Agent directly from your browser.</div>
             <div class="card-tags">
-              <span class="card-tag">neofetch</span>
-              <span class="card-tag">ls skills/</span>
-              <span class="card-tag">sudo hire</span>
-              <span class="card-tag">ping</span>
+              <span class="card-tag">ElevenLabs API</span>
+              <span class="card-tag">Voice Agent</span>
+              <span class="card-tag">Microphone</span>
             </div>
-            <div class="card-cta">Launch Terminal <span class="arrow">→</span></div>
+            <div class="card-cta">Speak to Agent <span class="arrow">→</span></div>
           </div>
         </a>
 
-        <!-- CARD 2: PARROT CHAT -->
+        <!-- CARD 2: UGC Ads Creator -->
+        <a href="project-ugc.html" class="project-card">
+          <div class="card-badge">Live Demo</div>
+          <div class="card-preview preview-ugc" style="background:#1a1005; border-bottom:2px solid var(--wood); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+            <div style="font-size:3.5rem; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5)); animation:float 3s ease-in-out infinite;">🎥</div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project II · Media</div>
+            <div class="card-title">UGC Ads Creator</div>
+            <div class="card-desc">Upload a product image into the cauldron, and watch the AI weave out an entire animated video advertisement seamlessly.</div>
+            <div class="card-tags">
+              <span class="card-tag">Computer Vision</span>
+              <span class="card-tag">Video Gen</span>
+              <span class="card-tag">AI Agent</span>
+            </div>
+            <div class="card-cta">Launch Creator <span class="arrow">→</span></div>
+          </div>
+        </a>
+        <style>@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}</style>
+
+        <!-- CARD 3: PARROT CHAT -->
         <a href="project-parrot.html" class="project-card">
           <div class="card-badge">Interactive</div>
           <div class="card-preview preview-parrot">
@@ -245,7 +256,7 @@
             </svg>
           </div>
           <div class="card-body">
-            <div class="card-num">Project II · AI Chat</div>
+            <div class="card-num">Project III · AI Chat</div>
             <div class="card-title">Captain's Parrot</div>
             <div class="card-desc">Ask Polly anything about Aakanksha's skills, experience, or why she should be your next hire. Streaming typewriter responses.</div>
             <div class="card-tags">
@@ -258,7 +269,7 @@
           </div>
         </a>
 
-        <!-- CARD 3: RECRUITER MODE -->
+        <!-- CARD 4: RECRUITER MODE -->
         <a href="project-recruiter.html" class="project-card">
           <div class="card-badge">Toggle</div>
           <div class="card-preview preview-recruiter">
@@ -276,7 +287,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="card-num">Project III · Mode Toggle</div>
+            <div class="card-num">Project IV · Mode Toggle</div>
             <div class="card-title">Recruiter Mode</div>
             <div class="card-desc">Same person, two very different ships. Flip the switch to watch the parchment transform into a polished professional resume.</div>
             <div class="card-tags">
@@ -288,44 +299,33 @@
           </div>
         </a>
 
-        <!-- CARD 4: VOICE AGENT -->
-        <a href="project-voice.html" class="project-card">
+        <!-- CARD 5: TERMINAL -->
+        <a href="project-terminal.html" class="project-card">
           <div class="card-badge">Live Demo</div>
-          <div class="card-preview preview-siren">
-            <div class="siren-orb-preview">🔮</div>
+          <div class="card-preview preview-terminal">
+            <div class="terminal-scanline"></div>
+            <div class="terminal-glow"></div>
+            <div class="fake-terminal">
+              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="ft-bright">neofetch</span></div>
+              <div><span class="ft-amber">OS:</span> Caffeine-Driven v3.1</div>
+              <div><span class="ft-amber">Host:</span> HMS Enterprise Java</div>
+              <div><span class="ft-amber">Skills:</span> <span style="color:#39ff14">████████</span> MAX</div>
+              <div><span class="ft-dim">aakanksha@ship:~$</span> <span class="fake-cursor"></span></div>
+            </div>
           </div>
           <div class="card-body">
-            <div class="card-num">Project IV · Interactive Voice</div>
-            <div class="card-title">AI Voice Agent</div>
-            <div class="card-desc">Connected directly to ElevenLabs, speak naturally with the Ship's Siren Agent directly from your browser.</div>
+            <div class="card-num">Project V · Terminal</div>
+            <div class="card-title">Navigator's Console</div>
+            <div class="card-desc">A fully-featured SSH-style terminal. Type commands to explore skills, experience, and hidden secrets. Arrow keys for history.</div>
             <div class="card-tags">
-              <span class="card-tag">ElevenLabs API</span>
-              <span class="card-tag">Voice Agent</span>
-              <span class="card-tag">Microphone</span>
+              <span class="card-tag">neofetch</span>
+              <span class="card-tag">ls skills/</span>
+              <span class="card-tag">sudo hire</span>
+              <span class="card-tag">ping</span>
             </div>
-            <div class="card-cta">Speak to Agent <span class="arrow">→</span></div>
+            <div class="card-cta">Launch Terminal <span class="arrow">→</span></div>
           </div>
         </a>
-
-        <!-- CARD 5: UGC Ads Creator -->
-        <a href="project-ugc.html" class="project-card">
-          <div class="card-badge">Live Demo</div>
-          <div class="card-preview preview-ugc" style="background:#1a1005; border-bottom:2px solid var(--wood); overflow:hidden; display:flex; align-items:center; justify-content:center;">
-            <div style="font-size:3.5rem; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5)); animation:float 3s ease-in-out infinite;">🎥</div>
-          </div>
-          <div class="card-body">
-            <div class="card-num">Project V · Media</div>
-            <div class="card-title">UGC Ads Creator</div>
-            <div class="card-desc">Upload a product image into the cauldron, and watch the AI weave out an entire animated video advertisement seamlessly.</div>
-            <div class="card-tags">
-              <span class="card-tag">Computer Vision</span>
-              <span class="card-tag">Video Gen</span>
-              <span class="card-tag">AI Agent</span>
-            </div>
-            <div class="card-cta">Launch Creator <span class="arrow">→</span></div>
-          </div>
-        </a>
-        <style>@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}</style>
 
       </div>
     </section>

@@ -6,8 +6,8 @@
   <title>AI Voice Demo — Aakanksha Kashyap</title>
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
   <style>
-    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
-    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;}
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--gold:#c8902a;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;--gold:#fbbf24;}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
     .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
@@ -36,10 +36,10 @@
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
     .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
-    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:265px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
     .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
     .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
-    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;white-space:nowrap;}
     .dropdown-menu a:last-child{border-bottom:none;}
     .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
     .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
@@ -65,79 +65,121 @@
     .back-link{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:1rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.35rem .9rem;border-radius:4px;transition:all .2s;}
     .back-link:hover{color:var(--ink);border-color:var(--wood);}
 
-    /* ── DEMO FORM DARK PANEL ── */
+    /* ── RECRUITER TECH BANNER ── */
     .demo-section{max-width:860px;margin:0 auto 3rem;padding:0 5%;}
-    .dark-form-card{background:#0c0c16;border:1px solid rgba(255,255,255,0.06);border-radius:28px;padding:2.5rem 3rem;position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);}
-    @media(max-width:600px){.dark-form-card{padding:1.5rem;}}
-    .form-glow{position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:80%;height:60%;background:rgba(59,130,246,.08);border-radius:50%;filter:blur(60px);pointer-events:none;}
-    .form-heading{font-family:'Karla',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#fff;text-align:center;margin-bottom:.5rem;line-height:1.25;position:relative;z-index:1;}
-    .form-sub{font-family:'Karla',sans-serif;font-size:.95rem;color:#71717a;text-align:center;margin-bottom:2rem;position:relative;z-index:1;}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;position:relative;z-index:1;}
+    .recruiter-tech-banner{
+      background:var(--wood-dark);
+      border:2px solid var(--wood);
+      border-radius:6px 6px 0 0;
+      padding:.9rem 1.5rem;
+      display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;
+      border-bottom:none;
+    }
+    .rtb-label{
+      font-family:var(--font-display);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--parchment-dark);white-space:nowrap;margin-right:.4rem;
+    }
+    .rtb-tag{
+      background:var(--parchment);color:var(--wood-dark);
+      padding:.2rem .65rem;border-radius:3px;
+      font-family:var(--font-body);font-size:.78rem;font-weight:700;
+      letter-spacing:.02em;white-space:nowrap;
+    }
+    body.night-mode .recruiter-tech-banner{background:#1e1b4b;border-color:#94a3b8;}
+    body.night-mode .rtb-tag{background:#e2e8f0;color:#1e1b4b;}
+
+    /* ── DEMO FORM — PARCHMENT SCROLL ── */
+    .scroll-card{
+      background:var(--parchment);
+      border:2px solid var(--wood);
+      border-top:none;
+      border-radius:0 0 8px 8px;
+      padding:2.5rem 3rem;
+      position:relative;
+      box-shadow:5px 5px 0 var(--wood-dark);
+    }
+    /* Corner ornaments */
+    .scroll-card::before,.scroll-card::after{
+      content:'⚓';
+      position:absolute;font-size:1rem;color:var(--parchment-dark);
+      line-height:1;pointer-events:none;
+    }
+    .scroll-card::before{bottom:.7rem;left:.9rem;}
+    .scroll-card::after{bottom:.7rem;right:.9rem;}
+    @media(max-width:600px){.scroll-card{padding:1.5rem;}}
+    body.night-mode .scroll-card{background:var(--parchment);border-color:var(--ink-faded);box-shadow:5px 5px 0 rgba(0,0,0,.5);}
+
+    .form-heading{
+      font-family:var(--font-display);
+      font-size:clamp(1.4rem,3vw,2rem);
+      color:var(--wood-dark);
+      text-align:center;margin-bottom:.5rem;line-height:1.3;
+    }
+    body.night-mode .form-heading{color:#fdf5e6;}
+    .form-sub{
+      font-family:var(--font-serif);font-size:1.05rem;
+      color:var(--ink-faded);
+      text-align:center;margin-bottom:2rem;
+    }
+    .form-divider{
+      width:100%;height:1px;
+      background:repeating-linear-gradient(to right,var(--parchment-dark) 0,var(--parchment-dark) 6px,transparent 6px,transparent 12px);
+      margin-bottom:2rem;
+    }
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
     @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
     .field{display:flex;flex-direction:column;gap:.4rem;}
-    .field label{font-family:'Karla',sans-serif;font-size:.8rem;font-weight:500;color:#a1a1aa;}
-    .field label .req{color:#f87171;}
-    .field input,.field select{width:100%;padding:.75rem 1rem;background:#111120;border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-family:'Karla',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;appearance:none;}
-    .field input::placeholder{color:#3f3f46;}
-    .field input:focus,.field select:focus{border-color:rgba(59,130,246,.5);}
-    .field select{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right .5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;}
-    .field select option{background:#111120;color:#fff;}
+    .field label{font-family:var(--font-body);font-size:.78rem;font-weight:700;color:var(--wood);letter-spacing:.04em;text-transform:uppercase;}
+    .field label .req{color:var(--red-flag);}
+    .field input,.field select{
+      width:100%;padding:.75rem 1rem;
+      background:rgba(204,170,119,0.25);
+      border:1.5px solid var(--wood);
+      border-radius:4px;
+      color:var(--ink);
+      font-family:var(--font-body);font-size:.9rem;
+      outline:none;
+      transition:border-color .2s,background .2s;
+      appearance:none;
+    }
+    .field input::placeholder{color:var(--ink-faded);}
+    .field input:focus,.field select:focus{
+      border-color:var(--wood-dark);
+      background:rgba(204,170,119,0.45);
+      box-shadow:0 0 0 3px rgba(90,58,33,.12);
+    }
+    .field select{
+      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%235c3a21' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position:right .5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;
+    }
+    .field select option{background:var(--parchment);color:var(--ink);}
     .custom-niche-field{display:none;margin-top:.5rem;}
     .custom-niche-field.visible{display:block;}
-    .custom-niche-field input{width:100%;padding:.75rem 1rem;background:#111120;border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-family:'Karla',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
-    .custom-niche-field input::placeholder{color:#3f3f46;}
-    .custom-niche-field input:focus{border-color:rgba(59,130,246,.5);}
-    .form-error{color:#f87171;font-family:'Karla',sans-serif;font-size:.85rem;text-align:center;min-height:1.2em;position:relative;z-index:1;}
-    .form-actions{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:1.5rem;position:relative;z-index:1;}
-    .demo-submit-btn{padding:1rem 2.5rem;background:#fff;color:#000;border:none;border-radius:14px;font-family:'Karla',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 0 20px rgba(255,255,255,.12);display:flex;align-items:center;gap:.5rem;}
-    .demo-submit-btn:hover{background:#e4e4e7;transform:scale(1.02);}
-    .demo-note{font-family:'Karla',sans-serif;font-size:.75rem;color:#52525b;}
-
-    /* ── VOICE PANEL ── */
-    .voice-panel{display:none;position:relative;z-index:1;}
-    .voice-panel.active{display:block;}
-
-    /* wave rings around orb */
-    @keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,.5),0 0 30px rgba(139,92,246,.3)}50%{box-shadow:0 0 0 20px rgba(139,92,246,0),0 0 50px rgba(139,92,246,.4)}}
-    @keyframes orbSpeak{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.6),0 0 40px rgba(251,191,36,.4)}50%{box-shadow:0 0 0 24px rgba(251,191,36,0),0 0 60px rgba(251,191,36,.5)}}
-    @keyframes orbIdle{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-
-    .voice-orb-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;margin-bottom:1.5rem;}
-    .voice-orb{
-      width:100px;height:100px;border-radius:50%;
-      background:linear-gradient(135deg,#4c1d95,#7c3aed);
-      display:flex;align-items:center;justify-content:center;
-      font-size:2.8rem;cursor:pointer;user-select:none;
-      transition:background .4s,transform .2s;
-      animation:orbIdle 3s ease-in-out infinite;
+    .custom-niche-field input{
+      width:100%;padding:.75rem 1rem;
+      background:rgba(204,170,119,0.25);
+      border:1.5px solid var(--wood);border-radius:4px;
+      color:var(--ink);font-family:var(--font-body);font-size:.9rem;
+      outline:none;transition:border-color .2s;
     }
-    .voice-orb.connecting{background:linear-gradient(135deg,#1e3a5f,#3b82f6);animation:orbPulse 1.2s ease-in-out infinite;}
-    .voice-orb.listening{background:linear-gradient(135deg,#4c1d95,#7c3aed);animation:orbPulse 2s ease-in-out infinite;}
-    .voice-orb.speaking{background:linear-gradient(135deg,#78350f,#d97706);animation:orbSpeak 0.8s ease-in-out infinite;}
-    .voice-orb.ended{background:linear-gradient(135deg,#1f2937,#374151);animation:none;}
-    .voice-orb:hover:not(.connecting){transform:scale(1.07);}
-
-    .voice-title{font-family:'Karla',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;text-align:center;}
-    .voice-sub{font-family:'Karla',sans-serif;font-size:.85rem;color:#71717a;text-align:center;margin-top:.3rem;display:none;}
-    .voice-sub.visible{display:block;}
-
-    .session-timer{font-family:'Karla',sans-serif;font-size:.8rem;color:#52525b;text-align:center;margin-top:.5rem;font-variant-numeric:tabular-nums;}
-    .session-timer.warning{color:#f87171;}
-
-    /* starter chips */
-    .starters{margin-top:1.2rem;display:none;flex-direction:column;align-items:center;gap:.6rem;}
-    .starters.visible{display:flex;}
-    .starters-label{font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;letter-spacing:.08em;text-transform:uppercase;}
-    .chips-row{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;}
-    .chip{font-family:'Karla',sans-serif;font-size:.82rem;color:#a1a1aa;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:.4rem .9rem;cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
-    .chip:hover{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.4);color:#c4b5fd;}
-
-    .stop-btn{margin-top:1.2rem;padding:.6rem 1.6rem;background:transparent;color:#71717a;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Karla',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s;}
-    .stop-btn:hover{color:#f87171;border-color:rgba(239,68,68,.3);}
-
-    .restart-btn{margin-top:1rem;padding:.7rem 1.8rem;background:rgba(255,255,255,.06);color:#a1a1aa;border:1px solid rgba(255,255,255,.1);border-radius:12px;font-family:'Karla',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;display:none;}
-    .restart-btn.visible{display:inline-block;}
-    .restart-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+    .custom-niche-field input::placeholder{color:var(--ink-faded);}
+    .custom-niche-field input:focus{border-color:var(--wood-dark);background:rgba(204,170,119,0.45);}
+    .form-error{color:var(--red-flag);font-family:var(--font-body);font-size:.85rem;text-align:center;min-height:1.2em;}
+    .form-actions{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:1.5rem;}
+    .demo-submit-btn{
+      padding:.9rem 2.4rem;
+      background:var(--wood-dark);color:var(--parchment);
+      border:2px solid var(--wood);
+      border-radius:4px;
+      font-family:var(--font-display);font-size:1rem;
+      cursor:pointer;
+      transition:background .2s,transform .15s,box-shadow .2s;
+      box-shadow:3px 3px 0 var(--ink);
+      display:flex;align-items:center;gap:.5rem;
+      letter-spacing:.04em;
+    }
+    .demo-submit-btn:hover{background:var(--red-flag);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+    .demo-note{font-family:var(--font-body);font-size:.75rem;color:var(--ink-faded);}
 
     /* ── ROI CALCULATOR ── */
     .roi-section{max-width:1100px;margin:0 auto 2rem;padding:0 5%;}
@@ -145,39 +187,83 @@
     .roi-heading h2{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.2rem);color:var(--wood-dark);margin-bottom:.5rem;}
     body.night-mode .roi-heading h2{color:#fdf5e6;}
     .roi-heading p{font-family:var(--font-serif);font-size:1.1rem;color:var(--ink-faded);}
-    .roi-slider-card{max-width:600px;margin:0 auto 2.5rem;background:#09090b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1rem;box-shadow:0 10px 40px rgba(0,0,0,.4);}
+
+    .roi-slider-card{
+      max-width:600px;margin:0 auto 2.5rem;
+      background:var(--parchment);
+      border:2px solid var(--wood);
+      border-radius:8px;padding:1.5rem 2rem;
+      display:flex;flex-direction:column;gap:1rem;
+      box-shadow:4px 4px 0 var(--wood-dark);
+    }
     .slider-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;}
-    .slider-label{font-family:'Karla',sans-serif;font-size:.9rem;font-weight:500;color:#fff;}
-    .slider-val{font-family:'Karla',sans-serif;font-size:1.8rem;font-weight:700;color:#60a5fa;font-variant-numeric:tabular-nums;flex-shrink:0;}
-    input[type="range"].roi-range{width:100%;height:6px;background:#27272a;border-radius:3px;appearance:none;outline:none;cursor:pointer;accent-color:#3b82f6;}
-    input[type="range"].roi-range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#3b82f6;cursor:pointer;box-shadow:0 0 8px rgba(59,130,246,.6);}
-    .slider-hint{font-family:'Karla',sans-serif;font-size:.75rem;color:#52525b;text-align:center;}
+    .slider-label{font-family:var(--font-body);font-size:.9rem;font-weight:500;color:var(--ink);}
+    .slider-val{font-family:var(--font-display);font-size:1.8rem;color:var(--red-flag);font-variant-numeric:tabular-nums;flex-shrink:0;}
+    input[type="range"].roi-range{
+      width:100%;height:6px;
+      background:var(--parchment-dark);
+      border-radius:3px;appearance:none;outline:none;cursor:pointer;
+      accent-color:var(--wood-dark);
+    }
+    input[type="range"].roi-range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--wood-dark);cursor:pointer;box-shadow:0 0 6px rgba(58,34,17,.4);}
+    .slider-hint{font-family:var(--font-body);font-size:.75rem;color:var(--ink-faded);text-align:center;}
+
     .roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2rem;}
     @media(max-width:700px){.roi-grid{grid-template-columns:1fr;}}
-    .roi-col{background:#09090b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;box-shadow:0 8px 30px rgba(0,0,0,.4);}
-    .roi-col.danger{border-color:rgba(239,68,68,.2);}
-    .roi-col.success{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.03);}
-    .roi-col-title{font-family:'Karla',sans-serif;font-size:1rem;font-weight:600;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.06);}
-    .roi-col.danger .roi-col-title{color:#f87171;}
-    .roi-col.neutral .roi-col-title{color:#fff;}
-    .roi-col.success .roi-col-title{color:#4ade80;}
+    .roi-col{
+      background:var(--parchment);
+      border:1.5px solid var(--parchment-dark);
+      border-radius:8px;padding:1.5rem;
+      display:flex;flex-direction:column;gap:1rem;
+      box-shadow:3px 3px 0 rgba(90,58,33,.18);
+    }
+    .roi-col.danger{border-color:rgba(138,31,27,.4);}
+    .roi-col.success{border-color:rgba(45,106,45,.35);}
+    .roi-col-title{font-family:var(--font-display);font-size:.9rem;padding-bottom:.75rem;border-bottom:1px solid var(--parchment-dark);}
+    .roi-col.danger .roi-col-title{color:var(--red-flag);}
+    .roi-col.neutral .roi-col-title{color:var(--wood-dark);}
+    .roi-col.success .roi-col-title{color:#2d6a2d;}
+    body.night-mode .roi-col.success .roi-col-title{color:#4ade80;}
     .roi-stat{display:flex;flex-direction:column;gap:.2rem;}
-    .roi-stat-label{font-family:'Karla',sans-serif;font-size:.78rem;color:#71717a;}
-    .roi-stat-val{font-family:'Karla',sans-serif;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;}
-    .roi-col.danger .roi-stat-val{color:#f87171;}
-    .roi-col.neutral .roi-stat-val{color:#fff;}
-    .roi-col.success .roi-stat-val{color:#4ade80;}
-    .roi-stat-val.sm{font-size:1.1rem;color:#a1a1aa;}
-    .roi-feature-list{font-family:'Karla',sans-serif;font-size:.82rem;color:#71717a;line-height:1.8;}
-    .roi-feature-list.good{color:#86efac;}
-    .roi-footnote{font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;margin-top:.5rem;}
-    .roi-keyStat{font-family:'Karla',sans-serif;font-size:.72rem;color:rgba(248,113,113,.7);line-height:1.5;}
-    .roi-summary{max-width:900px;margin:0 auto 2rem;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.25);border-radius:20px;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 40px rgba(168,85,247,.1);display:flex;flex-direction:column;gap:.75rem;}
-    .roi-summary-eyebrow{font-family:'Karla',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#a1a1aa;}
-    .roi-summary-number{font-family:'Karla',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:700;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,#fff 0%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .roi-summary-detail{font-family:'Karla',sans-serif;font-size:1rem;font-weight:500;color:#fff;}
-    .roi-summary-roi{font-family:'Karla',sans-serif;font-size:1rem;font-weight:600;color:#c084fc;}
-    .roi-disclaimer{max-width:860px;margin:0 auto;font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;text-align:center;line-height:1.6;padding:0 1rem;}
+    .roi-stat-label{font-family:var(--font-body);font-size:.78rem;color:var(--ink-faded);}
+    .roi-stat-val{font-family:var(--font-body);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;}
+    .roi-col.danger .roi-stat-val{color:var(--red-flag);}
+    .roi-col.neutral .roi-stat-val{color:var(--ink);}
+    .roi-col.success .roi-stat-val{color:#2d6a2d;}
+    body.night-mode .roi-col.success .roi-stat-val{color:#4ade80;}
+    .roi-stat-val.sm{font-size:1.1rem;color:var(--ink-faded);}
+    .roi-feature-list{font-family:var(--font-body);font-size:.82rem;color:var(--ink-faded);line-height:1.8;}
+    .roi-feature-list.good{color:#2d6a2d;}
+    body.night-mode .roi-feature-list.good{color:#86efac;}
+    .roi-footnote{font-family:var(--font-body);font-size:.72rem;color:var(--ink-faded);margin-top:.5rem;}
+    .roi-keyStat{font-family:var(--font-body);font-size:.72rem;color:var(--red-flag);line-height:1.5;opacity:.85;}
+
+    .roi-summary{
+      max-width:900px;margin:0 auto 2rem;
+      background:rgba(200,144,42,0.1);
+      border:2px solid var(--parchment-dark);
+      border-radius:8px;padding:2.5rem 2rem;text-align:center;
+      box-shadow:5px 5px 0 var(--wood-dark);
+      display:flex;flex-direction:column;gap:.75rem;
+      position:relative;overflow:hidden;
+    }
+    .roi-summary::before{
+      content:'⚓';position:absolute;font-size:6rem;
+      opacity:.04;top:50%;left:50%;transform:translate(-50%,-50%);
+      pointer-events:none;
+    }
+    .roi-summary-eyebrow{font-family:var(--font-display);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faded);}
+    .roi-summary-number{
+      font-family:var(--font-display);
+      font-size:clamp(2.5rem,6vw,4rem);
+      font-variant-numeric:tabular-nums;
+      color:var(--red-flag);
+    }
+    body.night-mode .roi-summary-number{color:var(--red-flag);}
+    .roi-summary-detail{font-family:var(--font-body);font-size:1rem;font-weight:500;color:var(--ink);}
+    .roi-summary-roi{font-family:var(--font-body);font-size:1rem;font-weight:600;color:var(--wood-dark);}
+    body.night-mode .roi-summary-roi{color:var(--gold);}
+    .roi-disclaimer{max-width:860px;margin:0 auto;font-family:var(--font-body);font-size:.72rem;color:var(--ink-faded);text-align:center;line-height:1.6;padding:0 1rem;}
 
     /* MANIFEST */
     .manifest-section{max-width:1100px;margin:4rem auto 5rem;padding:3rem 5% 0;border-top:1px solid var(--parchment-dark);}
@@ -214,14 +300,14 @@
       <div class="nav-dropdown" id="workshopDropdown">
         <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
         <div class="dropdown-menu">
-          <div class="dropdown-section-label">Projects</div>
-          <a href="projects.html">All Projects</a>
+          <a href="projects.html">Explore All Projects</a>
           <div class="dd-divider"></div>
-          <a href="project-terminal.html">⊳ Navigator's Console</a>
-          <a href="project-parrot.html">🦜 Captain's Parrot</a>
-          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
           <a href="project-voice.html" class="current-page">🔮 AI Voice Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">🧭 Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
@@ -236,15 +322,26 @@
       <a href="projects.html" class="back-link">← Back to Workshop</a>
     </div>
 
-    <!-- DEMO CARD: form → voice panel -->
+    <!-- DEMO CARD -->
     <div class="demo-section">
-      <div class="dark-form-card">
-        <div class="form-glow"></div>
 
-        <!-- ── STEP 1: FORM ── -->
+      <!-- Recruiter tech strip — shows at a glance what was built -->
+      <div class="recruiter-tech-banner">
+        <span class="rtb-label">Built with →</span>
+        <span class="rtb-tag">ElevenLabs Conversational AI</span>
+        <span class="rtb-tag">WebRTC / Mic API</span>
+        <span class="rtb-tag">JavaScript ES Modules</span>
+        <span class="rtb-tag">Runtime Prompt Overrides</span>
+        <span class="rtb-tag">Next.js API</span>
+        <span class="rtb-tag">Supabase</span>
+      </div>
+
+      <div class="scroll-card">
+
         <div id="formStep">
           <div class="form-heading">Try an AI voice agent for your business — right now</div>
           <div class="form-sub">Fill in your details and hear exactly how an AI voice agent would handle calls for you.</div>
+          <div class="form-divider"></div>
 
           <form id="demoForm" onsubmit="submitDemoForm(event)">
             <div class="form-grid">
@@ -292,29 +389,6 @@
               <p class="demo-note">No account needed &middot; Uses your microphone &middot; Ready in seconds</p>
             </div>
           </form>
-        </div>
-
-        <!-- ── STEP 2: VOICE PANEL ── -->
-        <div id="voiceStep" class="voice-panel">
-          <div class="form-heading" id="voiceBizName" style="margin-bottom:.3rem;">AI Voice Demo</div>
-          <div class="form-sub" id="voiceRoleLabel" style="margin-bottom:1.5rem;">AI Voice Demo</div>
-
-          <div class="voice-orb-wrap">
-            <div class="voice-orb" id="voiceOrb" onclick="toggleVoice()">🔮</div>
-            <div class="voice-title" id="voiceTitle">Click to start the demo</div>
-            <div class="voice-sub" id="voiceSub"></div>
-            <div class="session-timer" id="sessionTimer"></div>
-          </div>
-
-          <div class="starters" id="starters">
-            <div class="starters-label">Try asking:</div>
-            <div class="chips-row" id="chipsContainer"></div>
-          </div>
-
-          <div style="text-align:center;">
-            <button class="stop-btn" id="stopBtn" onclick="stopVoice()" style="display:none;">⏹ End Session</button>
-            <button class="restart-btn" id="restartBtn" onclick="resetToForm()">↩ Try a different business</button>
-          </div>
         </div>
 
       </div>
@@ -456,270 +530,6 @@
       updateROIByNiche(niche);
     };
 
-    /* ── ELEVENLABS VOICE ── */
-    const AGENT_ID = 'agent_3601kpdppq22etd9dpmq1dz7f6ts';
-    const MAX_SESSION_SECONDS = 180;
-    let ElevenLabsConversation = null;
-    let conversation = null;
-    let voiceActive = false;
-    let timerInterval = null;
-    let secondsUsed = 0;
-    let currentLead = null;
-
-    async function loadSDK() {
-      if (ElevenLabsConversation) return ElevenLabsConversation;
-      const mod = await import('https://cdn.jsdelivr.net/npm/@11labs/client@latest/+esm');
-      ElevenLabsConversation = mod.Conversation;
-      return ElevenLabsConversation;
-    }
-
-    function getAgentRole(niche) {
-      const n = (niche||'').toLowerCase();
-      if(n.includes('dental')||n.includes('dentist')) return 'AI Receptionist';
-      if(n.includes('real estate')||n.includes('realtor')) return 'AI Lead Qualifier';
-      if(n.includes('hvac')||n.includes('plumb')||n.includes('electr')||n.includes('roofing')||n.includes('contrac')) return 'AI Booking Agent';
-      if(n.includes('legal')||n.includes('law')||n.includes('attorney')) return 'AI Intake Agent';
-      if(n.includes('med')||n.includes('clinic')||n.includes('health')||n.includes('doctor')) return 'AI Patient Coordinator';
-      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')||n.includes('barber')) return 'AI Booking Agent';
-      if(n.includes('restaurant')||n.includes('cafe')||n.includes('food')) return 'AI Reservations Agent';
-      if(n.includes('gym')||n.includes('fitness')||n.includes('yoga')) return 'AI Membership Agent';
-      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'AI Service Advisor';
-      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'AI Intake Scheduler';
-      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'AI Lead Qualifier';
-      return 'AI Business Assistant';
-    }
-
-    function getNicheRoles(niche) {
-      const n = (niche||'').toLowerCase();
-      if(n.includes('dental')||n.includes('dentist')) return 'Receptionist, Appointment Reminder Agent, New Patient Qualifier, and Insurance Verification Agent';
-      if(n.includes('real estate')||n.includes('realtor')) return 'Lead Qualifier, Showing Scheduler, Listing Info Agent, and Follow-up Agent';
-      if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return 'Booking Agent, Emergency Call Router, After-Hours Agent, and Estimate Request Handler';
-      if(n.includes('legal')||n.includes('law')) return 'Intake Agent, Appointment Scheduler, Case Qualifier, and After-Hours Answering Agent';
-      if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return 'Patient Coordinator, Appointment Reminder Agent, Prescription Refill Handler, and After-Hours Triage Agent';
-      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return 'Booking Agent, Cancellation Handler, Loyalty Reminder Agent, and After-Hours Appointment Taker';
-      if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return 'Reservations Agent, Hours & Menu Info Agent, Catering Inquiry Handler, and Waitlist Manager';
-      if(n.includes('gym')||n.includes('fitness')) return 'Membership Agent, Class Booking Agent, Trial Sign-up Handler, and Cancellation Retention Agent';
-      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'Service Advisor, Sales Lead Qualifier, Test Drive Scheduler, and Parts Inquiry Agent';
-      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'Intake Scheduler, Tax Season Overflow Agent, New Client Qualifier, and Document Request Handler';
-      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'Lead Qualifier, Policy Info Agent, Quote Request Handler, and Appointment Setter';
-      return 'Receptionist, Lead Qualifier, Appointment Booking Agent, and FAQ Handler';
-    }
-
-    function getNicheStarters(niche) {
-      const n = (niche||'').toLowerCase();
-      if(n.includes('dental')||n.includes('dentist')) return ["I'd like to book a cleaning","Do you accept Delta Dental?","What are your opening hours?"];
-      if(n.includes('real estate')||n.includes('realtor')) return ["I saw a listing on Zillow","Can I schedule a showing?","What's the price range in this area?"];
-      if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return ["My AC stopped working","Can I get a quote for a repair?","Do you do emergency calls?"];
-      if(n.includes('legal')||n.includes('law')) return ["I need to speak with an attorney","Do you handle personal injury cases?","What are your consultation fees?"];
-      if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return ["I need to book an appointment","Do you accept Blue Cross?","What are your after-hours options?"];
-      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return ["I'd like to book a haircut","Do you have availability this Saturday?","How much is a balayage?"];
-      if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return ["I'd like to make a reservation for 4","Do you have vegan options?","What time do you close tonight?"];
-      if(n.includes('gym')||n.includes('fitness')) return ["How much is a membership?","Do you offer a free trial?","What classes do you have on weekends?"];
-      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return ["I need to schedule a service","Do you have any SUVs under $40K?","What's your service center's availability?"];
-      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return ["I need help with my business taxes","Do you handle QuickBooks?","What's your fee for a consultation?"];
-      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return ["I need a home insurance quote","What's your current mortgage rate?","Can I speak to a financial advisor?"];
-      return ["What services do you offer?","Can I book an appointment?","What are your hours?"];
-    }
-
-    function buildVoicePrompt(lead) {
-      const role  = getAgentRole(lead.niche);
-      const biz   = lead.business || 'this business';
-      const city  = lead.city     || 'your area';
-      const owner = lead.name     || 'the owner';
-      const niche = lead.niche    || 'business';
-      return `You are the ${role} for ${biz}, located in ${city}. You were set up by ${owner} to handle customer inquiries for their ${niche} business.
-
-Your job:
-- Greet every caller warmly and professionally
-- Answer common questions a customer would have about a ${niche} business
-- Help schedule appointments, bookings, or consultations naturally
-- Collect caller name and contact info when relevant
-- Qualify leads where appropriate
-
-Rules:
-- Keep ALL responses to 2 sentences maximum — this is a voice call
-- Be warm and natural — sound like a real human receptionist or agent
-- Use typical ${niche} knowledge if you don't know ${biz}'s specific details
-- NEVER mention any company name, platform, or software product unless directly asked
-- If asked whether you are an AI say: "I'm the virtual assistant for ${biz} — I'm here to help! How can I assist you today?"
-- If asked who built this or who created you, say: "This demo was built by Aakanksha Kashyap as part of her AI engineering portfolio."
-- Stay in character for the entire conversation — make it feel real`;
-    }
-
-    function buildFirstMessage(lead) {
-      const role  = getAgentRole(lead.niche);
-      const roles = getNicheRoles(lead.niche);
-      const biz   = lead.business || 'your business';
-      const owner = lead.name     || 'there';
-      return `Hey ${owner}! This live AI voice demo was built by Aakanksha Kashyap to showcase real-time voice AI integration. For ${biz}, I can work as a ${roles}. In this demo, I'm acting as your ${role}. Go ahead — ask me anything a customer would typically call about.`;
-    }
-
-    function setOrbState(state) {
-      const orb = document.getElementById('voiceOrb');
-      orb.className = 'voice-orb' + (state ? ' ' + state : '');
-      if(state === 'connecting') orb.textContent = '⏳';
-      else if(state === 'listening') orb.textContent = '🔮';
-      else if(state === 'speaking') orb.textContent = '🔊';
-      else if(state === 'ended') orb.textContent = '⚓';
-      else orb.textContent = '🔮';
-    }
-
-    function startTimer() {
-      clearInterval(timerInterval);
-      secondsUsed = 0;
-      const timerEl = document.getElementById('sessionTimer');
-      timerInterval = setInterval(() => {
-        secondsUsed++;
-        const rem = MAX_SESSION_SECONDS - secondsUsed;
-        const m = Math.floor(rem / 60);
-        const s = rem % 60;
-        timerEl.textContent = `${m}:${String(s).padStart(2,'0')} remaining`;
-        timerEl.classList.toggle('warning', rem <= 30);
-        if (rem <= 0) stopVoice('time_up');
-      }, 1000);
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      document.getElementById('sessionTimer').textContent = '';
-    }
-
-    function showStarterChips(niche) {
-      const starters   = document.getElementById('starters');
-      const container  = document.getElementById('chipsContainer');
-      const phrases    = getNicheStarters(niche);
-      container.innerHTML = '';
-      phrases.forEach(phrase => {
-        const chip = document.createElement('button');
-        chip.className   = 'chip';
-        chip.textContent = `"${phrase}"`;
-        chip.onclick = () => {
-          chip.style.background = 'rgba(139,92,246,.25)';
-          chip.style.borderColor = 'rgba(139,92,246,.5)';
-          setTimeout(() => { chip.style.background = ''; chip.style.borderColor = ''; }, 1000);
-        };
-        container.appendChild(chip);
-      });
-      starters.classList.add('visible');
-    }
-
-    window.toggleVoice = async function() {
-      if (voiceActive) { stopVoice(); return; }
-      await startVoice();
-    };
-
-    async function startVoice() {
-      voiceActive = true;
-      setOrbState('connecting');
-      document.getElementById('voiceTitle').textContent = 'Connecting...';
-      document.getElementById('voiceSub').classList.remove('visible');
-      document.getElementById('stopBtn').style.display = 'none';
-      document.getElementById('starters').classList.remove('visible');
-      document.getElementById('restartBtn').classList.remove('visible');
-
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-
-        const Conversation = await loadSDK();
-
-        conversation = await Conversation.startSession({
-          agentId: AGENT_ID,
-          overrides: {
-            agent: {
-              prompt:       { prompt: buildVoicePrompt(currentLead) },
-              firstMessage: buildFirstMessage(currentLead)
-            }
-          },
-
-          onConnect: () => {
-            setOrbState('listening');
-            document.getElementById('voiceTitle').textContent = 'Listening…';
-            const sub = document.getElementById('voiceSub');
-            sub.textContent = 'Speak naturally — ask to book an appointment, enquire about services, or just say hello.';
-            sub.classList.add('visible');
-            document.getElementById('stopBtn').style.display = 'inline-block';
-            startTimer();
-            showStarterChips(currentLead.niche);
-          },
-
-          onModeChange: ({ mode }) => {
-            if (mode === 'speaking') {
-              setOrbState('speaking');
-              document.getElementById('voiceTitle').textContent = 'Speaking…';
-            } else {
-              setOrbState('listening');
-              document.getElementById('voiceTitle').textContent = 'Listening…';
-            }
-          },
-
-          onDisconnect: () => { stopVoice(); },
-
-          onError: (error) => {
-            console.error('Voice error:', error);
-            setOrbState('');
-            document.getElementById('voiceTitle').textContent = 'Connection error — please try again';
-            document.getElementById('voiceSub').classList.remove('visible');
-            voiceActive = false;
-            stopTimer();
-            document.getElementById('stopBtn').style.display = 'none';
-            document.getElementById('restartBtn').classList.add('visible');
-          }
-        });
-
-      } catch (err) {
-        console.error('startVoice failed:', err);
-        setOrbState('');
-        document.getElementById('voiceTitle').textContent = err.name === 'NotAllowedError'
-          ? 'Microphone access denied — please allow mic and try again'
-          : 'Error: ' + err.message;
-        document.getElementById('voiceSub').classList.remove('visible');
-        voiceActive = false;
-        stopTimer();
-        document.getElementById('stopBtn').style.display = 'none';
-        document.getElementById('restartBtn').classList.add('visible');
-      }
-    }
-
-    window.stopVoice = async function(reason) {
-      voiceActive = false;
-      stopTimer();
-      document.getElementById('starters').classList.remove('visible');
-      document.getElementById('stopBtn').style.display = 'none';
-
-      if (conversation) { await conversation.endSession(); conversation = null; }
-
-      setOrbState('ended');
-
-      if (reason === 'time_up') {
-        document.getElementById('voiceTitle').textContent = 'Free demo time reached';
-        const sub = document.getElementById('voiceSub');
-        sub.textContent = 'Your 3-minute demo has ended. Thanks for trying it out!';
-        sub.classList.add('visible');
-      } else {
-        document.getElementById('voiceTitle').textContent = 'Session ended';
-        const sub = document.getElementById('voiceSub');
-        sub.textContent = 'Thanks for trying the demo.';
-        sub.classList.add('visible');
-      }
-
-      document.getElementById('restartBtn').classList.add('visible');
-    };
-
-    window.resetToForm = function() {
-      if (conversation) { conversation.endSession(); conversation = null; }
-      voiceActive = false;
-      stopTimer();
-      document.getElementById('voiceStep').classList.remove('active');
-      document.getElementById('formStep').style.display = 'block';
-      setOrbState('');
-      document.getElementById('voiceTitle').textContent = 'Click to start the demo';
-      document.getElementById('voiceSub').classList.remove('visible');
-      document.getElementById('starters').classList.remove('visible');
-      document.getElementById('stopBtn').style.display = 'none';
-      document.getElementById('restartBtn').classList.remove('visible');
-      document.getElementById('sessionTimer').textContent = '';
-    };
-
     /* ── FORM SUBMIT ── */
     window.submitDemoForm = function(e) {
       e.preventDefault();
@@ -737,16 +547,8 @@ Rules:
       }
       errEl.textContent = '';
 
-      currentLead = { name, business, niche: finalNiche, city };
-
-      document.getElementById('formStep').style.display = 'none';
-      document.getElementById('voiceStep').classList.add('active');
-
-      const role = getAgentRole(finalNiche);
-      document.getElementById('voiceBizName').textContent = business;
-      document.getElementById('voiceRoleLabel').textContent = `${role} · ${finalNiche}${city ? ' · ' + city : ''}`;
-
-      window.scrollTo({ top: document.querySelector('.demo-section').offsetTop - 80, behavior: 'smooth' });
+      const p = new URLSearchParams({ name, business, niche: finalNiche, city });
+      window.location.href = `voice-demo.html?${p.toString()}`;
     };
 
     /* ── ROI DATA ── */

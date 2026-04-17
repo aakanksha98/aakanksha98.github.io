@@ -36,10 +36,10 @@
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
     .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
-    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:265px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
     .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
     .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
-    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;white-space:nowrap;}
     .dropdown-menu a:last-child{border-bottom:none;}
     .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
     .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
@@ -117,6 +117,24 @@
     .chat-send-btn:hover{background:var(--wood-dark);transform:translateY(-1px);}
     .chat-send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 
+    /* RECRUITER TECH BANNER */
+    .recruiter-tech-banner{background:var(--wood-dark);border:2px solid var(--wood);border-radius:6px;padding:.9rem 1.5rem;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;max-width:1000px;margin:0 auto 1.5rem;}
+    .rtb-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--parchment-dark);white-space:nowrap;margin-right:.4rem;}
+    .rtb-tag{background:var(--parchment);color:var(--wood-dark);padding:.2rem .65rem;border-radius:3px;font-family:var(--font-body);font-size:.78rem;font-weight:700;white-space:nowrap;}
+    body.night-mode .recruiter-tech-banner{background:#1e1b4b;border-color:#94a3b8;}
+    body.night-mode .rtb-tag{background:#e2e8f0;color:#1e1b4b;}
+    /* MANIFEST SECTION */
+    .manifest-section{max-width:1000px;margin:0 auto 5rem;padding:3rem 5% 0;border-top:1px solid var(--parchment-dark);}
+    .manifest-title{font-family:var(--font-display);color:var(--wood-dark);text-align:center;font-size:2rem;margin-bottom:2rem;}
+    body.night-mode .manifest-title{color:#fdf5e6;}
+    .manifest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;}
+    .manifest-card{background:rgba(255,255,255,0.12);border:1px dotted var(--wood-dark);padding:1.5rem;border-radius:8px;}
+    body.night-mode .manifest-card{background:rgba(255,255,255,0.05);border-color:var(--ink-faded);}
+    .manifest-card h3{font-family:var(--font-display);color:var(--red-flag);font-size:1.1rem;margin-bottom:.8rem;}
+    .manifest-card p{font-family:var(--font-serif);color:var(--ink);line-height:1.6;font-size:1.05rem;}
+    .tech-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .tech-tag{background:var(--wood);color:var(--parchment);padding:.2rem .6rem;border-radius:4px;font-family:var(--font-serif);font-size:.85rem;}
+
     @media(max-width:720px){
       .chat-stage{grid-template-columns:1fr;}
       .parrot-col{position:static;flex-direction:row;justify-content:center;}
@@ -144,14 +162,14 @@
       <div class="nav-dropdown" id="workshopDropdown">
         <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
         <div class="dropdown-menu">
-          <div class="dropdown-section-label">Projects</div>
-          <a href="projects.html">All Projects</a>
+          <a href="projects.html">Explore All Projects</a>
           <div class="dd-divider"></div>
-          <a href="project-terminal.html">⊳ Navigator's Console</a>
-          <a href="project-parrot.html" class="current-page">🦜 Captain's Parrot</a>
-          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
           <a href="project-voice.html">🔮 AI Voice Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">🧭 Navigator's Console</a>
+          <a href="project-parrot.html" class="current-page">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
@@ -164,6 +182,15 @@
       <h1 class="page-title">Captain's Parrot</h1>
       <p class="page-desc">Ask Polly anything about Aakanksha — skills, experience, why you should hire her. The parrot has been thoroughly briefed.</p>
       <a href="projects.html" class="back-link">← Back to Workshop</a>
+    </div>
+
+    <div class="recruiter-tech-banner" style="padding-left:5%;padding-right:5%;">
+      <span class="rtb-label">Built with →</span>
+      <span class="rtb-tag">Vanilla JavaScript</span>
+      <span class="rtb-tag">Keyword Knowledge Base</span>
+      <span class="rtb-tag">Typed Reply Animation</span>
+      <span class="rtb-tag">Animated SVG Avatar</span>
+      <span class="rtb-tag">CSS Custom Properties</span>
     </div>
 
     <div class="chat-stage">
@@ -215,6 +242,31 @@
             <input type="text" class="chat-input" id="chatInput" placeholder="Ask Polly anything..." autocomplete="off"/>
             <button class="chat-send-btn" id="chatSendBtn">Send</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANIFEST -->
+    <div class="manifest-section">
+      <h2 class="manifest-title">The Captain's Manifest</h2>
+      <div class="manifest-grid">
+        <div class="manifest-card">
+          <h3>⚓ My Command</h3>
+          <p>Built Polly entirely from scratch — the knowledge base, the typed character-by-character reply animation, the parrot SVG bob animation, and the keyword-matching conversational engine. Zero external AI API calls.</p>
+        </div>
+        <div class="manifest-card">
+          <h3>⚔️ The Arsenal</h3>
+          <div class="tech-tags">
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">CSS Animations</span>
+            <span class="tech-tag">Animated SVG</span>
+            <span class="tech-tag">Custom Chat UI</span>
+            <span class="tech-tag">Knowledge Graph</span>
+          </div>
+        </div>
+        <div class="manifest-card">
+          <h3>🏴‍☠️ The Fleet</h3>
+          <p>A fully offline, zero-dependency AI chat experience — the reply typing effect, avatar animation, and recruiter-targeted knowledge base were all hand-crafted to showcase frontend engineering depth without a single npm install.</p>
         </div>
       </div>
     </div>
