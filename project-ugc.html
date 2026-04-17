@@ -880,7 +880,7 @@
           document.getElementById('btnText').textContent = 'Generate Ad';
           setIdle();
           if (res.status === 429) {
-            showError('🚫 ' + (data.error || 'Demo limit reached (2 per IP per month). Visit myjarvis.tech to generate more.'));
+            showError('🚫 ' + (data.error || 'Demo limit reached. Each IP can generate 2 videos per month.'));
           } else {
             showError(data.error || 'Something went wrong. Please try again.');
           }

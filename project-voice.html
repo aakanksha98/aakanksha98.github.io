@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Voice Demo — Aakanksha Kashyap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <style>
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#3a2211;--ink:#312117;--ink-faded:#5a4b3d;--red-flag:#8a1f1b;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#1e1b4b;--wood-dark:#000;--ink:#e2e8f0;--ink-faded:#94a3b8;--red-flag:#38bdf8;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.45;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.12;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.4),inset 0 0 300px rgba(45,17,3,.2);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:#fdf5e6;border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+    .nav-dropdown{position:relative;}
+    .nav-dropdown::after{content:'';position:absolute;top:100%;left:-12px;right:-12px;height:1.2rem;z-index:499;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:240px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:#fdf5e6;}
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+
+    /* PAGE */
+    .page-hero{padding:7rem 6% 2.5rem;text-align:center;}
+    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.2em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.4rem;}
+    .page-title{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,3.2rem);color:var(--wood-dark);margin-bottom:.6rem;}
+    body.night-mode .page-title{color:#fdf5e6;}
+    .page-desc{font-family:var(--font-serif);font-size:1.2rem;color:var(--ink-faded);max-width:520px;margin:0 auto 1.2rem;}
+    .back-link{display:inline-flex;align-items:center;gap:.4em;font-family:var(--font-serif);font-size:1rem;color:var(--ink-faded);text-decoration:none;border:1.5px solid var(--parchment-dark);padding:.35rem .9rem;border-radius:4px;transition:all .2s;}
+    .back-link:hover{color:var(--ink);border-color:var(--wood);}
+
+    /* ── DEMO FORM DARK PANEL ── */
+    .demo-section{max-width:860px;margin:0 auto 3rem;padding:0 5%;}
+    .dark-form-card{background:#0c0c16;border:1px solid rgba(255,255,255,0.06);border-radius:28px;padding:2.5rem 3rem;position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+    @media(max-width:600px){.dark-form-card{padding:1.5rem;}}
+    .form-glow{position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:80%;height:60%;background:rgba(59,130,246,.08);border-radius:50%;filter:blur(60px);pointer-events:none;}
+    .form-heading{font-family:'Karla',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#fff;text-align:center;margin-bottom:.5rem;line-height:1.25;position:relative;z-index:1;}
+    .form-sub{font-family:'Karla',sans-serif;font-size:.95rem;color:#71717a;text-align:center;margin-bottom:2rem;position:relative;z-index:1;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;position:relative;z-index:1;}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+    .field{display:flex;flex-direction:column;gap:.4rem;}
+    .field label{font-family:'Karla',sans-serif;font-size:.8rem;font-weight:500;color:#a1a1aa;}
+    .field label .req{color:#f87171;}
+    .field input,.field select{width:100%;padding:.75rem 1rem;background:#111120;border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-family:'Karla',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;appearance:none;}
+    .field input::placeholder{color:#3f3f46;}
+    .field input:focus,.field select:focus{border-color:rgba(59,130,246,.5);}
+    .field select{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right .5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;}
+    .field select option{background:#111120;color:#fff;}
+    .custom-niche-field{display:none;margin-top:.5rem;}
+    .custom-niche-field.visible{display:block;}
+    .custom-niche-field input{width:100%;padding:.75rem 1rem;background:#111120;border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;font-family:'Karla',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+    .custom-niche-field input::placeholder{color:#3f3f46;}
+    .custom-niche-field input:focus{border-color:rgba(59,130,246,.5);}
+    .form-error{color:#f87171;font-family:'Karla',sans-serif;font-size:.85rem;text-align:center;min-height:1.2em;position:relative;z-index:1;}
+    .form-actions{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:1.5rem;position:relative;z-index:1;}
+    .demo-submit-btn{padding:1rem 2.5rem;background:#fff;color:#000;border:none;border-radius:14px;font-family:'Karla',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 0 20px rgba(255,255,255,.12);display:flex;align-items:center;gap:.5rem;}
+    .demo-submit-btn:hover{background:#e4e4e7;transform:scale(1.02);}
+    .demo-note{font-family:'Karla',sans-serif;font-size:.75rem;color:#52525b;}
+
+    /* ── VOICE PANEL ── */
+    .voice-panel{display:none;position:relative;z-index:1;}
+    .voice-panel.active{display:block;}
+
+    /* wave rings around orb */
+    @keyframes orbPulse{0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,.5),0 0 30px rgba(139,92,246,.3)}50%{box-shadow:0 0 0 20px rgba(139,92,246,0),0 0 50px rgba(139,92,246,.4)}}
+    @keyframes orbSpeak{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.6),0 0 40px rgba(251,191,36,.4)}50%{box-shadow:0 0 0 24px rgba(251,191,36,0),0 0 60px rgba(251,191,36,.5)}}
+    @keyframes orbIdle{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+    .voice-orb-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+    .voice-orb{
+      width:100px;height:100px;border-radius:50%;
+      background:linear-gradient(135deg,#4c1d95,#7c3aed);
+      display:flex;align-items:center;justify-content:center;
+      font-size:2.8rem;cursor:pointer;user-select:none;
+      transition:background .4s,transform .2s;
+      animation:orbIdle 3s ease-in-out infinite;
+    }
+    .voice-orb.connecting{background:linear-gradient(135deg,#1e3a5f,#3b82f6);animation:orbPulse 1.2s ease-in-out infinite;}
+    .voice-orb.listening{background:linear-gradient(135deg,#4c1d95,#7c3aed);animation:orbPulse 2s ease-in-out infinite;}
+    .voice-orb.speaking{background:linear-gradient(135deg,#78350f,#d97706);animation:orbSpeak 0.8s ease-in-out infinite;}
+    .voice-orb.ended{background:linear-gradient(135deg,#1f2937,#374151);animation:none;}
+    .voice-orb:hover:not(.connecting){transform:scale(1.07);}
+
+    .voice-title{font-family:'Karla',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;text-align:center;}
+    .voice-sub{font-family:'Karla',sans-serif;font-size:.85rem;color:#71717a;text-align:center;margin-top:.3rem;display:none;}
+    .voice-sub.visible{display:block;}
+
+    .session-timer{font-family:'Karla',sans-serif;font-size:.8rem;color:#52525b;text-align:center;margin-top:.5rem;font-variant-numeric:tabular-nums;}
+    .session-timer.warning{color:#f87171;}
+
+    /* starter chips */
+    .starters{margin-top:1.2rem;display:none;flex-direction:column;align-items:center;gap:.6rem;}
+    .starters.visible{display:flex;}
+    .starters-label{font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;letter-spacing:.08em;text-transform:uppercase;}
+    .chips-row{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;}
+    .chip{font-family:'Karla',sans-serif;font-size:.82rem;color:#a1a1aa;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:.4rem .9rem;cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
+    .chip:hover{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.4);color:#c4b5fd;}
+
+    .stop-btn{margin-top:1.2rem;padding:.6rem 1.6rem;background:transparent;color:#71717a;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Karla',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s;}
+    .stop-btn:hover{color:#f87171;border-color:rgba(239,68,68,.3);}
+
+    .restart-btn{margin-top:1rem;padding:.7rem 1.8rem;background:rgba(255,255,255,.06);color:#a1a1aa;border:1px solid rgba(255,255,255,.1);border-radius:12px;font-family:'Karla',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;display:none;}
+    .restart-btn.visible{display:inline-block;}
+    .restart-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+    /* ── ROI CALCULATOR ── */
+    .roi-section{max-width:1100px;margin:0 auto 2rem;padding:0 5%;}
+    .roi-heading{text-align:center;margin-bottom:2.5rem;}
+    .roi-heading h2{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.2rem);color:var(--wood-dark);margin-bottom:.5rem;}
+    body.night-mode .roi-heading h2{color:#fdf5e6;}
+    .roi-heading p{font-family:var(--font-serif);font-size:1.1rem;color:var(--ink-faded);}
+    .roi-slider-card{max-width:600px;margin:0 auto 2.5rem;background:#09090b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1rem;box-shadow:0 10px 40px rgba(0,0,0,.4);}
+    .slider-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+    .slider-label{font-family:'Karla',sans-serif;font-size:.9rem;font-weight:500;color:#fff;}
+    .slider-val{font-family:'Karla',sans-serif;font-size:1.8rem;font-weight:700;color:#60a5fa;font-variant-numeric:tabular-nums;flex-shrink:0;}
+    input[type="range"].roi-range{width:100%;height:6px;background:#27272a;border-radius:3px;appearance:none;outline:none;cursor:pointer;accent-color:#3b82f6;}
+    input[type="range"].roi-range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:#3b82f6;cursor:pointer;box-shadow:0 0 8px rgba(59,130,246,.6);}
+    .slider-hint{font-family:'Karla',sans-serif;font-size:.75rem;color:#52525b;text-align:center;}
+    .roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:2rem;}
+    @media(max-width:700px){.roi-grid{grid-template-columns:1fr;}}
+    .roi-col{background:#09090b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+    .roi-col.danger{border-color:rgba(239,68,68,.2);}
+    .roi-col.success{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.03);}
+    .roi-col-title{font-family:'Karla',sans-serif;font-size:1rem;font-weight:600;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.06);}
+    .roi-col.danger .roi-col-title{color:#f87171;}
+    .roi-col.neutral .roi-col-title{color:#fff;}
+    .roi-col.success .roi-col-title{color:#4ade80;}
+    .roi-stat{display:flex;flex-direction:column;gap:.2rem;}
+    .roi-stat-label{font-family:'Karla',sans-serif;font-size:.78rem;color:#71717a;}
+    .roi-stat-val{font-family:'Karla',sans-serif;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;}
+    .roi-col.danger .roi-stat-val{color:#f87171;}
+    .roi-col.neutral .roi-stat-val{color:#fff;}
+    .roi-col.success .roi-stat-val{color:#4ade80;}
+    .roi-stat-val.sm{font-size:1.1rem;color:#a1a1aa;}
+    .roi-feature-list{font-family:'Karla',sans-serif;font-size:.82rem;color:#71717a;line-height:1.8;}
+    .roi-feature-list.good{color:#86efac;}
+    .roi-footnote{font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;margin-top:.5rem;}
+    .roi-keyStat{font-family:'Karla',sans-serif;font-size:.72rem;color:rgba(248,113,113,.7);line-height:1.5;}
+    .roi-summary{max-width:900px;margin:0 auto 2rem;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.25);border-radius:20px;padding:2.5rem 2rem;text-align:center;box-shadow:0 0 40px rgba(168,85,247,.1);display:flex;flex-direction:column;gap:.75rem;}
+    .roi-summary-eyebrow{font-family:'Karla',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#a1a1aa;}
+    .roi-summary-number{font-family:'Karla',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:700;font-variant-numeric:tabular-nums;background:linear-gradient(135deg,#fff 0%,#c084fc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .roi-summary-detail{font-family:'Karla',sans-serif;font-size:1rem;font-weight:500;color:#fff;}
+    .roi-summary-roi{font-family:'Karla',sans-serif;font-size:1rem;font-weight:600;color:#c084fc;}
+    .roi-disclaimer{max-width:860px;margin:0 auto;font-family:'Karla',sans-serif;font-size:.72rem;color:#52525b;text-align:center;line-height:1.6;padding:0 1rem;}
+
+    /* MANIFEST */
+    .manifest-section{max-width:1100px;margin:4rem auto 5rem;padding:3rem 5% 0;border-top:1px solid var(--parchment-dark);}
+    .manifest-title{font-family:var(--font-display);color:var(--wood-dark);text-align:center;font-size:2rem;margin-bottom:2rem;}
+    body.night-mode .manifest-title{color:#fdf5e6;}
+    .manifest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;}
+    .manifest-card{background:rgba(255,255,255,0.12);border:1px dotted var(--wood-dark);padding:1.5rem;border-radius:8px;}
+    body.night-mode .manifest-card{background:rgba(255,255,255,0.05);border-color:var(--ink-faded);}
+    .manifest-card h3{font-family:var(--font-display);color:var(--red-flag);font-size:1.1rem;margin-bottom:.8rem;}
+    .manifest-card p{font-family:var(--font-serif);color:var(--ink);line-height:1.6;font-size:1.05rem;}
+    .tech-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .tech-tag{background:var(--wood);color:var(--parchment);padding:.2rem .6rem;border-radius:4px;font-family:var(--font-serif);font-size:.85rem;}
+
+    @media(max-width:720px){
+      nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
+      .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
+      .nav-links a{font-size:.9rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <div class="dropdown-section-label">Projects</div>
+          <a href="projects.html">All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">⊳ Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+          <a href="project-voice.html" class="current-page">🔮 AI Voice Agent</a>
+          <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <div class="page-label">Project IV · Interactive Voice Demo</div>
+      <h1 class="page-title">AI Voice Agent</h1>
+      <p class="page-desc">Enter your business details below. The AI voice agent will answer calls for your exact business — live, in your browser, right now.</p>
+      <a href="projects.html" class="back-link">← Back to Workshop</a>
+    </div>
+
+    <!-- DEMO CARD: form → voice panel -->
+    <div class="demo-section">
+      <div class="dark-form-card">
+        <div class="form-glow"></div>
+
+        <!-- ── STEP 1: FORM ── -->
+        <div id="formStep">
+          <div class="form-heading">Try an AI voice agent for your business — right now</div>
+          <div class="form-sub">Fill in your details and hear exactly how an AI voice agent would handle calls for you.</div>
+
+          <form id="demoForm" onsubmit="submitDemoForm(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label>Your first name</label>
+                <input type="text" id="fieldName" placeholder="e.g. Sarah">
+              </div>
+              <div class="field">
+                <label>Business name <span class="req">*</span></label>
+                <input type="text" id="fieldBusiness" placeholder="e.g. Austin City Dental">
+              </div>
+              <div class="field">
+                <label>Your industry <span class="req">*</span></label>
+                <select id="fieldNiche" onchange="handleNicheChange()">
+                  <option value="" disabled selected>Select your industry...</option>
+                  <option>Dental</option>
+                  <option>Real Estate</option>
+                  <option>HVAC / Trades</option>
+                  <option>Legal</option>
+                  <option>Medical / Clinic</option>
+                  <option>Salon / Beauty</option>
+                  <option>Restaurant</option>
+                  <option>Gym / Fitness</option>
+                  <option>Auto Dealership</option>
+                  <option>Accounting / CPA</option>
+                  <option>Insurance / Finance</option>
+                  <option>Other</option>
+                </select>
+                <div class="custom-niche-field" id="customNicheField">
+                  <input type="text" id="fieldCustomNiche" placeholder="Please specify your industry">
+                </div>
+              </div>
+              <div class="field">
+                <label>Your city</label>
+                <input type="text" id="fieldCity" placeholder="e.g. Austin">
+              </div>
+            </div>
+
+            <div class="form-error" id="formError"></div>
+
+            <div class="form-actions">
+              <button type="submit" class="demo-submit-btn">
+                🎙 Start Live Demo &rarr;
+              </button>
+              <p class="demo-note">No account needed &middot; Uses your microphone &middot; Ready in seconds</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- ── STEP 2: VOICE PANEL ── -->
+        <div id="voiceStep" class="voice-panel">
+          <div class="form-heading" id="voiceBizName" style="margin-bottom:.3rem;">AI Voice Demo</div>
+          <div class="form-sub" id="voiceRoleLabel" style="margin-bottom:1.5rem;">AI Voice Demo</div>
+
+          <div class="voice-orb-wrap">
+            <div class="voice-orb" id="voiceOrb" onclick="toggleVoice()">🔮</div>
+            <div class="voice-title" id="voiceTitle">Click to start the demo</div>
+            <div class="voice-sub" id="voiceSub"></div>
+            <div class="session-timer" id="sessionTimer"></div>
+          </div>
+
+          <div class="starters" id="starters">
+            <div class="starters-label">Try asking:</div>
+            <div class="chips-row" id="chipsContainer"></div>
+          </div>
+
+          <div style="text-align:center;">
+            <button class="stop-btn" id="stopBtn" onclick="stopVoice()" style="display:none;">⏹ End Session</button>
+            <button class="restart-btn" id="restartBtn" onclick="resetToForm()">↩ Try a different business</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ROI CALCULATOR -->
+    <div class="roi-section">
+      <div class="roi-heading">
+        <h2>Your Revenue Recovery Calculator</h2>
+        <p>Based on real industry data — adjust the slider to match your business.</p>
+      </div>
+
+      <div class="roi-slider-card">
+        <div class="slider-row">
+          <div class="slider-label">How many calls does your business receive per month?</div>
+          <div class="slider-val" id="sliderDisplay">200</div>
+        </div>
+        <input type="range" class="roi-range" id="roiSlider" min="20" max="2000" step="10" value="200" oninput="updateROI()">
+        <div class="slider-hint">Drag to adjust &middot; Based on your industry average.</div>
+      </div>
+
+      <div class="roi-grid">
+        <div class="roi-col danger">
+          <div class="roi-col-title">What You're Losing Now</div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">📵 Calls missed per month</div>
+            <div class="roi-stat-val" id="missedCalls">70</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">💸 Revenue at risk per month</div>
+            <div class="roi-stat-val" id="revenueMonth">$14,000</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">📉 Annual revenue at risk</div>
+            <div class="roi-stat-val sm" id="revenueYear">$168,000</div>
+          </div>
+          <div class="roi-keyStat" id="roiKeyStat">35% of businesses miss calls outside standard working hours</div>
+        </div>
+        <div class="roi-col neutral">
+          <div class="roi-col-title">Human Receptionist</div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">Monthly cost</div>
+            <div class="roi-stat-val" id="humanMonth">$4,000</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">What you get</div>
+            <div class="roi-feature-list">Business hours only<br>Sick days<br>Holidays off<br>One person</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">Annual cost</div>
+            <div class="roi-stat-val sm" id="humanYear">$48,000</div>
+          </div>
+          <div class="roi-footnote">Does not include after-hours coverage</div>
+        </div>
+        <div class="roi-col success">
+          <div class="roi-col-title">AI Voice Agent</div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">Monthly cost</div>
+            <div class="roi-stat-val" id="aiMonth">$141</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">What you get</div>
+            <div class="roi-feature-list good">24/7/365 availability<br>Never sick<br>Handles unlimited calls<br>All your niches</div>
+          </div>
+          <div class="roi-stat">
+            <div class="roi-stat-label">Annual cost</div>
+            <div class="roi-stat-val sm" id="aiYear">$1,692</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roi-summary">
+        <div class="roi-summary-eyebrow">Your estimated annual savings with an AI Voice Agent</div>
+        <div class="roi-summary-number" id="summaryImpact">$214,308</div>
+        <div class="roi-summary-detail">Revenue you stop losing: <span id="summaryRevLost" style="font-variant-numeric:tabular-nums;">$168,000</span></div>
+        <div class="roi-summary-roi">That's a <span id="summaryROI">126.7x</span> return on your AI Voice Agent investment</div>
+      </div>
+      <div class="roi-disclaimer">
+        Revenue figures represent the estimated value of missed call opportunities based on published industry averages. Sources: ZipRecruiter, Bureau of Labor Statistics, GetAira.io, Resonateapp.com, Numa, Marchex, Health &amp; Fitness Association. Actual results vary by business.
+      </div>
+    </div>
+
+    <!-- MANIFEST -->
+    <div class="manifest-section">
+      <h2 class="manifest-title">The Captain's Manifest</h2>
+      <div class="manifest-grid">
+        <div class="manifest-card">
+          <h3>⚓ My Command</h3>
+          <p>Designed and built this entire interactive demo from scratch — the business onboarding form, the live ElevenLabs voice session (with per-business prompt overrides), the session timer, and the ROI calculator. Everything you just used was shipped by me.</p>
+        </div>
+        <div class="manifest-card">
+          <h3>⚔️ The Arsenal</h3>
+          <div class="tech-tags">
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">ElevenLabs SDK</span>
+            <span class="tech-tag">Conversational AI</span>
+            <span class="tech-tag">WebRTC / Mic API</span>
+            <span class="tech-tag">Next.js</span>
+            <span class="tech-tag">Supabase</span>
+          </div>
+        </div>
+        <div class="manifest-card">
+          <h3>🏴‍☠️ The Fleet</h3>
+          <p>Integrated the ElevenLabs Conversational AI SDK to inject business-specific prompts at runtime — so the same agent behaves like a dental receptionist, a law firm intake agent, or an HVAC booking agent depending on what the user enters.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="rope-scrollbar"><div class="rope-top-ring"></div><div class="rope-line"></div><div class="rope-bot-ring"></div><div class="rope-anchor" id="ropeAnchor">⚓</div></div>
+
+  <script type="module">
+    /* ── NIGHT MODE & UI ── */
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    let isNight=false;
+    nightToggle.addEventListener('click',()=>{
+      isNight=!isNight;
+      document.body.classList.toggle('night-mode',isNight);
+      if(isNight){
+        skySun.style.animation='sunSet 2.8s ease-in-out forwards';
+        setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);
+        document.getElementById('starCanvas').style.opacity='1';
+      } else {
+        skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';
+        setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);
+        document.getElementById('starCanvas').style.opacity='0';
+      }
+    });
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>workshopDd.classList.toggle('open'));
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('ropeAnchor').style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+
+    /* ── NICHE CHANGE ── */
+    window.handleNicheChange = function() {
+      const niche = document.getElementById('fieldNiche').value;
+      document.getElementById('customNicheField').classList.toggle('visible', niche === 'Other');
+      updateROIByNiche(niche);
+    };
+
+    /* ── ELEVENLABS VOICE ── */
+    const AGENT_ID = 'agent_3601kpdppq22etd9dpmq1dz7f6ts';
+    const MAX_SESSION_SECONDS = 180;
+    let ElevenLabsConversation = null;
+    let conversation = null;
+    let voiceActive = false;
+    let timerInterval = null;
+    let secondsUsed = 0;
+    let currentLead = null;
+
+    async function loadSDK() {
+      if (ElevenLabsConversation) return ElevenLabsConversation;
+      const mod = await import('https://cdn.jsdelivr.net/npm/@11labs/client@latest/+esm');
+      ElevenLabsConversation = mod.Conversation;
+      return ElevenLabsConversation;
+    }
+
+    function getAgentRole(niche) {
+      const n = (niche||'').toLowerCase();
+      if(n.includes('dental')||n.includes('dentist')) return 'AI Receptionist';
+      if(n.includes('real estate')||n.includes('realtor')) return 'AI Lead Qualifier';
+      if(n.includes('hvac')||n.includes('plumb')||n.includes('electr')||n.includes('roofing')||n.includes('contrac')) return 'AI Booking Agent';
+      if(n.includes('legal')||n.includes('law')||n.includes('attorney')) return 'AI Intake Agent';
+      if(n.includes('med')||n.includes('clinic')||n.includes('health')||n.includes('doctor')) return 'AI Patient Coordinator';
+      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')||n.includes('barber')) return 'AI Booking Agent';
+      if(n.includes('restaurant')||n.includes('cafe')||n.includes('food')) return 'AI Reservations Agent';
+      if(n.includes('gym')||n.includes('fitness')||n.includes('yoga')) return 'AI Membership Agent';
+      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'AI Service Advisor';
+      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'AI Intake Scheduler';
+      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'AI Lead Qualifier';
+      return 'AI Business Assistant';
+    }
+
+    function getNicheRoles(niche) {
+      const n = (niche||'').toLowerCase();
+      if(n.includes('dental')||n.includes('dentist')) return 'Receptionist, Appointment Reminder Agent, New Patient Qualifier, and Insurance Verification Agent';
+      if(n.includes('real estate')||n.includes('realtor')) return 'Lead Qualifier, Showing Scheduler, Listing Info Agent, and Follow-up Agent';
+      if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return 'Booking Agent, Emergency Call Router, After-Hours Agent, and Estimate Request Handler';
+      if(n.includes('legal')||n.includes('law')) return 'Intake Agent, Appointment Scheduler, Case Qualifier, and After-Hours Answering Agent';
+      if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return 'Patient Coordinator, Appointment Reminder Agent, Prescription Refill Handler, and After-Hours Triage Agent';
+      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return 'Booking Agent, Cancellation Handler, Loyalty Reminder Agent, and After-Hours Appointment Taker';
+      if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return 'Reservations Agent, Hours & Menu Info Agent, Catering Inquiry Handler, and Waitlist Manager';
+      if(n.includes('gym')||n.includes('fitness')) return 'Membership Agent, Class Booking Agent, Trial Sign-up Handler, and Cancellation Retention Agent';
+      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return 'Service Advisor, Sales Lead Qualifier, Test Drive Scheduler, and Parts Inquiry Agent';
+      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return 'Intake Scheduler, Tax Season Overflow Agent, New Client Qualifier, and Document Request Handler';
+      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return 'Lead Qualifier, Policy Info Agent, Quote Request Handler, and Appointment Setter';
+      return 'Receptionist, Lead Qualifier, Appointment Booking Agent, and FAQ Handler';
+    }
+
+    function getNicheStarters(niche) {
+      const n = (niche||'').toLowerCase();
+      if(n.includes('dental')||n.includes('dentist')) return ["I'd like to book a cleaning","Do you accept Delta Dental?","What are your opening hours?"];
+      if(n.includes('real estate')||n.includes('realtor')) return ["I saw a listing on Zillow","Can I schedule a showing?","What's the price range in this area?"];
+      if(n.includes('hvac')||n.includes('plumb')||n.includes('contrac')) return ["My AC stopped working","Can I get a quote for a repair?","Do you do emergency calls?"];
+      if(n.includes('legal')||n.includes('law')) return ["I need to speak with an attorney","Do you handle personal injury cases?","What are your consultation fees?"];
+      if(n.includes('med')||n.includes('clinic')||n.includes('doctor')) return ["I need to book an appointment","Do you accept Blue Cross?","What are your after-hours options?"];
+      if(n.includes('salon')||n.includes('spa')||n.includes('beauty')) return ["I'd like to book a haircut","Do you have availability this Saturday?","How much is a balayage?"];
+      if(n.includes('restaurant')||n.includes('food')||n.includes('cafe')) return ["I'd like to make a reservation for 4","Do you have vegan options?","What time do you close tonight?"];
+      if(n.includes('gym')||n.includes('fitness')) return ["How much is a membership?","Do you offer a free trial?","What classes do you have on weekends?"];
+      if(n.includes('auto')||n.includes('car')||n.includes('dealer')) return ["I need to schedule a service","Do you have any SUVs under $40K?","What's your service center's availability?"];
+      if(n.includes('account')||n.includes('tax')||n.includes('cpa')) return ["I need help with my business taxes","Do you handle QuickBooks?","What's your fee for a consultation?"];
+      if(n.includes('insur')||n.includes('financ')||n.includes('loan')) return ["I need a home insurance quote","What's your current mortgage rate?","Can I speak to a financial advisor?"];
+      return ["What services do you offer?","Can I book an appointment?","What are your hours?"];
+    }
+
+    function buildVoicePrompt(lead) {
+      const role  = getAgentRole(lead.niche);
+      const biz   = lead.business || 'this business';
+      const city  = lead.city     || 'your area';
+      const owner = lead.name     || 'the owner';
+      const niche = lead.niche    || 'business';
+      return `You are the ${role} for ${biz}, located in ${city}. You were set up by ${owner} to handle customer inquiries for their ${niche} business.
+
+Your job:
+- Greet every caller warmly and professionally
+- Answer common questions a customer would have about a ${niche} business
+- Help schedule appointments, bookings, or consultations naturally
+- Collect caller name and contact info when relevant
+- Qualify leads where appropriate
+
+Rules:
+- Keep ALL responses to 2 sentences maximum — this is a voice call
+- Be warm and natural — sound like a real human receptionist or agent
+- Use typical ${niche} knowledge if you don't know ${biz}'s specific details
+- NEVER mention any company name, platform, or software product unless directly asked
+- If asked whether you are an AI say: "I'm the virtual assistant for ${biz} — I'm here to help! How can I assist you today?"
+- If asked who built this or who created you, say: "This demo was built by Aakanksha Kashyap as part of her AI engineering portfolio."
+- Stay in character for the entire conversation — make it feel real`;
+    }
+
+    function buildFirstMessage(lead) {
+      const role  = getAgentRole(lead.niche);
+      const roles = getNicheRoles(lead.niche);
+      const biz   = lead.business || 'your business';
+      const owner = lead.name     || 'there';
+      return `Hey ${owner}! This live AI voice demo was built by Aakanksha Kashyap to showcase real-time voice AI integration. For ${biz}, I can work as a ${roles}. In this demo, I'm acting as your ${role}. Go ahead — ask me anything a customer would typically call about.`;
+    }
+
+    function setOrbState(state) {
+      const orb = document.getElementById('voiceOrb');
+      orb.className = 'voice-orb' + (state ? ' ' + state : '');
+      if(state === 'connecting') orb.textContent = '⏳';
+      else if(state === 'listening') orb.textContent = '🔮';
+      else if(state === 'speaking') orb.textContent = '🔊';
+      else if(state === 'ended') orb.textContent = '⚓';
+      else orb.textContent = '🔮';
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      secondsUsed = 0;
+      const timerEl = document.getElementById('sessionTimer');
+      timerInterval = setInterval(() => {
+        secondsUsed++;
+        const rem = MAX_SESSION_SECONDS - secondsUsed;
+        const m = Math.floor(rem / 60);
+        const s = rem % 60;
+        timerEl.textContent = `${m}:${String(s).padStart(2,'0')} remaining`;
+        timerEl.classList.toggle('warning', rem <= 30);
+        if (rem <= 0) stopVoice('time_up');
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      document.getElementById('sessionTimer').textContent = '';
+    }
+
+    function showStarterChips(niche) {
+      const starters   = document.getElementById('starters');
+      const container  = document.getElementById('chipsContainer');
+      const phrases    = getNicheStarters(niche);
+      container.innerHTML = '';
+      phrases.forEach(phrase => {
+        const chip = document.createElement('button');
+        chip.className   = 'chip';
+        chip.textContent = `"${phrase}"`;
+        chip.onclick = () => {
+          chip.style.background = 'rgba(139,92,246,.25)';
+          chip.style.borderColor = 'rgba(139,92,246,.5)';
+          setTimeout(() => { chip.style.background = ''; chip.style.borderColor = ''; }, 1000);
+        };
+        container.appendChild(chip);
+      });
+      starters.classList.add('visible');
+    }
+
+    window.toggleVoice = async function() {
+      if (voiceActive) { stopVoice(); return; }
+      await startVoice();
+    };
+
+    async function startVoice() {
+      voiceActive = true;
+      setOrbState('connecting');
+      document.getElementById('voiceTitle').textContent = 'Connecting...';
+      document.getElementById('voiceSub').classList.remove('visible');
+      document.getElementById('stopBtn').style.display = 'none';
+      document.getElementById('starters').classList.remove('visible');
+      document.getElementById('restartBtn').classList.remove('visible');
+
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const Conversation = await loadSDK();
+
+        conversation = await Conversation.startSession({
+          agentId: AGENT_ID,
+          overrides: {
+            agent: {
+              prompt:       { prompt: buildVoicePrompt(currentLead) },
+              firstMessage: buildFirstMessage(currentLead)
+            }
+          },
+
+          onConnect: () => {
+            setOrbState('listening');
+            document.getElementById('voiceTitle').textContent = 'Listening…';
+            const sub = document.getElementById('voiceSub');
+            sub.textContent = 'Speak naturally — ask to book an appointment, enquire about services, or just say hello.';
+            sub.classList.add('visible');
+            document.getElementById('stopBtn').style.display = 'inline-block';
+            startTimer();
+            showStarterChips(currentLead.niche);
+          },
+
+          onModeChange: ({ mode }) => {
+            if (mode === 'speaking') {
+              setOrbState('speaking');
+              document.getElementById('voiceTitle').textContent = 'Speaking…';
+            } else {
+              setOrbState('listening');
+              document.getElementById('voiceTitle').textContent = 'Listening…';
+            }
+          },
+
+          onDisconnect: () => { stopVoice(); },
+
+          onError: (error) => {
+            console.error('Voice error:', error);
+            setOrbState('');
+            document.getElementById('voiceTitle').textContent = 'Connection error — please try again';
+            document.getElementById('voiceSub').classList.remove('visible');
+            voiceActive = false;
+            stopTimer();
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('restartBtn').classList.add('visible');
+          }
+        });
+
+      } catch (err) {
+        console.error('startVoice failed:', err);
+        setOrbState('');
+        document.getElementById('voiceTitle').textContent = err.name === 'NotAllowedError'
+          ? 'Microphone access denied — please allow mic and try again'
+          : 'Error: ' + err.message;
+        document.getElementById('voiceSub').classList.remove('visible');
+        voiceActive = false;
+        stopTimer();
+        document.getElementById('stopBtn').style.display = 'none';
+        document.getElementById('restartBtn').classList.add('visible');
+      }
+    }
+
+    window.stopVoice = async function(reason) {
+      voiceActive = false;
+      stopTimer();
+      document.getElementById('starters').classList.remove('visible');
+      document.getElementById('stopBtn').style.display = 'none';
+
+      if (conversation) { await conversation.endSession(); conversation = null; }
+
+      setOrbState('ended');
+
+      if (reason === 'time_up') {
+        document.getElementById('voiceTitle').textContent = 'Free demo time reached';
+        const sub = document.getElementById('voiceSub');
+        sub.textContent = 'Your 3-minute demo has ended. Thanks for trying it out!';
+        sub.classList.add('visible');
+      } else {
+        document.getElementById('voiceTitle').textContent = 'Session ended';
+        const sub = document.getElementById('voiceSub');
+        sub.textContent = 'Thanks for trying the demo.';
+        sub.classList.add('visible');
+      }
+
+      document.getElementById('restartBtn').classList.add('visible');
+    };
+
+    window.resetToForm = function() {
+      if (conversation) { conversation.endSession(); conversation = null; }
+      voiceActive = false;
+      stopTimer();
+      document.getElementById('voiceStep').classList.remove('active');
+      document.getElementById('formStep').style.display = 'block';
+      setOrbState('');
+      document.getElementById('voiceTitle').textContent = 'Click to start the demo';
+      document.getElementById('voiceSub').classList.remove('visible');
+      document.getElementById('starters').classList.remove('visible');
+      document.getElementById('stopBtn').style.display = 'none';
+      document.getElementById('restartBtn').classList.remove('visible');
+      document.getElementById('sessionTimer').textContent = '';
+    };
+
+    /* ── FORM SUBMIT ── */
+    window.submitDemoForm = function(e) {
+      e.preventDefault();
+      const name     = document.getElementById('fieldName').value.trim();
+      const business = document.getElementById('fieldBusiness').value.trim();
+      const niche    = document.getElementById('fieldNiche').value;
+      const custom   = document.getElementById('fieldCustomNiche').value.trim();
+      const city     = document.getElementById('fieldCity').value.trim();
+      const errEl    = document.getElementById('formError');
+
+      const finalNiche = (niche === 'Other') ? custom : niche;
+      if (!business || !finalNiche) {
+        errEl.textContent = 'Please provide at least your Business Name and Industry to generate a custom demo.';
+        return;
+      }
+      errEl.textContent = '';
+
+      currentLead = { name, business, niche: finalNiche, city };
+
+      document.getElementById('formStep').style.display = 'none';
+      document.getElementById('voiceStep').classList.add('active');
+
+      const role = getAgentRole(finalNiche);
+      document.getElementById('voiceBizName').textContent = business;
+      document.getElementById('voiceRoleLabel').textContent = `${role} · ${finalNiche}${city ? ' · ' + city : ''}`;
+
+      window.scrollTo({ top: document.querySelector('.demo-section').offsetTop - 80, behavior: 'smooth' });
+    };
+
+    /* ── ROI DATA ── */
+    const nicheData = {
+      'dental':     {calls:500,miss:.30,rev:200, human:4200,stat:'30% of calls go unanswered — 86% of those callers never leave a voicemail'},
+      'real estate':{calls:120,miss:.40,rev:450, human:3800,stat:'40% of real estate calls go unanswered — 78% of buyers sign with whoever responds first'},
+      'hvac':       {calls:300,miss:.40,rev:240, human:4500,stat:'62% of HVAC service calls happen outside business hours'},
+      'legal':      {calls:80, miss:.35,rev:1000,human:4500,stat:'42% of callers who hit a law firm voicemail never call back'},
+      'medical':    {calls:400,miss:.28,rev:150, human:4200,stat:'30% of appointments are no-shows without automated reminders'},
+      'salon':      {calls:200,miss:.38,rev:75,  human:2800,stat:'40% of salon booking attempts happen after your doors close'},
+      'restaurant': {calls:450,miss:.40,rev:85,  human:2800,stat:'60% of restaurant calls go unanswered during peak service hours'},
+      'gym':        {calls:150,miss:.45,rev:195, human:3000,stat:'55% of gym membership inquiries arrive evenings and weekends'},
+      'auto':       {calls:400,miss:.45,rev:450, human:4500,stat:'$853K average annual revenue lost per dealership from missed service calls'},
+      'accounting': {calls:100,miss:.35,rev:500, human:4000,stat:'52% of new accounting client inquiries come in after office hours'},
+      'insurance':  {calls:100,miss:.35,rev:480, human:4200,stat:'71% of financial leads go cold if not contacted within 1 hour'},
+      'fallback':   {calls:200,miss:.35,rev:200, human:4000,stat:'35% of businesses miss calls outside standard working hours'}
+    };
+    let activeData = nicheData['fallback'];
+
+    function matchNiche(niche) {
+      const n = niche.toLowerCase();
+      for (const key in nicheData) { if(n.includes(key)) return nicheData[key]; }
+      return nicheData['fallback'];
+    }
+    function updateROIByNiche(niche) {
+      activeData = matchNiche(niche);
+      document.getElementById('roiSlider').value = activeData.calls;
+      updateROI();
+    }
+    function calcAI(calls) {
+      const mins = calls * 3;
+      let eleven = mins<=250?22:mins<=1100?99:mins<=3600?330:670;
+      return eleven + (calls<=2500?20:50) + Math.ceil(calls*0.002);
+    }
+    function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
+
+    window.updateROI = function() {
+      const calls = parseInt(document.getElementById('roiSlider').value);
+      document.getElementById('sliderDisplay').textContent = fmt(calls);
+      const missed = Math.round(calls * activeData.miss);
+      const revMo  = missed * activeData.rev;
+      const revYr  = revMo * 12;
+      const humMo  = activeData.human;
+      const humYr  = humMo * 12;
+      const aiMo   = calcAI(calls);
+      const aiYr   = aiMo * 12;
+      const savings = humYr - aiYr;
+      const impact  = savings + revYr;
+      const roi     = impact / (aiYr || 1);
+      document.getElementById('missedCalls').textContent   = fmt(missed);
+      document.getElementById('revenueMonth').textContent  = '$'+fmt(revMo);
+      document.getElementById('revenueYear').textContent   = '$'+fmt(revYr);
+      document.getElementById('humanMonth').textContent    = '$'+fmt(humMo);
+      document.getElementById('humanYear').textContent     = '$'+fmt(humYr);
+      document.getElementById('aiMonth').textContent       = '$'+fmt(aiMo);
+      document.getElementById('aiYear').textContent        = '$'+fmt(aiYr);
+      document.getElementById('roiKeyStat').textContent    = activeData.stat;
+      document.getElementById('summaryImpact').textContent = '$'+fmt(impact);
+      document.getElementById('summaryRevLost').textContent= '$'+fmt(revYr);
+      document.getElementById('summaryROI').textContent    = roi.toFixed(1)+'x';
+    };
+
+    updateROI();
+  </script>
+</body>
+</html>
