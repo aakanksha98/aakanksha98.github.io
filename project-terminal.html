@@ -45,6 +45,7 @@
 
     /* DROPDOWN */
     .nav-dropdown{position:relative;}
+    .nav-dropdown::after{content:'';position:absolute;top:100%;left:-12px;right:-12px;height:1.2rem;z-index:499;}
     .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
@@ -139,6 +140,8 @@
           <a href="project-terminal.html" class="current-page">⊳ Navigator's Console</a>
           <a href="project-parrot.html">🦜 Captain's Parrot</a>
           <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+          <a href="project-voice.html">🔮 AI Voice Agent</a>
+          <a href="project-ugc.html">🎥 UGC Ads Creator</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>

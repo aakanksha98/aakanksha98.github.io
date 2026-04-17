@@ -36,6 +36,7 @@
 
     /* DROPDOWN */
     .nav-dropdown{position:relative;}
+    .nav-dropdown::after{content:'';position:absolute;top:100%;left:-12px;right:-12px;height:1.2rem;z-index:499;}
     .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
     .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
     .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
@@ -140,6 +141,12 @@
     .card-cta .arrow{transition:transform .2s;}
     .project-card:hover .card-cta .arrow{transform:translateX(4px);}
 
+    /* Voice Agent preview */
+    .preview-siren {background:radial-gradient(circle at center, #064e3b 0%, #022c22 100%); border-bottom:2px solid var(--wood); overflow:hidden;}
+    .siren-orb-preview {width:70px; height:70px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #e2e8f0 0%, #10b981 40%, #064e3b 80%, #022c22 100%); font-size:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 30px rgba(16, 185, 129, 0.5), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8); animation:orbFloat 3s ease-in-out infinite, orbGlow 2s alternate infinite;}
+    @keyframes orbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+    @keyframes orbGlow{0%{box-shadow:0 0 20px rgba(16, 185, 129, 0.3), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}100%{box-shadow:0 0 40px rgba(16, 185, 129, 0.7), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}}
+
     @media(max-width:640px){
       nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
       .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
@@ -169,6 +176,8 @@
           <a href="project-terminal.html">⊳ Navigator's Console</a>
           <a href="project-parrot.html">🦜 Captain's Parrot</a>
           <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+          <a href="project-voice.html">🔮 AI Voice Agent</a>
+          <a href="project-ugc.html">🎥 UGC Ads Creator</a>
         </div>
       </div>
       <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
@@ -278,6 +287,45 @@
             <div class="card-cta">Flip the Switch <span class="arrow">→</span></div>
           </div>
         </a>
+
+        <!-- CARD 4: VOICE AGENT -->
+        <a href="project-voice.html" class="project-card">
+          <div class="card-badge">Live Demo</div>
+          <div class="card-preview preview-siren">
+            <div class="siren-orb-preview">🔮</div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project IV · Interactive Voice</div>
+            <div class="card-title">AI Voice Agent</div>
+            <div class="card-desc">Connected directly to ElevenLabs, speak naturally with the Ship's Siren Agent directly from your browser.</div>
+            <div class="card-tags">
+              <span class="card-tag">ElevenLabs API</span>
+              <span class="card-tag">Voice Agent</span>
+              <span class="card-tag">Microphone</span>
+            </div>
+            <div class="card-cta">Speak to Agent <span class="arrow">→</span></div>
+          </div>
+        </a>
+
+        <!-- CARD 5: UGC Ads Creator -->
+        <a href="project-ugc.html" class="project-card">
+          <div class="card-badge">Live Demo</div>
+          <div class="card-preview preview-ugc" style="background:#1a1005; border-bottom:2px solid var(--wood); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+            <div style="font-size:3.5rem; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5)); animation:float 3s ease-in-out infinite;">🎥</div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project V · Media</div>
+            <div class="card-title">UGC Ads Creator</div>
+            <div class="card-desc">Upload a product image into the cauldron, and watch the AI weave out an entire animated video advertisement seamlessly.</div>
+            <div class="card-tags">
+              <span class="card-tag">Computer Vision</span>
+              <span class="card-tag">Video Gen</span>
+              <span class="card-tag">AI Agent</span>
+            </div>
+            <div class="card-cta">Launch Creator <span class="arrow">→</span></div>
+          </div>
+        </a>
+        <style>@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}</style>
 
       </div>
     </section>
