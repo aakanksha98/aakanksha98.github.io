@@ -90,6 +90,7 @@
     /* PIRATE RESUME */
     .pirate-mode{background:var(--parchment);border:3px solid var(--wood);font-family:var(--font-serif);}
     .pirate-header{background:var(--wood-dark);color:var(--parchment);padding:2.5rem 3rem;text-align:center;position:relative;}
+    body.night-mode .pirate-header{color:#fdf5e6;}
     .pirate-header::after{content:'';display:block;height:4px;background:repeating-linear-gradient(90deg,var(--red-flag) 0 22px,transparent 22px 32px);margin-top:1.3rem;}
     .pirate-stamp{position:absolute;top:1.2rem;right:1.8rem;border:3px solid var(--red-flag);color:var(--red-flag);padding:.3rem .7rem;font-family:var(--font-display);font-size:.9rem;transform:rotate(15deg);opacity:.85;letter-spacing:.05em;}
     .pirate-name{font-family:var(--font-display);font-size:2.4rem;letter-spacing:.06em;text-shadow:2px 2px 4px rgba(0,0,0,.4);}
@@ -98,9 +99,11 @@
     .sec-title{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;border-bottom:1.5px solid currentColor;padding-bottom:.35rem;margin-bottom:1.1rem;margin-top:2rem;}
     .sec-title:first-child{margin-top:0;}
     .pirate-sec-title{color:var(--wood);font-family:var(--font-display);}
+    body.night-mode .pirate-sec-title{color:var(--red-flag);}
     .skill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem;}
     .skill-tag{padding:.25rem .85rem;border-radius:4px;font-size:.88rem;}
     .pirate-skill{background:var(--wood);color:var(--parchment);font-family:var(--font-serif);}
+    body.night-mode .pirate-skill{color:#fdf5e6;}
     .entry{margin-bottom:1.4rem;}
     .entry-title{font-weight:bold;font-size:1.1rem;font-family:var(--font-serif);}
     .entry-meta{font-size:.9rem;opacity:.65;margin-bottom:.3rem;}
@@ -127,6 +130,7 @@
     .rtb-tag{background:var(--parchment);color:var(--wood-dark);padding:.2rem .65rem;border-radius:3px;font-family:var(--font-body);font-size:.78rem;font-weight:700;white-space:nowrap;}
     body.night-mode .recruiter-tech-banner{background:#1e1b4b;border-color:#94a3b8;}
     body.night-mode .rtb-tag{background:#e2e8f0;color:#1e1b4b;}
+    body.night-mode .rtb-label{color:#e2e8f0;}
 
     @media(max-width:640px){
       .pirate-header,.pro-header,.resume-body,.pro-body{padding:1.5rem 1.5rem;}

@@ -87,6 +87,7 @@
     }
     body.night-mode .recruiter-tech-banner{background:#1e1b4b;border-color:#94a3b8;}
     body.night-mode .rtb-tag{background:#e2e8f0;color:#1e1b4b;}
+    body.night-mode .rtb-label{color:#e2e8f0;}
 
     /* ── DEMO FORM — PARCHMENT SCROLL ── */
     .scroll-card{
@@ -130,6 +131,7 @@
     @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
     .field{display:flex;flex-direction:column;gap:.4rem;}
     .field label{font-family:var(--font-body);font-size:.78rem;font-weight:700;color:var(--wood);letter-spacing:.04em;text-transform:uppercase;}
+    body.night-mode .field label{color:#cbd5e1;}
     .field label .req{color:var(--red-flag);}
     .field input,.field select{
       width:100%;padding:.75rem 1rem;
@@ -179,6 +181,7 @@
       letter-spacing:.04em;
     }
     .demo-submit-btn:hover{background:var(--red-flag);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+    body.night-mode .demo-submit-btn{color:#fdf5e6;}
     .demo-note{font-family:var(--font-body);font-size:.75rem;color:var(--ink-faded);}
 
     /* ── ROI CALCULATOR ── */
@@ -222,6 +225,7 @@
     .roi-col-title{font-family:var(--font-display);font-size:.9rem;padding-bottom:.75rem;border-bottom:1px solid var(--parchment-dark);}
     .roi-col.danger .roi-col-title{color:var(--red-flag);}
     .roi-col.neutral .roi-col-title{color:var(--wood-dark);}
+    body.night-mode .roi-col.neutral .roi-col-title{color:#e2e8f0;}
     .roi-col.success .roi-col-title{color:#2d6a2d;}
     body.night-mode .roi-col.success .roi-col-title{color:#4ade80;}
     .roi-stat{display:flex;flex-direction:column;gap:.2rem;}
@@ -276,6 +280,7 @@
     .manifest-card p{font-family:var(--font-serif);color:var(--ink);line-height:1.6;font-size:1.05rem;}
     .tech-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
     .tech-tag{background:var(--wood);color:var(--parchment);padding:.2rem .6rem;border-radius:4px;font-family:var(--font-serif);font-size:.85rem;}
+    body.night-mode .tech-tag{color:#fdf5e6;}
 
     @media(max-width:720px){
       nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
