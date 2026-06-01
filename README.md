@@ -78,5 +78,5 @@ Stack: CSS 3D transforms · Vanilla JS · Responsive layout
  Contact
 
 - Email: aaku.mas@gmail.com
-- LinkedIn: [linkedin.com/in/aakanksha-kashyap](https://linkedin.com/in/aakanksha-kashyap)
+- LinkedIn: [https://www.linkedin.com/in/aakanksha-kashyap-ai/](https://www.linkedin.com/in/aakanksha-kashyap-ai/)
 - Site: [aakanksha98.github.io](https://aakanksha98.github.io)

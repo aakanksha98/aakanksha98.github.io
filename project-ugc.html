@@ -419,9 +419,16 @@
     const nightToggle = document.getElementById('nightToggle');
     const skySun = document.getElementById('skySun');
     const skyMoon = document.getElementById('skyMoon');
-    let isNight = false;
+    const THEME_STORAGE_KEY = 'portfolio-night-mode';
+    let isNight = localStorage.getItem(THEME_STORAGE_KEY) === 'night';
+    document.body.classList.toggle('night-mode', isNight);
+    if (isNight) {
+      skyMoon.style.opacity = '1';
+      document.getElementById('starCanvas').style.opacity = '1';
+    }
     nightToggle.addEventListener('click', () => {
       isNight = !isNight;
+      localStorage.setItem(THEME_STORAGE_KEY, isNight ? 'night' : 'day');
       document.body.classList.toggle('night-mode', isNight);
       if (isNight) {
         skySun.style.animation = 'sunSet 2.8s ease-in-out forwards';

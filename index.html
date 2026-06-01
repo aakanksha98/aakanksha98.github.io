@@ -2104,7 +2104,7 @@
           <div class="loot-scroll">
             <h3>Contact Scroll</h3>
             <a href="mailto:aaku.mas@gmail.com">📧 Email</a>
-            <a href="https://linkedin.com/in/aakanksha-kashyap" target="_blank">💼 LinkedIn</a>
+            <a href="https://www.linkedin.com/in/aakanksha-kashyap-ai/" target="_blank">💼 LinkedIn</a>
           </div>
         </div>
       </div>
@@ -2665,14 +2665,24 @@
       // ══════════════════════════════════════════════════════════════
       const skySun  = document.getElementById('skySun');
       const skyMoon = document.getElementById('skyMoon');
+      const THEME_STORAGE_KEY = 'portfolio-night-mode';
 
       // Remove the old night toggle listener and replace it
       nightToggle.replaceWith(nightToggle.cloneNode(true));
       const newNightToggle = document.getElementById('nightToggle');
 
+      isNightMode = localStorage.getItem(THEME_STORAGE_KEY) === 'night';
+      document.body.classList.toggle('night-mode', isNightMode);
+      if (isNightMode) {
+        skyMoon.style.opacity = '1';
+        createStars();
+        drawStars();
+      }
+
       newNightToggle.addEventListener('click', () => {
         sfx.lanternClick();
         isNightMode = !isNightMode;
+        localStorage.setItem(THEME_STORAGE_KEY, isNightMode ? 'night' : 'day');
 
         // Clear previous animation classes
         skySun.className  = 'sky-sun';
