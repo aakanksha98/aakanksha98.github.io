@@ -2165,7 +2165,6 @@
       let ctx = null;
       function ac() {
         if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === 'suspended') ctx.resume();
         return ctx;
       }
 
@@ -2311,8 +2310,34 @@
         ns.connect(bp); bp.connect(ng); ng.connect(c.destination); ns.start();
       }
 
-      return { cannonBoom, cannonWhoosh, bugSplat, pageTurn, parrotSquawk, chestCreak, lanternClick, bottlePop, bottleSplash };
+      function ready(sound) {
+        return () => {
+          const c = ac();
+          if (c.state === 'running') {
+            sound();
+            return;
+          }
+          c.resume().then(sound).catch(() => {});
+        };
+      }
+
+      return {
+        cannonBoom: ready(cannonBoom),
+        cannonWhoosh: ready(cannonWhoosh),
+        bugSplat: ready(bugSplat),
+        pageTurn: ready(pageTurn),
+        parrotSquawk: ready(parrotSquawk),
+        chestCreak: ready(chestCreak),
+        lanternClick: ready(lanternClick),
+        bottlePop: ready(bottlePop),
+        bottleSplash: ready(bottleSplash),
+        unlock: ready(() => {})
+      };
     })();
+
+    ['pointerdown', 'keydown', 'touchstart'].forEach(eventName => {
+      document.addEventListener(eventName, () => sfx.unlock(), { once: true, passive: true });
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
       // CLEAR BURN IN SO WE CAN INTERACT
