@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise RAG Chatbot — Captain Aakanksha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="rag-app.css">
+  <style>
+    :root{--parchment:#eacda1;--parchment-dark:#ccaa77;--wood:#5c3a21;--wood-dark:#2b160b;--ink:#25170f;--ink-faded:#5f4937;--red-flag:#8a1f1b;--ocean:#176b87;--ocean-dark:#111827;--foam:#fdf5e6;--font-display:'Uncial Antiqua',cursive;--font-serif:'Crimson Text',serif;--font-body:'Karla',sans-serif;}
+    body.night-mode{--parchment:#0f172a;--parchment-dark:#1e293b;--wood:#312e81;--wood-dark:#020617;--ink:#e2e8f0;--ink-faded:#cbd5e1;--red-flag:#38bdf8;--ocean:#38bdf8;--foam:#f8fafc;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--parchment);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;transition:background-color 2s,color 2s;}
+    .burn-in-layer{position:fixed;inset:0;background:#000;z-index:999999;pointer-events:none;mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%);animation:burnReveal 2.5s cubic-bezier(.8,0,.2,1) forwards;}
+    @keyframes burnReveal{0%{mask-image:radial-gradient(circle,transparent 0%,black 0%);-webkit-mask-image:radial-gradient(circle,transparent 0%,black 0%)}70%{mask-image:radial-gradient(circle,transparent 100%,black 150%);-webkit-mask-image:radial-gradient(circle,transparent 100%,black 150%)}100%{mask-image:radial-gradient(circle,transparent 200%,black 300%);-webkit-mask-image:radial-gradient(circle,transparent 200%,black 300%);opacity:0}}
+    .burn-flames{position:absolute;width:100%;height:100%;background:radial-gradient(circle,transparent 0%,#ff5e00 5%,#8a1f1b 10%,black 15%);mix-blend-mode:color-dodge;animation:burnFlames 2s forwards;}
+    @keyframes burnFlames{0%{transform:scale(0);opacity:1}100%{transform:scale(30);opacity:0}}
+    .texture-overlay{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:.35;mix-blend-mode:multiply;transition:opacity 2s;}
+    body.night-mode .texture-overlay{opacity:.1;}
+    .vignette{position:fixed;inset:0;pointer-events:none;z-index:999;box-shadow:inset 0 0 150px rgba(71,35,12,.35),inset 0 0 300px rgba(45,17,3,.18);}
+    body.night-mode .vignette{box-shadow:inset 0 0 200px rgba(0,0,0,.9);}
+
+    nav{position:fixed;top:0;width:100%;padding:1rem 5%;z-index:100;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,var(--parchment),transparent);transition:background 2s;}
+    .logo{font-family:var(--font-display);font-size:1.35rem;color:var(--wood-dark);text-decoration:none;letter-spacing:.08em;padding-bottom:4px;padding-left:2.4rem;border-bottom:1.5px solid var(--wood-dark);white-space:nowrap;transition:color 2s,border-color 2s;}
+    body.night-mode .logo{color:var(--foam);border-bottom-color:rgba(253,245,230,.4);}
+    .sky-sun,.sky-moon{position:fixed;z-index:200;pointer-events:none;font-size:1.5rem;top:.65rem;left:5%;}
+    .sky-moon{opacity:0;}
+    .nav-links{display:flex;gap:2rem;align-items:center;}
+    .nav-links a{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-decoration:none;text-transform:uppercase;letter-spacing:2px;transition:color .3s;}
+    .nav-links a:hover{color:var(--red-flag);}
+    .lantern-toggle{font-size:2rem;cursor:pointer;color:var(--wood-dark);transition:transform 1s,filter .3s,color 2s;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.2));}
+    .lantern-toggle:hover{filter:drop-shadow(0 0 10px #ffdf73);}
+    body.night-mode .lantern-toggle{text-shadow:0 0 20px #ffdf73;animation:swingLantern 3s ease-in-out infinite;}
+    @keyframes swingLantern{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
+
+    .nav-dropdown{position:relative;}
+    .nav-dropdown::after{content:'';position:absolute;top:100%;left:-12px;right:-12px;height:1.2rem;z-index:499;}
+    .dropdown-trigger{font-family:var(--font-serif);font-size:1.2rem;font-weight:bold;color:var(--ink);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:.3em;cursor:pointer;transition:color .3s;user-select:none;}
+    .nav-dropdown:hover .dropdown-trigger,.nav-dropdown.open .dropdown-trigger{color:var(--red-flag);}
+    .caret{font-size:.7em;transition:transform .25s;display:inline-block;}
+    .nav-dropdown:hover .caret,.nav-dropdown.open .caret{transform:rotate(180deg);}
+    .dropdown-menu{position:absolute;top:calc(100% + 1rem);right:0;min-width:265px;background:var(--parchment);border:2px solid var(--wood-dark);box-shadow:4px 4px 0 rgba(0,0,0,.15);display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;z-index:500;}
+    .nav-dropdown:hover .dropdown-menu,.nav-dropdown.open .dropdown-menu{opacity:1;pointer-events:all;transform:translateY(0);}
+    .dropdown-section-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faded);padding:.5rem 1.2rem .2rem;}
+    .dropdown-menu a{font-family:var(--font-serif);font-size:1.05rem;color:var(--ink);text-decoration:none;padding:.6rem 1.2rem;border-bottom:1px solid rgba(90,75,61,.2);transition:background .15s,color .15s;letter-spacing:.05em;white-space:nowrap;}
+    .dropdown-menu a:last-child{border-bottom:none;}
+    .dropdown-menu a:hover{background:var(--wood);color:var(--parchment);}
+    .dropdown-menu a.current-page{color:var(--red-flag);font-style:italic;pointer-events:none;}
+    .dd-divider{height:1px;background:var(--parchment-dark);margin:0;}
+    body.night-mode .dropdown-menu{background:var(--parchment-dark);border-color:var(--ink-faded);}
+    body.night-mode .dropdown-menu a{color:var(--ink);border-bottom-color:rgba(255,255,255,.1);}
+    body.night-mode .dropdown-menu a:hover{background:var(--wood);color:var(--foam);}
+
+    .rope-scrollbar{position:fixed;right:16px;top:10vh;bottom:10vh;width:18px;z-index:300;pointer-events:none;display:flex;flex-direction:column;align-items:center;}
+    .rope-top-ring,.rope-bot-ring{width:14px;height:14px;border-radius:50%;border:2px solid var(--wood);background:var(--parchment-dark);flex-shrink:0;}
+    .rope-line{flex:1;width:4px;background:repeating-linear-gradient(to bottom,var(--wood) 0,var(--wood-dark) 6px,var(--wood) 12px);border-radius:2px;}
+    .rope-anchor{font-size:1.4rem;position:absolute;left:50%;transform:translateX(-50%);top:0;transition:top .1s linear;pointer-events:none;}
+
+    @keyframes sunSet{0%{top:.65rem;left:5%;opacity:1;transform:scale(1) rotate(0)}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2) rotate(210deg)}}
+    @keyframes moonRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+    @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
+    @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
+
+    main{position:relative;z-index:2;padding:8rem 5% 5rem;}
+    .project-hero{max-width:1120px;margin:0 auto 2rem;}
+    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.24em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.8rem;}
+    h1{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,5.2rem);line-height:1.05;color:var(--wood-dark);text-shadow:3px 3px 0 var(--parchment-dark),5px 5px 10px rgba(0,0,0,.14);}
+    body.night-mode h1{color:var(--foam);text-shadow:0 0 30px rgba(255,200,100,.2);}
+    .hero-copy{font-family:var(--font-serif);font-size:1.35rem;line-height:1.6;color:var(--ink-faded);max-width:760px;margin-top:1rem;}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.6rem;}
+    .launch-btn,.back-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;text-decoration:none;border-radius:6px;font-family:var(--font-display);letter-spacing:.06em;transition:transform .2s,box-shadow .2s,background .2s,color .2s;}
+    .launch-btn{background:var(--wood-dark);color:var(--parchment);border:2px solid var(--wood-dark);padding:.8rem 1.35rem;box-shadow:4px 4px 0 var(--wood);}
+    .launch-btn:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--wood);}
+    .back-btn{color:var(--ink);border:1.5px solid var(--wood);padding:.75rem 1.1rem;}
+    .back-btn:hover{background:rgba(92,58,33,.1);}
+    body.night-mode .launch-btn{background:var(--foam);color:var(--wood-dark);border-color:var(--foam);box-shadow:4px 4px 0 rgba(0,0,0,.6);}
+    body.night-mode .back-btn{color:var(--foam);border-color:var(--ink-faded);}
+    .launch-note{font-size:.88rem;color:var(--ink-faded);line-height:1.5;margin-top:.9rem;}
+    .rag-embed{max-width:1480px;margin:0 auto;}
+
+    @media(max-width:640px){nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem}.nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end}.nav-links a,.dropdown-trigger{font-size:.9rem}main{padding:8rem 1rem 4rem}}
+  </style>
+</head>
+<body>
+  <div class="burn-in-layer"><div class="burn-flames"></div></div>
+  <canvas id="starCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;opacity:0;transition:opacity 2s;"></canvas>
+  <svg class="texture-overlay" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#noise)" opacity="0.4"/></svg>
+  <div class="vignette"></div>
+  <div class="sky-sun" id="skySun">☀️</div>
+  <div class="sky-moon" id="skyMoon">🌙</div>
+
+  <nav>
+    <a href="index.html" class="logo">Captain's Log</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html" target="_blank">The Voyages</a>
+      <div class="nav-dropdown" id="workshopDropdown">
+        <span class="dropdown-trigger">The Workshop <span class="caret">▾</span></span>
+        <div class="dropdown-menu">
+          <a href="projects.html">Explore All Projects</a>
+          <div class="dd-divider"></div>
+          <a href="project-voice.html">🔮 AI Voice Agent</a>
+          <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <a href="project-rag.html" class="current-page">📚 Enterprise RAG Chatbot</a>
+          <div class="dd-divider"></div>
+          <a href="project-terminal.html">🧭 Navigator's Console</a>
+          <a href="project-parrot.html">🦜 Captain's Parrot</a>
+          <a href="project-recruiter.html">⚓ Recruiter Mode</a>
+        </div>
+      </div>
+      <div class="lantern-toggle" id="nightToggle" title="Toggle Night Voyage">🏮</div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="project-hero">
+      <div class="page-label">Project VI · Enterprise AI</div>
+      <h1>Enterprise RAG Chatbot</h1>
+      <p class="hero-copy">A browser-first company knowledge assistant: upload a document, let the backend ingest it automatically, then ask grounded questions with cited source context.</p>
+      <div class="hero-actions">
+        <a class="back-btn" href="projects.html">← Back to Workshop</a>
+      </div>
+      <p class="launch-note">Upload, ingestion, retrieval, answer generation, and citations all run on this page through the Vercel FastAPI backend and Neon vector database.</p>
+    </section>
+
+    <section class="rag-embed rag-app" aria-label="Enterprise RAG Chatbot">
+      <div class="rag-app-shell">
+        <aside class="sidebar" aria-label="Document workspace">
+          <div class="brand-block">
+            <div class="brand-mark">R</div>
+            <div>
+              <p class="eyebrow">Enterprise RAG</p>
+              <h1>Knowledge Chatbot</h1>
+            </div>
+          </div>
+
+          <section class="upload-card">
+            <input id="fileInput" type="file" accept=".pdf,.txt,.csv" hidden>
+            <button id="uploadButton" class="primary-action" type="button">
+              <span>Upload Document</span>
+            </button>
+            <p class="upload-copy">PDF, TXT, or CSV under 4 MB. The backend ingests, chunks, embeds, and indexes automatically.</p>
+          </section>
+
+          <section class="document-ledger" aria-live="polite">
+            <div class="section-heading">
+              <span>Indexed Cargo</span>
+              <span id="documentCount">0</span>
+            </div>
+            <div id="documentList" class="document-list">
+              <p class="empty-note">No documents uploaded yet.</p>
+            </div>
+          </section>
+
+          <section class="system-card">
+            <div class="section-heading">
+              <span>System Status</span>
+            </div>
+            <div class="status-row">
+              <span id="statusDot" class="status-dot pending"></span>
+              <span id="statusText">Checking backend...</span>
+            </div>
+          </section>
+        </aside>
+
+        <section class="chat-workspace">
+          <header class="chat-header">
+            <div>
+              <p class="eyebrow">Grounded Answers With Sources</p>
+              <h2>Enterprise RAG Chatbot</h2>
+            </div>
+            <button id="clearButton" class="ghost-action" type="button">Clear Chat</button>
+          </header>
+
+          <section id="notice" class="notice" hidden></section>
+
+          <section id="chatMessages" class="chat-messages" aria-live="polite">
+            <article class="message assistant">
+              <div class="avatar">AI</div>
+              <div class="bubble">
+                <p>Upload a company document, then ask a question. I will answer only from indexed context and show the source scrolls below each grounded response.</p>
+              </div>
+            </article>
+          </section>
+
+          <form id="chatForm" class="chat-form">
+            <input
+              id="questionInput"
+              type="text"
+              placeholder="Ask about the uploaded company document..."
+              autocomplete="off"
+            >
+            <button id="sendButton" class="send-button" type="submit">Send</button>
+          </form>
+        </section>
+
+        <aside class="polly-panel" aria-label="Polly helper">
+          <div id="pollyCard" class="polly-card" data-mood="idle">
+            <button id="pollyButton" class="parrot-wrap" type="button" aria-label="Show next Polly briefing">
+              <svg class="parrot" viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="41" cy="58" rx="20" ry="25" fill="#e63946" />
+                <ellipse cx="28" cy="61" rx="12" ry="17" fill="#c1121f" transform="rotate(-12 28 61)" />
+                <circle cx="42" cy="29" r="19" fill="#e63946" />
+                <path d="M54 33 Q68 29 62 41 Q58 47 49 40 Z" fill="#ffb703" />
+                <circle cx="50" cy="23" r="6" fill="#fff" />
+                <circle cx="52" cy="23" r="3.2" fill="#172033" />
+                <path d="M30 14 Q28 3 34 9 Q36 1 40 9 Q42 2 47 10 Q54 6 51 16" fill="#f77f00" />
+                <path d="M34 82 L26 94 M36 82 L36 95 M50 82 L45 95 M52 82 L56 94" stroke="#ffb703" stroke-width="3" stroke-linecap="round" />
+                <path d="M26 78 Q18 92 12 96 Q23 89 31 89 Q29 96 38 98 Q41 90 48 88 Q58 91 63 96 Q58 88 54 80 Z" fill="#4361ee" />
+              </svg>
+            </button>
+            <div id="pollyStatus" class="polly-status">Standing by</div>
+            <h3>Polly's Briefing</h3>
+            <p id="pollyText">Upload the first document and I will keep watch while the RAG engine builds its source map.</p>
+          </div>
+
+          <div class="flow-card">
+            <div class="section-heading">
+              <span>Demo Flow</span>
+            </div>
+            <ol>
+              <li>Upload a company document</li>
+              <li>Automatic ingestion and indexing</li>
+              <li>Ask a grounded question</li>
+              <li>Review answer citations</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="rope-scrollbar"><div class="rope-top-ring"></div><div class="rope-line"></div><div class="rope-bot-ring"></div><div class="rope-anchor" id="ropeAnchor">⚓</div></div>
+
+  <script src="rag-app.js"></script>
+  <script>
+    const nightToggle=document.getElementById('nightToggle'),skySun=document.getElementById('skySun'),skyMoon=document.getElementById('skyMoon');
+    const THEME_STORAGE_KEY='portfolio-night-mode';
+    let isNight=localStorage.getItem(THEME_STORAGE_KEY)==='night';
+    document.body.classList.toggle('night-mode',isNight);
+    if(isNight)skyMoon.style.opacity='1';
+    nightToggle.addEventListener('click',()=>{isNight=!isNight;localStorage.setItem(THEME_STORAGE_KEY,isNight?'night':'day');document.body.classList.toggle('night-mode',isNight);if(isNight){skySun.style.animation='sunSet 2.8s ease-in-out forwards';setTimeout(()=>{skyMoon.style.opacity='1';skyMoon.style.animation='moonRise 2s ease-out forwards';},1200);}else{skyMoon.style.animation='moonSet 2.5s ease-in-out forwards';setTimeout(()=>{skySun.style.opacity='1';skySun.style.animation='sunRise 2s ease-out forwards';},1000);}});
+    const workshopDd=document.getElementById('workshopDropdown');
+    workshopDd.querySelector('.dropdown-trigger').addEventListener('click',()=>workshopDd.classList.toggle('open'));
+    document.addEventListener('click',e=>{if(!workshopDd.contains(e.target))workshopDd.classList.remove('open');});
+    window.addEventListener('scroll',()=>{const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);document.getElementById('ropeAnchor').style.top=(p*window.innerHeight*.8)+'px';},{passive:true});
+    (function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let s=[];function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:120},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.75,r:Math.random()*1.5+.4,a:Math.random(),da:(Math.random()-.5)*.01}));}function d(){x.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a=Math.max(.1,Math.min(1,p.a+p.da));if(p.a<=.1||p.a>=1)p.da*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`rgba(255,255,240,${p.a})`;x.fill();});requestAnimationFrame(d);}r();window.addEventListener('resize',r);d();})();
+  </script>
+</body>
+</html>

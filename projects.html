@@ -147,6 +147,15 @@
     @keyframes orbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
     @keyframes orbGlow{0%{box-shadow:0 0 20px rgba(16, 185, 129, 0.3), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}100%{box-shadow:0 0 40px rgba(16, 185, 129, 0.7), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}}
 
+    /* RAG preview */
+    .preview-rag{background:linear-gradient(160deg,#111827 0%,#172033 55%,#2b160b 100%);border-bottom:2px solid var(--wood);padding:1.2rem;}
+    .rag-mini-window{width:88%;max-width:330px;border:1px solid rgba(234,205,161,.35);border-radius:8px;background:rgba(255,248,229,.08);box-shadow:0 18px 40px rgba(0,0,0,.35);padding:.75rem;display:grid;gap:.55rem;}
+    .rag-mini-row{height:9px;border-radius:99px;background:rgba(234,205,161,.5);}
+    .rag-mini-row.short{width:58%;}
+    .rag-mini-chat{display:grid;gap:.45rem;margin-top:.2rem;}
+    .rag-mini-bubble{height:24px;border-radius:6px;background:rgba(125,211,252,.22);border:1px solid rgba(125,211,252,.28);}
+    .rag-mini-source{height:18px;border-radius:5px;background:rgba(234,205,161,.18);border:1px dashed rgba(234,205,161,.4);}
+
     @media(max-width:640px){
       nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem;}
       .nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end;}
@@ -174,6 +183,7 @@
           <div class="dd-divider"></div>
           <a href="project-voice.html">🔮 AI Voice Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
+          <a href="project-rag.html">📚 Enterprise RAG Chatbot</a>
           <div class="dd-divider"></div>
           <a href="project-terminal.html">🧭 Navigator's Console</a>
           <a href="project-parrot.html">🦜 Captain's Parrot</a>
@@ -189,7 +199,7 @@
       <div class="hero-label">Interactive Demos</div>
       <h1 class="hero-title">The Workshop</h1>
       <div class="hero-divider"></div>
-      <p class="hero-sub">"Three fully working projects, built for recruiters brave enough to click."</p>
+      <p class="hero-sub">"Six fully working projects, built for recruiters brave enough to click."</p>
       <a href="index.html" class="hero-back">← Return to Main Log</a>
     </section>
 
@@ -324,6 +334,34 @@
               <span class="card-tag">ping</span>
             </div>
             <div class="card-cta">Launch Terminal <span class="arrow">→</span></div>
+          </div>
+        </a>
+
+        <!-- CARD 6: ENTERPRISE RAG CHATBOT -->
+        <a href="project-rag.html" class="project-card">
+          <div class="card-badge">RAG Demo</div>
+          <div class="card-preview preview-rag">
+            <div class="rag-mini-window">
+              <div class="rag-mini-row short"></div>
+              <div class="rag-mini-row"></div>
+              <div class="rag-mini-chat">
+                <div class="rag-mini-bubble"></div>
+                <div class="rag-mini-source"></div>
+                <div class="rag-mini-source"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Project VI · Enterprise AI</div>
+            <div class="card-title">Enterprise RAG Chatbot</div>
+            <div class="card-desc">Upload company PDFs, TXT, or CSV files, then ask grounded questions with source citations from a FastAPI, OpenAI, and ChromaDB backend.</div>
+            <div class="card-tags">
+              <span class="card-tag">FastAPI</span>
+              <span class="card-tag">OpenAI SDK</span>
+              <span class="card-tag">ChromaDB</span>
+              <span class="card-tag">Citations</span>
+            </div>
+            <div class="card-cta">Open RAG Demo <span class="arrow">→</span></div>
           </div>
         </a>
 

@@ -80,3 +80,26 @@ Stack: CSS 3D transforms · Vanilla JS · Responsive layout
 - Email: aaku.mas@gmail.com
 - LinkedIn: [https://www.linkedin.com/in/aakanksha-kashyap-ai/](https://www.linkedin.com/in/aakanksha-kashyap-ai/)
 - Site: [aakanksha98.github.io](https://aakanksha98.github.io)
+
+---
+
+## Vercel RAG Deployment
+
+The Enterprise RAG Chatbot is deployed from this same portfolio repo.
+
+Required Vercel environment variables:
+
+- `OPENAI_API_KEY`
+- `OPENAI_CHAT_MODEL`
+- `OPENAI_EMBEDDING_MODEL`
+- `EMBEDDING_DIMENSIONS`
+- `DATABASE_URL`
+- `MAX_UPLOAD_BYTES`
+
+Neon setup:
+
+1. Create a Neon Postgres database.
+2. Use the pooled connection string as `DATABASE_URL`.
+3. The FastAPI backend creates the `vector` extension and RAG tables on first upload/query.
+
+The hosted RAG page is `project-rag.html`; it calls `/api/upload`, `/api/chat`, and `/api/health`.

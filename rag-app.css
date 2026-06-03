@@ -1,0 +1,551 @@
+.rag-app {
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.rag-app *,
+.rag-app *::before,
+.rag-app *::after {
+  box-sizing: border-box;
+}
+
+.rag-app button,
+.rag-app input {
+  font: inherit;
+}
+
+.rag-app button {
+  border: 0;
+}
+
+.rag-app-shell {
+  width: min(1480px, 100%);
+  min-height: 720px;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 280px;
+  gap: 16px;
+}
+
+.rag-app .sidebar,
+.rag-app .chat-workspace,
+.rag-app .polly-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.rag-app .sidebar,
+.rag-app .chat-workspace,
+.rag-app .polly-card,
+.rag-app .flow-card {
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  background:
+    linear-gradient(135deg, rgba(255, 248, 229, 0.92), rgba(234, 205, 161, 0.72)),
+    rgba(255, 255, 255, 0.34);
+  box-shadow: 0 20px 60px rgba(43, 22, 11, 0.18);
+}
+
+.rag-app .sidebar,
+.rag-app .chat-workspace {
+  min-height: 720px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rag-app .sidebar {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rag-app .brand-block {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(92, 58, 33, 0.22);
+}
+
+.rag-app .brand-mark {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #fdf5e6;
+  background: var(--wood-dark);
+  box-shadow: 6px 6px 0 var(--wood);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.rag-app .eyebrow,
+.rag-app .section-heading {
+  color: #176b87;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+}
+
+.rag-app .eyebrow {
+  margin-bottom: 4px;
+  font-size: 0.76rem;
+}
+
+.rag-app h1,
+.rag-app h2,
+.rag-app h3 {
+  color: var(--wood-dark);
+  font-family: var(--font-display);
+  line-height: 1.05;
+}
+
+.rag-app h1 {
+  font-size: 1.6rem;
+}
+
+.rag-app h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.rag-app .upload-card,
+.rag-app .document-ledger,
+.rag-app .system-card {
+  padding: 15px;
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.rag-app .primary-action,
+.rag-app .send-button,
+.rag-app .ghost-action {
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+.rag-app .primary-action,
+.rag-app .send-button {
+  color: #fdf5e6;
+  background: #176b87;
+}
+
+.rag-app .primary-action {
+  width: 100%;
+  padding: 14px 16px;
+  font-weight: 700;
+}
+
+.rag-app .primary-action:hover,
+.rag-app .send-button:hover {
+  background: #105268;
+  transform: translateY(-1px);
+}
+
+.rag-app button:disabled,
+.rag-app input:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.rag-app .upload-copy,
+.rag-app .empty-note,
+.rag-app .document-item span,
+.rag-app .polly-card p,
+.rag-app .flow-card li,
+.rag-app .source-card p {
+  color: var(--ink-faded);
+}
+
+.rag-app .upload-copy {
+  margin-top: 14px;
+  line-height: 1.45;
+}
+
+.rag-app .section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--wood-dark);
+  font-size: 0.76rem;
+}
+
+.rag-app .document-list {
+  display: grid;
+  gap: 10px;
+}
+
+.rag-app .document-item {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 7px;
+  background: rgba(255, 248, 229, 0.55);
+}
+
+.rag-app .document-item strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rag-app .status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-faded);
+}
+
+.rag-app .status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ccaa77;
+  box-shadow: 0 0 0 6px rgba(204, 170, 119, 0.16);
+}
+
+.rag-app .status-dot.ready {
+  background: #0f766e;
+  box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.14);
+}
+
+.rag-app .status-dot.error {
+  background: #b42318;
+  box-shadow: 0 0 0 6px rgba(180, 35, 24, 0.12);
+}
+
+.rag-app .chat-workspace {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+.rag-app .chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 30px 18px;
+  border-bottom: 1px solid rgba(92, 58, 33, 0.22);
+}
+
+.rag-app .ghost-action {
+  padding: 11px 16px;
+  color: var(--ink);
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.rag-app .ghost-action:hover {
+  background: rgba(255, 248, 229, 0.58);
+}
+
+.rag-app .notice {
+  margin: 18px 30px 0;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: 7px;
+  background: rgba(255, 248, 229, 0.5);
+}
+
+.rag-app .notice.success {
+  color: #0f766e;
+  border-color: rgba(15, 118, 110, 0.34);
+}
+
+.rag-app .notice.error {
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.34);
+}
+
+.rag-app .chat-messages {
+  overflow-y: auto;
+  padding: 22px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rag-app .message {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  max-width: 860px;
+}
+
+.rag-app .message.user {
+  align-self: flex-end;
+  grid-template-columns: minmax(0, 1fr) 36px;
+}
+
+.rag-app .message.user .avatar {
+  grid-column: 2;
+}
+
+.rag-app .message.user .bubble {
+  grid-column: 1;
+  grid-row: 1;
+  background: #e3f2f7;
+  border-color: rgba(23, 107, 135, 0.24);
+}
+
+.rag-app .avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  border-radius: 8px;
+  color: #fdf5e6;
+  background: var(--wood);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.rag-app .bubble {
+  padding: 14px 16px;
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.rag-app .sources {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(92, 58, 33, 0.22);
+}
+
+.rag-app .sources h3 {
+  margin-bottom: 10px;
+  font-size: 0.98rem;
+}
+
+.rag-app .source-list {
+  display: grid;
+  gap: 8px;
+}
+
+.rag-app .source-card {
+  padding: 10px;
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  border-radius: 7px;
+  background: rgba(255, 248, 229, 0.62);
+}
+
+.rag-app .source-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.rag-app .chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 16px 30px 18px;
+  border-top: 1px solid rgba(92, 58, 33, 0.22);
+}
+
+.rag-app .chat-form input {
+  width: 100%;
+  border: 1px solid rgba(92, 58, 33, 0.22);
+  border-radius: 7px;
+  padding: 13px 14px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+  outline: none;
+}
+
+.rag-app .chat-form input:focus {
+  border-color: rgba(23, 107, 135, 0.62);
+  box-shadow: 0 0 0 4px rgba(23, 107, 135, 0.12);
+}
+
+.rag-app .send-button {
+  min-width: 88px;
+  padding: 0 18px;
+  font-weight: 700;
+}
+
+.rag-app .polly-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rag-app .polly-card,
+.rag-app .flow-card {
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.rag-app .parrot-wrap {
+  width: 100%;
+  height: 126px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #143542, #0e2438);
+  box-shadow: inset 0 -30px 40px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.rag-app .parrot-wrap:hover,
+.rag-app .parrot-wrap:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -30px 40px rgba(0, 0, 0, 0.24),
+    0 0 0 4px rgba(23, 107, 135, 0.16);
+}
+
+.rag-app .parrot {
+  width: 92px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  animation: ragParrotIdle 4s ease-in-out infinite;
+}
+
+.rag-app .polly-card[data-mood="working"] .parrot {
+  animation: ragParrotWorking 0.9s ease-in-out infinite;
+}
+
+.rag-app .polly-card[data-mood="success"] .parrot-wrap {
+  box-shadow:
+    inset 0 -30px 40px rgba(0, 0, 0, 0.24),
+    0 0 0 4px rgba(15, 118, 110, 0.14);
+}
+
+.rag-app .polly-card[data-mood="error"] .parrot-wrap {
+  box-shadow:
+    inset 0 -30px 40px rgba(0, 0, 0, 0.24),
+    0 0 0 4px rgba(180, 35, 24, 0.14);
+}
+
+.rag-app .polly-pulse {
+  animation: ragPollyPulse 0.32s ease-out;
+}
+
+.rag-app .polly-status {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #105268;
+  background: rgba(23, 107, 135, 0.1);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rag-app .polly-card[data-mood="success"] .polly-status {
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.1);
+}
+
+.rag-app .polly-card[data-mood="error"] .polly-status {
+  color: #b42318;
+  background: rgba(180, 35, 24, 0.1);
+}
+
+.rag-app .polly-card h3 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.rag-app .polly-card p,
+.rag-app .flow-card li {
+  line-height: 1.5;
+}
+
+.rag-app .flow-card ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.rag-app .flow-card li + li {
+  margin-top: 8px;
+}
+
+@keyframes ragParrotIdle {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes ragParrotWorking {
+  0%, 100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}
+
+@keyframes ragPollyPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.015);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 1120px) {
+  .rag-app-shell {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  .rag-app .polly-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .rag-app-shell {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .rag-app .sidebar,
+  .rag-app .chat-workspace {
+    min-height: auto;
+  }
+
+  .rag-app .polly-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .rag-app .chat-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .rag-app .chat-form {
+    grid-template-columns: 1fr;
+  }
+
+  .rag-app h2 {
+    font-size: 2rem;
+  }
+}
