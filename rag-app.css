@@ -475,6 +475,113 @@
   margin-top: 8px;
 }
 
+body.night-mode .rag-app {
+  color: #f8fafc;
+}
+
+body.night-mode .rag-app .sidebar,
+body.night-mode .rag-app .chat-workspace,
+body.night-mode .rag-app .polly-card,
+body.night-mode .rag-app .flow-card {
+  border-color: rgba(203, 213, 225, 0.22);
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.88)),
+    rgba(15, 23, 42, 0.9);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+}
+
+body.night-mode .rag-app .brand-block,
+body.night-mode .rag-app .chat-header,
+body.night-mode .rag-app .chat-form,
+body.night-mode .rag-app .sources {
+  border-color: rgba(203, 213, 225, 0.2);
+}
+
+body.night-mode .rag-app h1,
+body.night-mode .rag-app h2,
+body.night-mode .rag-app h3,
+body.night-mode .rag-app .section-heading,
+body.night-mode .rag-app .source-card strong {
+  color: #f8fafc;
+}
+
+body.night-mode .rag-app .eyebrow {
+  color: #7dd3fc;
+}
+
+body.night-mode .rag-app .upload-card,
+body.night-mode .rag-app .document-ledger,
+body.night-mode .rag-app .system-card,
+body.night-mode .rag-app .bubble,
+body.night-mode .rag-app .source-card {
+  border-color: rgba(203, 213, 225, 0.2);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+body.night-mode .rag-app .document-item {
+  background: rgba(30, 41, 59, 0.78);
+}
+
+body.night-mode .rag-app .upload-copy,
+body.night-mode .rag-app .empty-note,
+body.night-mode .rag-app .document-item span,
+body.night-mode .rag-app .polly-card p,
+body.night-mode .rag-app .flow-card li,
+body.night-mode .rag-app .source-card p,
+body.night-mode .rag-app .status-row {
+  color: #cbd5e1;
+}
+
+body.night-mode .rag-app .message.user .bubble {
+  color: #f8fafc;
+  border-color: rgba(56, 189, 248, 0.26);
+  background: rgba(14, 116, 144, 0.34);
+}
+
+body.night-mode .rag-app .ghost-action,
+body.night-mode .rag-app .chat-form input {
+  color: #f8fafc;
+  border-color: rgba(203, 213, 225, 0.24);
+  background: rgba(2, 6, 23, 0.52);
+}
+
+body.night-mode .rag-app .ghost-action:hover {
+  background: rgba(30, 41, 59, 0.72);
+}
+
+body.night-mode .rag-app .chat-form input::placeholder {
+  color: rgba(203, 213, 225, 0.72);
+}
+
+body.night-mode .rag-app .notice {
+  background: rgba(15, 23, 42, 0.74);
+}
+
+body.night-mode .rag-app .notice.success {
+  color: #5eead4;
+  border-color: rgba(45, 212, 191, 0.38);
+}
+
+body.night-mode .rag-app .notice.error {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.42);
+}
+
+body.night-mode .rag-app .polly-status {
+  color: #bae6fd;
+  background: rgba(56, 189, 248, 0.14);
+}
+
+body.night-mode .rag-app .polly-card[data-mood="success"] .polly-status {
+  color: #99f6e4;
+  background: rgba(45, 212, 191, 0.14);
+}
+
+body.night-mode .rag-app .polly-card[data-mood="error"] .polly-status {
+  color: #fecaca;
+  background: rgba(248, 113, 113, 0.14);
+}
+
 @keyframes ragParrotIdle {
   0%, 100% {
     transform: translateY(0) rotate(-1deg);
