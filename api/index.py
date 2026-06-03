@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 from api.rag_backend.chunking import chunk_sections
 from api.rag_backend.config import settings
@@ -11,6 +14,22 @@ from api.rag_backend.vector_store import index_chunks
 
 
 app = FastAPI(title="Enterprise RAG Chatbot API")
+STATIC_ROOT = Path(__file__).resolve().parents[1]
+ALLOWED_STATIC_EXTENSIONS = {
+    ".css",
+    ".html",
+    ".ico",
+    ".jpeg",
+    ".jpg",
+    ".js",
+    ".json",
+    ".mp3",
+    ".pdf",
+    ".png",
+    ".svg",
+    ".wav",
+    ".webp",
+}
 
 app.add_middleware(
     CORSMiddleware,
@@ -76,3 +95,19 @@ def chat(request: ChatRequest):
         raise HTTPException(status_code=500, detail="Chat failed while generating an answer.") from exc
 
     return ChatResponse(answer=answer, sources=sources)
+
+
+@app.get("/", include_in_schema=False)
+def site_index():
+    return FileResponse(STATIC_ROOT / "index.html")
+
+
+@app.get("/{file_path:path}", include_in_schema=False)
+def static_file(file_path: str):
+    candidate = (STATIC_ROOT / file_path).resolve()
+    root = STATIC_ROOT.resolve()
+    if root != candidate and root not in candidate.parents:
+        raise HTTPException(status_code=404, detail="Not found.")
+    if candidate.is_file() and candidate.suffix.lower() in ALLOWED_STATIC_EXTENSIONS:
+        return FileResponse(candidate)
+    raise HTTPException(status_code=404, detail="Not found.")
