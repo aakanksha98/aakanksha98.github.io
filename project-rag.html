@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise RAG Chatbot — Captain Aakanksha</title>
+  <title>Enterprise RAG Chatbot - Captain Aakanksha</title>
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Karla:wght@300;400;500;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="rag-app.css">
   <style>
@@ -61,22 +61,7 @@
     @keyframes moonSet{0%{top:.65rem;left:5%;opacity:1}100%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}}
     @keyframes sunRise{0%{top:105vh;left:105vw;opacity:0;transform:scale(.2)}100%{top:.65rem;left:5%;opacity:1;transform:scale(1)}}
 
-    main{position:relative;z-index:2;padding:8rem 5% 5rem;}
-    .project-hero{max-width:1120px;margin:0 auto 2rem;}
-    .page-label{font-family:var(--font-display);font-size:.85rem;letter-spacing:.24em;color:var(--red-flag);text-transform:uppercase;margin-bottom:.8rem;}
-    h1{font-family:var(--font-display);font-size:clamp(2.6rem,6vw,5.2rem);line-height:1.05;color:var(--wood-dark);text-shadow:3px 3px 0 var(--parchment-dark),5px 5px 10px rgba(0,0,0,.14);}
-    body.night-mode h1{color:var(--foam);text-shadow:0 0 30px rgba(255,200,100,.2);}
-    .hero-copy{font-family:var(--font-serif);font-size:1.35rem;line-height:1.6;color:var(--ink-faded);max-width:760px;margin-top:1rem;}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.6rem;}
-    .launch-btn,.back-btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;text-decoration:none;border-radius:6px;font-family:var(--font-display);letter-spacing:.06em;transition:transform .2s,box-shadow .2s,background .2s,color .2s;}
-    .launch-btn{background:var(--wood-dark);color:var(--parchment);border:2px solid var(--wood-dark);padding:.8rem 1.35rem;box-shadow:4px 4px 0 var(--wood);}
-    .launch-btn:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--wood);}
-    .back-btn{color:var(--ink);border:1.5px solid var(--wood);padding:.75rem 1.1rem;}
-    .back-btn:hover{background:rgba(92,58,33,.1);}
-    body.night-mode .launch-btn{background:var(--foam);color:var(--wood-dark);border-color:var(--foam);box-shadow:4px 4px 0 rgba(0,0,0,.6);}
-    body.night-mode .back-btn{color:var(--foam);border-color:var(--ink-faded);}
-    .launch-note{font-size:.88rem;color:var(--ink-faded);line-height:1.5;margin-top:.9rem;}
-    .rag-embed{max-width:1480px;margin:0 auto;}
+    main{position:relative;z-index:2;}
 
     @media(max-width:640px){nav{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem}.nav-links{gap:.8rem;flex-wrap:wrap;justify-content:flex-end}.nav-links a,.dropdown-trigger{font-size:.9rem}main{padding:8rem 1rem 4rem}}
   </style>
@@ -112,20 +97,16 @@
     </div>
   </nav>
 
-  <main>
-    <section class="project-hero">
-      <div class="page-label">Project VI · Enterprise AI</div>
-      <h1>Enterprise RAG Chatbot</h1>
-      <p class="hero-copy">A browser-first company knowledge assistant: upload a document, let the backend ingest it automatically, then ask grounded questions with cited source context.</p>
-      <div class="hero-actions">
-        <a class="back-btn" href="projects.html">← Back to Workshop</a>
-      </div>
-      <p class="launch-note">Upload, ingestion, retrieval, answer generation, and citations all run on this page through the Vercel FastAPI backend and Neon vector database.</p>
-    </section>
-
+  <main class="rag-main">
     <section class="rag-embed rag-app" aria-label="Enterprise RAG Chatbot">
+      <div id="sidebarOverlay" class="sidebar-overlay" hidden></div>
       <div class="rag-app-shell">
-        <aside class="sidebar" aria-label="Document workspace">
+        <aside id="ragSidebar" class="sidebar" aria-label="Document archive">
+          <div class="sidebar-mobile-head">
+            <span>Ship Archive</span>
+            <button id="sidebarCloseButton" class="sidebar-close" type="button" aria-label="Close document archive">Close</button>
+          </div>
+
           <div class="brand-block">
             <div class="brand-mark">R</div>
             <div>
@@ -134,17 +115,16 @@
             </div>
           </div>
 
-          <section class="upload-card">
+          <div class="sidebar-actions">
+            <button id="clearButton" class="ghost-action full-action" type="button">New Chat</button>
             <input id="fileInput" type="file" accept=".pdf,.txt,.csv" hidden>
-            <button id="uploadButton" class="primary-action" type="button">
-              <span>Upload Document</span>
-            </button>
-            <p class="upload-copy">PDF, TXT, or CSV under 4 MB. The backend ingests, chunks, embeds, and indexes automatically.</p>
-          </section>
+            <button id="uploadButton" class="primary-action" type="button" aria-label="Upload PDF, TXT, or CSV document">Upload Document</button>
+            <a class="back-link" href="projects.html">Back to Workshop</a>
+          </div>
 
           <section class="document-ledger" aria-live="polite">
             <div class="section-heading">
-              <span>Indexed Cargo</span>
+              <span>Indexed Scrolls</span>
               <span id="documentCount">0</span>
             </div>
             <div id="documentList" class="document-list">
@@ -161,42 +141,9 @@
               <span id="statusText">Checking backend...</span>
             </div>
           </section>
-        </aside>
 
-        <section class="chat-workspace">
-          <header class="chat-header">
-            <div>
-              <p class="eyebrow">Grounded Answers With Sources</p>
-              <h2>Enterprise RAG Chatbot</h2>
-            </div>
-            <button id="clearButton" class="ghost-action" type="button">Clear Chat</button>
-          </header>
-
-          <section id="notice" class="notice" hidden></section>
-
-          <section id="chatMessages" class="chat-messages" aria-live="polite">
-            <article class="message assistant">
-              <div class="avatar">AI</div>
-              <div class="bubble">
-                <p>Upload a company document, then ask a question. I will answer only from indexed context and show the source scrolls below each grounded response.</p>
-              </div>
-            </article>
-          </section>
-
-          <form id="chatForm" class="chat-form">
-            <input
-              id="questionInput"
-              type="text"
-              placeholder="Ask about the uploaded company document..."
-              autocomplete="off"
-            >
-            <button id="sendButton" class="send-button" type="submit">Send</button>
-          </form>
-        </section>
-
-        <aside class="polly-panel" aria-label="Polly helper">
-          <div id="pollyCard" class="polly-card" data-mood="idle">
-            <button id="pollyButton" class="parrot-wrap" type="button" aria-label="Show next Polly briefing">
+          <section id="pollyCard" class="polly-card compact" data-mood="idle" aria-live="polite">
+            <button id="pollyButton" class="polly-mini" type="button" aria-label="Show next Polly briefing">
               <svg class="parrot" viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
                 <ellipse cx="41" cy="58" rx="20" ry="25" fill="#e63946" />
                 <ellipse cx="28" cy="61" rx="12" ry="17" fill="#c1121f" transform="rotate(-12 28 61)" />
@@ -209,23 +156,52 @@
                 <path d="M26 78 Q18 92 12 96 Q23 89 31 89 Q29 96 38 98 Q41 90 48 88 Q58 91 63 96 Q58 88 54 80 Z" fill="#4361ee" />
               </svg>
             </button>
-            <div id="pollyStatus" class="polly-status">Standing by</div>
-            <h3>Polly's Briefing</h3>
-            <p id="pollyText">Upload the first document and I will keep watch while the RAG engine builds its source map.</p>
-          </div>
-
-          <div class="flow-card">
-            <div class="section-heading">
-              <span>Demo Flow</span>
+            <div>
+              <div id="pollyStatus" class="polly-status">Standing by</div>
+              <p id="pollyText">Polly tracks indexing, retrieval, and citations without interrupting the chat.</p>
             </div>
-            <ol>
-              <li>Upload a company document</li>
-              <li>Automatic ingestion and indexing</li>
-              <li>Ask a grounded question</li>
-              <li>Review answer citations</li>
-            </ol>
-          </div>
+          </section>
         </aside>
+
+        <section class="chat-workspace">
+          <header class="chat-header">
+            <button id="sidebarOpenButton" class="sidebar-toggle" type="button" aria-controls="ragSidebar" aria-expanded="false">Archive</button>
+            <div>
+              <p class="eyebrow">Grounded Answers With Sources</p>
+              <h2>Enterprise RAG Chatbot</h2>
+            </div>
+            <p class="chat-subtitle">Upload a document, ask naturally, and inspect the exact sources behind each answer.</p>
+          </header>
+
+          <section id="notice" class="notice" hidden></section>
+
+          <section id="chatMessages" class="chat-messages" aria-live="polite">
+            <section class="empty-state" aria-label="Enterprise RAG Chatbot start screen">
+              <div class="empty-mark">R</div>
+              <p class="eyebrow">Enterprise RAG</p>
+              <h3>Ask grounded questions from your uploaded document.</h3>
+              <p>Upload a PDF, TXT, or CSV, then use the composer below. Answers stay grounded in indexed context and include source citations.</p>
+              <div class="prompt-grid" aria-label="Suggested prompts">
+                <button class="prompt-chip" type="button" data-prompt="Summarize this document">Summarize this document</button>
+                <button class="prompt-chip" type="button" data-prompt="What are the key points?">What are the key points?</button>
+                <button class="prompt-chip" type="button" data-prompt="List important dates or requirements">List important dates</button>
+                <button class="prompt-chip" type="button" data-prompt="What should I know first?">What should I know first?</button>
+              </div>
+            </section>
+          </section>
+
+          <form id="chatForm" class="chat-form">
+            <button id="composerUploadButton" class="composer-upload" type="button" aria-label="Upload document">+</button>
+            <input
+              id="questionInput"
+              type="text"
+              placeholder="Ask about the uploaded company document..."
+              autocomplete="off"
+              aria-label="Ask a question about the uploaded document"
+            >
+            <button id="sendButton" class="send-button" type="submit">Send</button>
+          </form>
+        </section>
       </div>
     </section>
   </main>
