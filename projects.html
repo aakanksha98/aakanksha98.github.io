@@ -147,6 +147,21 @@
     @keyframes orbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
     @keyframes orbGlow{0%{box-shadow:0 0 20px rgba(16, 185, 129, 0.3), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}100%{box-shadow:0 0 40px rgba(16, 185, 129, 0.7), inset -5px -5px 10px rgba(0,0,0,0.5), inset 5px 5px 10px rgba(255,255,255,0.8);}}
 
+    /* Enterprise voice orchestration preview */
+    .preview-orchestration{background:linear-gradient(145deg,#0b1720 0%,#173f47 52%,#2b160b 100%);border-bottom:2px solid var(--wood);padding:1rem;}
+    .orchestration-mini{width:88%;max-width:330px;border:1px solid rgba(234,205,161,.35);border-radius:8px;background:rgba(255,248,229,.08);box-shadow:0 18px 42px rgba(0,0,0,.38);padding:.8rem;display:grid;gap:.65rem;}
+    .orchestration-top{display:flex;justify-content:space-between;align-items:center;gap:.75rem;}
+    .orchestration-pill{height:10px;border-radius:99px;background:rgba(234,205,161,.65);}
+    .orchestration-pill.long{width:48%;}
+    .orchestration-pill.short{width:22%;background:rgba(56,189,248,.5);}
+    .orchestration-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;align-items:center;}
+    .orchestration-node{height:34px;border-radius:6px;border:1px solid rgba(125,211,252,.32);background:rgba(125,211,252,.16);position:relative;}
+    .orchestration-node::after{content:'';position:absolute;right:-.42rem;top:50%;width:.38rem;height:1px;background:rgba(234,205,161,.65);}
+    .orchestration-node:last-child::after{display:none;}
+    .orchestration-chat{display:grid;gap:.4rem;}
+    .orchestration-chat span{height:18px;border-radius:5px;background:rgba(234,205,161,.18);border:1px dashed rgba(234,205,161,.35);}
+    .orchestration-chat span:nth-child(2){width:72%;justify-self:end;background:rgba(35,79,104,.72);border-style:solid;}
+
     /* RAG preview */
     .preview-rag{background:linear-gradient(160deg,#111827 0%,#172033 55%,#2b160b 100%);border-bottom:2px solid var(--wood);padding:1.2rem;}
     .rag-mini-window{width:88%;max-width:330px;border:1px solid rgba(234,205,161,.35);border-radius:8px;background:rgba(255,248,229,.08);box-shadow:0 18px 40px rgba(0,0,0,.35);padding:.75rem;display:grid;gap:.55rem;}
@@ -182,6 +197,7 @@
           <a href="projects.html" class="current-page">Explore All Projects</a>
           <div class="dd-divider"></div>
           <a href="project-voice.html">🔮 AI Voice Agent</a>
+          <a href="https://enterprise-voice-ai-agent.vercel.app" target="_blank" rel="noopener">Enterprise Voice AI Orchestration Agent</a>
           <a href="project-ugc.html">🎥 UGC Ads Creator</a>
           <a href="project-rag.html">📚 Enterprise AI Knowledge Assistant</a>
           <a href="https://enterprise-ai-knowledge-assistant-l.vercel.app/project-rag.html" target="_blank" rel="noopener">🔗 LangChain Powered Enterprise Assistant</a>
@@ -200,12 +216,48 @@
       <div class="hero-label">Interactive Demos</div>
       <h1 class="hero-title">The Workshop</h1>
       <div class="hero-divider"></div>
-      <p class="hero-sub">"Six fully working projects, built for recruiters brave enough to click."</p>
+      <p class="hero-sub">"Flagship AI systems and interactive demos, built for recruiters ready to inspect the work."</p>
       <a href="index.html" class="hero-back">← Return to Main Log</a>
     </section>
 
     <section class="cards-section">
       <div class="cards-grid">
+
+        <!-- FLAGSHIP: ENTERPRISE VOICE ORCHESTRATION AGENT -->
+        <a href="https://enterprise-voice-ai-agent.vercel.app" class="project-card" target="_blank" rel="noopener">
+          <div class="card-badge">Flagship</div>
+          <div class="card-preview preview-orchestration">
+            <div class="orchestration-mini" aria-hidden="true">
+              <div class="orchestration-top">
+                <span class="orchestration-pill long"></span>
+                <span class="orchestration-pill short"></span>
+              </div>
+              <div class="orchestration-flow">
+                <span class="orchestration-node"></span>
+                <span class="orchestration-node"></span>
+                <span class="orchestration-node"></span>
+                <span class="orchestration-node"></span>
+              </div>
+              <div class="orchestration-chat">
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-num">Flagship · LangGraph Voice AI</div>
+            <div class="card-title">Enterprise Voice AI Orchestration Agent</div>
+            <div class="card-desc">A multi-business AI receptionist powered by one LangGraph workflow, profile-scoped RAG, mock appointment tools, browser voice support, FastAPI, OpenAI, and Neon.</div>
+            <div class="card-tags">
+              <span class="card-tag">LangGraph</span>
+              <span class="card-tag">FastAPI</span>
+              <span class="card-tag">OpenAI</span>
+              <span class="card-tag">Neon</span>
+              <span class="card-tag">Voice AI</span>
+            </div>
+            <div class="card-cta">Open Live Demo <span class="arrow">→</span></div>
+          </div>
+        </a>
 
         <!-- CARD 1: VOICE AGENT -->
         <a href="project-voice.html" class="project-card">
